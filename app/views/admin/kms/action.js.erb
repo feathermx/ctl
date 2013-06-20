@@ -1,0 +1,30 @@
+<% content_for :table_formats do %>
+var table_formats = {};
+$.extend(table_formats, {
+	parent: this,
+	root: null,
+	list: {},
+	init: function(){
+		this.initRoot();
+		this.initList();
+	},
+	initList: function(){
+		var _self = this;
+		$.extend(this.list, {
+			c_at: "date"
+		});
+	},
+	initRoot: function(){
+		this.root = this.parent.root;
+	}
+});
+table_formats.init();
+this.table_formats = table_formats.list;
+<% end %>
+<% content_for :section_actions do %>
+	<%= render partial: 'admin/shared/section/actions/add', locals: { opts: @section.merge(perm: add?) } %>
+	<%= render partial: 'admin/shared/section/actions/edit', locals: { opts: @section.merge(perm: edit?) } %>
+	<%= render partial: 'admin/shared/section/actions/show', locals: { opts: @section.merge(show_icon: 'tracks', lang_key: 'app.admin.views.kms.actions.tracks', show_action: { controller: :tracks, action: :index }, perm: edit?) } %>
+	<%= render partial: 'admin/shared/section/actions/delete', locals: { opts: @section.merge(perm: delete?) } %>
+<% end %>
+<%= render partial: 'admin/shared/section/action', locals: { opts: @section } %>

@@ -1,0 +1,135 @@
+// Dear IE, screw you. Window click is never triggered
+(function(){
+	var nil = $();
+	$.fmx_collapse_globals = {};
+	$.extend($.fmx_collapse_globals, {
+		has_touch: false,
+		body: null,
+		initialized: false,
+		active: null,
+		init: function(opts){
+			if(!this.initialized){
+				$.extend(this, opts);
+				this.initialized = true;
+				this.initBody();
+			}
+		},
+		setActive: function(which){
+			if(which != this.active){
+				if(this.active != null){
+					this.active.disable();
+				}
+				this.active = which;
+			}
+		},
+		clearActive: function(){
+			this.active = null;
+		},
+		initBody: function(){
+			var _self = this;
+			this.body = $('body');
+			if(this.has_touch){
+				var body = this.body.get(0);
+				body.addEventListener('touchstart', function(e){
+					_self.bodyOnClick(e);
+				});
+			}
+			else{
+				this.body.click(function(e){
+					_self.bodyOnClick(e);
+				});
+			}
+		},
+		bodyOnClick: function(e){
+			if(this.active){
+				this.active.disable();
+			}
+		}
+	});
+	$.fmx_collapse = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			globals: $.fmx_collapse_globals,
+			has_touch: false,
+			_window: false,
+			container: nil,
+			wrapper: nil,
+			active: false,
+			init: function(){
+				this.initGlobals();
+				this.initContainer();
+				this.initLinks();
+			},
+			initGlobals: function(){
+				this.globals.init({
+					has_touch: this.has_touch
+				});
+			},
+			initLinks: function(){
+				var _self = this;
+				var links = this.container.find('a');
+				if(this.has_touch){
+					links.each(function(e){
+						var link = $(this).get(0);
+						link.addEventListener('touchstart', function(e){
+							e.stopPropagation();
+						}, false);
+					});
+				}
+				else{
+					links.click(function(e){
+						e.stopPropagation();
+					});
+				}
+			},
+			windowOnClick: function(e){
+				if(this.active){
+					this.disable();
+				}
+			},
+			initContainer: function(){
+				var _self = this;
+				if(this.has_touch){
+					var container = this.container.get(0);
+					container.addEventListener('touchstart', function(e){
+						e.preventDefault();
+						e.stopPropagation();
+						_self.containerOnClick(e, container);
+					}, false);
+				}
+				else{
+					this.container.click(function(e){
+						e.preventDefault();
+						e.stopPropagation();
+						_self.containerOnClick(e, $(this));
+					});
+				}
+			},
+			containerOnClick: function(e, element){
+				this.toggle();
+			},
+			enable: function(){
+				this.globals.setActive(this);
+				this.container.addClass('active');
+				this.wrapper.css('display', 'block');
+				this.active = true;
+			},
+			disable: function(){
+				this.globals.clearActive();
+				this.container.removeClass('active');
+				this.wrapper.css('display', 'none');
+				this.active = false;
+			},
+			toggle: function(){
+				if(this.active){
+					this.disable();
+				}
+				else{
+					this.enable();
+				}
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

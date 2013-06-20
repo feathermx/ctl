@@ -1,0 +1,10 @@
+.fmx_overlay_trigger{
+	display: block;
+	position: relative;
+}
+
+.fmx_overlay_container{
+	position: absolute;
+	display: none;
+	z-index: 5000;
+}

@@ -1,0 +1,371 @@
+var app = {};
+$.extend(app, {
+	root: null,
+	_window: null,
+	main_loader: null,
+	has_touch: false,
+	loading_count: 0,
+	google_maps_loader: null,
+	init: function(){
+		this.initRoot();
+		this.initFmx();
+		this.initGoogleMapsLoader();
+		this.initHasTouch();
+		this.initMainLoader();
+		this.initWindow();
+	},
+	initGoogleMapsLoader: function(){
+		this.google_maps_loader = {};
+		$.extend(this.google_maps_loader, {
+			callbacks: [],
+			added: false,
+			head: null,
+			loaded: false,
+			init: function(){
+				this.initHead();
+			},
+			initHead: function(){
+				this.head = $('head');
+			},
+			load: function(callback){
+				if(!this.loaded){
+					if(!this.added){
+						this.add();
+					}
+					this.callbacks.push(callback);
+				}
+				else{
+					callback();
+				}
+			},
+			add: function(){
+				var url = '';
+				url += 'http://maps.google.com/maps/api/js?';
+				url += 'sensor=true&';
+				url += 'callback=googleMapsOnLoad&';
+				url += 'libraries=places&';
+				url += 'region=US&';
+				url += 'language=en';
+				var script = $('<script></script>').attr({
+					type: 'text/javascript',
+					src: url
+				});
+				script.appendTo(this.head);
+				this.added = true;
+			},
+			onLoad: function(){
+				this.loaded = true;
+				$.each(this.callbacks, function(key, callback){
+					callback();
+				});
+				this.callbacks = [];
+			}
+		});
+		this.google_maps_loader.init();
+	},
+	initMainLoader: function(){
+		this.main_loader = {};
+		$.extend(this.main_loader, {
+			parent: this,
+			root: null,
+			container: null,
+			init: function(){
+				this.initRoot();
+				this.initContainer();
+				this.initSprite();
+			},
+			initContainer: function(){
+				this.container = $('#main_loader').css('opacity', 0.75);
+			},
+			initSprite: function(){
+				this.root.fmx.sprite({
+					container: this.container.find('#main_loader_sprite'),
+					fps: 12,
+					dimensions: {
+						width: 20,
+						height: 20
+					}
+				});
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			},
+			show: function(){
+				this.container.css('display', 'block');
+			},
+			hide: function(){
+				this.container.css('display', 'none');
+			}
+		});
+		this.main_loader.init();
+	},
+	loading: function(){
+		if(this.loading_count == 0){
+			this.main_loader.show();
+		}
+		++this.loading_count;
+    },
+    loaded: function(){
+		--this.loading_count;
+		if(this.loading_count == 0){
+			this.main_loader.hide();
+		}
+    },
+    error: function(){
+		this.root.fmx.notification({
+			icon_src: 'error',
+			msg: lang.messages.error
+		});
+    },
+	getConfirmationDialog: function(callback){
+		var d = {};
+		$.extend(d, {
+			parent: this,
+			root: null,
+			cancel_btn: null,
+			confirm_btn: null,
+			actions: [],
+			dialog: null,
+			init: function(){
+				this.initRoot();
+				this.initActions();
+				this.initDialog();
+			},
+			initDialog: function(){
+				var dialog_lang = lang.app.confirm_dialog();
+			    var content = $('<div>' + dialog_lang.message + '</div>')
+			    this.dialog = this.root.fmx.dialog({
+			        height: 80,
+			        title: dialog_lang.title,
+			        content: content,
+			        actions: this.actions
+			    });
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			},
+			initActions: function(){
+				this.initConfirmBtn();
+				this.initCancelBtn();
+			},
+			initConfirmBtn: function(){
+			    var _self = this;
+			    this.confirm_btn = this.root.fmx.dialog_action({
+			        name: lang.app.actions.confirm,
+			        containerOnClick: function(e, element, instance){
+			            _self.confirmBtnOnClick(e, element, instance);
+			        }
+			    });
+			    this.actions.push(this.confirm_btn);
+			},
+			confirmBtnOnClick: function(e, element, instance){
+			    callback(this);
+			},
+			initCancelBtn: function(){
+			    var _self = this;
+				this.cancel_btn = this.root.fmx.dialog_action({
+				   name: lang.app.actions.cancel,
+				   cls: 'gray',
+				   containerOnClick: function(e, element, instance){
+				       _self.cancelBtnOnClick(e, element, instance);
+				   }
+				});
+				this.actions.push(this.cancel_btn);
+			},
+			cancelBtnOnClick: function(e, element, instance){
+			    instance.dialog.close();
+			}
+		});
+		d.init();
+		return d;
+	},
+	getTouchOpts: function(){
+		return { has_touch: this.has_touch, _window: this._window };
+	},
+	initWindow: function(){
+		this._window = $(window);
+	},
+	initFmx: function(){
+		this.fmx.root = this;
+	},
+	initHasTouch: function(){
+		this.has_touch = 'ontouchstart' in document.documentElement;
+	},
+	initRoot: function(){
+		this.root = this;
+	},
+	formats: {
+		bool_format: function(val){
+			var formats = config.images.formats;
+	        val = parseInt(val);
+			val = val == 1 ? formats.b_true : formats.b_false;
+			var img = $('<img />', {
+				src: val
+			});
+			img.addClass('fmx_table_image_bool_format');
+	        return img;
+	    },    
+		image: function(src, width, height){
+			var dimensions = {};
+			var base = config.images.base;
+			$.extend(dimensions, {
+				width: width,
+				height: height
+			});
+			var time = (new Date()).getTime();
+			var img = $('<img />', {
+				src: base.replace('%{image}', src) + '?t=' + time
+			}).attr(dimensions).css(dimensions).addClass('fmx_table_image');
+			return img;
+		}
+	},
+	fmx: {
+		root: null,
+		tabs: function(opts){
+			return $.fmx_tabs(
+				$.extend(opts, config.fmx.tabs())
+			);
+		},
+		notification: function(opts){
+			return $.fmx_notification(
+				$.extend(opts, config.fmx.notification(), this.root.getTouchOpts())
+			);
+		},
+		overlay: function(opts){
+			return $.fmx_overlay(
+				$.extend(opts, config.fmx.overlay())
+			);
+		},
+		dialog: function(opts){
+			return $.fmx_dialog(
+				$.extend(opts, config.fmx.dialog())
+			);
+		},
+		dialog_action: function(opts){
+			return $.fmx_dialog_action(
+				$.extend(opts, config.fmx.dialog_action())
+			);
+		},
+		table: function(opts){
+			return $.fmx_table(
+				$.extend(opts, config.fmx.table())
+			);
+		},
+		table_grid: function(opts){
+			return $.fmx_table_grid(
+				$.extend(opts, config.fmx.table_grid())
+			);
+		},
+		table_filter: function(opts){
+			return $.fmx_table_filter(
+				$.extend(opts, config.fmx.table_filter())
+			);
+		},
+		table_action: function(opts){
+			return $.fmx_table_action(
+				$.extend(opts, config.fmx.table_action())
+			);
+		},
+		date_table_filter: function(opts){
+			return $.fmx_date_table_filter(
+				$.extend(opts, config.fmx.date_table_filter())
+			);
+		},
+		form: function(opts){
+			return $.fmx_form(
+				$.extend(opts, config.fmx.form())
+			);
+		},
+		checkbox: function(opts){
+			return $.fmx_checkbox(
+				$.extend(opts, config.fmx.checkbox())
+			);
+		},
+		placeholder: function(opts){
+			return $.fmx_placeholder(
+				$.extend(opts, config.fmx.placeholder())
+			);
+		},
+		login: function(opts){
+			return $.fmx_login(
+				$.extend(opts, config.fmx.login())
+			);
+		},
+		sprite: function(opts){
+			return $.fmx_sprite(
+				$.extend(opts, config.fmx.sprite())
+			);
+		},
+		uploader: function(opts, token, upload_config){ 
+			return $.fmx_uploader(
+				$.extend(opts, config.fmx.uploader(), { token: token }, upload_config)
+			);
+		},
+		fullscreen: function(opts){
+			return $.fmx_fullscreen(
+				$.extend(opts, config.fmx.fullscreen(), this.root.getTouchOpts())
+			);
+		},
+		fixed: function(opts){
+			return $.fmx_fixed(
+				$.extend(opts, config.fmx.fixed(), this.root.getTouchOpts())
+			);
+		},
+		collapse: function(opts){
+			return $.fmx_collapse(
+				$.extend(opts, config.fmx.collapse(), this.root.getTouchOpts())
+			);
+		},
+		view_stack: function(opts){
+			return $.fmx_view_stack(
+				$.extend(opts, config.fmx.view_stack(), this.root.getTouchOpts())
+			);
+		},
+		navigation: function(opts){
+			return $.fmx_navigation(
+				$.extend(opts, config.fmx.navigation())
+			);
+		},
+		date_picker: function(opts){
+			return $.fmx_date_picker(
+				$.extend(opts, config.fmx.date_picker())
+			);
+		},
+		coordinates_selector: function(opts){
+			return $.fmx_coordinates_selector(
+				$.extend(opts, config.fmx.coordinates_selector(), {
+					google_maps_loader: this.root.google_maps_loader
+				})
+			);
+		},
+		multiselect: function(opts){
+			var _self = this;
+			return $.fmx_multiselect(
+				$.extend(opts, config.fmx.multiselect(), {
+					error: function(){
+						_self.root.error();
+					}
+				})
+			);
+		},
+		date_picker: function(opts){
+			return $.fmx_date_picker(
+				$.extend(opts, config.fmx.date_picker())
+			);
+		},
+		csv_uploader: function(opts){
+			return $.fmx_csv_uploader(
+				$.extend(opts, config.fmx.csv_uploader())
+			);
+		}
+	}
+});
+(function(){
+	$(function(){
+		app.init();
+	});
+})(jQuery);
+
+function googleMapsOnLoad(){
+	app.google_maps_loader.onLoad();
+}

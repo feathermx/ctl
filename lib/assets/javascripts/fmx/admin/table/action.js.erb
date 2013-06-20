@@ -1,0 +1,29 @@
+(function(){
+	$.fmx_table_action = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			name: null,
+			callback: function(id, data, instance){},
+			icon_cls: '',
+			init: function(){},
+			getContainer: function(id, data, instance){
+				var _self = this;
+				var container = $('<div class="fmx_table_action"></div>').addClass(this.icon_cls);
+				this.initOverlay(container);
+				container.click(function(e){
+					e.preventDefault();
+					_self.callback(id, data, instance);
+				});
+				return container;
+			},
+			initOverlay: function(container){
+				$.fmx_overlay({
+					trigger: container,
+					msg: this.name
+				});
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

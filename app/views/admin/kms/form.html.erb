@@ -1,0 +1,46 @@
+<% opts = section_form_defaults(@element, @section) %>
+<% form_action_url = { action: :form_action, new_record: opts[:new_record] }.merge(opts[:params]) %>
+<% form_action_url.merge!(id: @element.id) unless @element.new_record?  %>
+<%= javascript_include_tag url_for(form_action_url) %>
+<%= render partial: 'admin/shared/section/header', locals: { opts: opts } %>
+<%= form_for @element, url: url_for(opts[:form_url]), html: { class: 'fmx_form', id: opts[:form_id], method: 'post' } do |f| %>
+	<fieldset>
+		<div class="field">
+			<label><%= t('app.admin.views.kms.fields.name')  %></label>
+			<div class="field_container">
+				<%= f.text_field :name %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.kms.fields.center')  %></label>
+			<div id="kms_coordinates_selector" class="field_container"></div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.kms.fields.captured_at')  %></label>
+			<div class="field_container">
+				<%= hidden_field_tag "admin_km[captured_at]", @element.c_at %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.kms.fields.description')  %></label>
+			<div class="field_container">
+				<%= f.text_area :description %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.kms.fields.comments')  %></label>
+			<div class="field_container">
+				<%= f.text_area :comments %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="form_actions">
+			<%= submit_tag t('app.admin.actions.submit'), class: 'button' %>
+			<div class="clear"></div>
+		</div>
+	</fiedset>
+<% end %>

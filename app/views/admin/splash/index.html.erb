@@ -1,0 +1,45 @@
+<% content_for :head do %>
+<%= render partial: 'admin/shared/plugins/login' %>
+<%= render partial: 'admin/shared/plugins/checkbox' %>
+<%= render partial: 'admin/shared/plugins/placeholder' %>
+<%= stylesheet_link_tag 'admin/views/login' %>
+<%= javascript_include_tag 'admin/views/login' %>
+<% end %>
+<div id="login_container">
+	<div id="login_wrapper">
+		<a id="login_logo" href="<%= url_for action: :index %>">
+			<%= image_tag 'admin/logos/login.png', width: 153, height: 59 %>
+		</a>
+		<div id="login_panel">
+			<h1 id="login_legend"><%= t "app.admin.views.login.legend" %></h1>
+			<%= form_for :user, url: { controller: :splash, action: :login }, html: { id: 'login_form' } do |f|  %>
+				<fieldset>
+					<div class="field">
+						<div class="field_container">
+							<%= image_tag 'admin/icons/login/mail.png', width: 16, height: 16, class: 'field_icon' %>
+							<%= f.text_field :mail, placeholder: t("app.admin.views.login.fields.mail") %>
+							<div class="clear"></div>
+						</div>
+					</div>
+					<div class="field">
+						<div class="field_container">
+							<%= image_tag 'admin/icons/login/password.png', width: 16, height: 16, class: 'field_icon' %>
+							<%= f.password_field :password, placeholder: t("app.admin.views.login.fields.password") %>
+							<div class="clear"></div>
+						</div>
+					</div>
+					<div class="form_actions">
+						<div id="login_form_remember_container">
+							<div id="login_form_remember_checkbox"></div>
+							<p id="login_form_remember_label"><%= t "app.admin.views.login.labels.remember" %></p>
+							<div class="clear"></div>
+						</div>
+						<%= submit_tag 'Login', class: 'button' %>
+						<div class="clear"></div>
+					</div>
+				</fieldset>
+			<% end %>
+		</div>
+		<div id="legal"><%= t "app.admin.legal.copyright" %></div>
+	</div>
+</div>

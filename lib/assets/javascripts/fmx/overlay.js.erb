@@ -1,0 +1,63 @@
+(function(){
+	var nil = $();
+	$.fmx_overlay_positions = {
+		left: 0,
+		right: 1
+	};
+	$.fmx_overlay = function(opts){
+		var _self = {
+			trigger: nil,
+			parent: null,
+			msg: '',
+			trigger_dimensions: null,
+			opacity: 0.8,
+			position: $.fmx_overlay_positions.right,
+			init: function(){
+				this.initTrigger();
+				this.initContainer();
+			},
+			initTrigger: function(){
+				var _self = this;
+				this.trigger.addClass('fmx_overlay_trigger').hover(
+					function(e){
+						_self.triggerOnHoverIn(e, $(this));
+					},
+					function(e){
+						_self.triggerOnHoverOut(e, $(this));
+					}
+				);
+			},
+			triggerOnHoverIn: function(e, element){
+				if(this.trigger_dimensions == null){
+					this.trigger_dimensions = {
+						width: this.trigger.outerWidth(),
+						height: this.trigger.outerHeight()
+					};
+					var position = {};
+					position.top = this.trigger_dimensions.height;
+					if(this.position == $.fmx_overlay_positions.right){
+						position.left = this.trigger_dimensions.width;
+					}
+					else{
+						position.left = this.trigger_dimensions.width * -1;
+					}
+					this.container.css(position);
+				}
+				this.container.stop(true, true).fadeIn(300);
+			},
+			triggerOnHoverOut: function(e, element){
+				this.container.stop(true, true).fadeOut(300);
+			},
+			initContainer: function(){
+				this.container = $('<div class="fmx_overlay_container">' + this.msg + '</div>');
+				this.container.css({
+					opacity: this.opacity
+				});
+				this.container.appendTo(this.trigger);
+			}
+		};
+		$.extend(_self, opts);
+		_self.init();
+		return _self;
+	};
+})(jQuery);

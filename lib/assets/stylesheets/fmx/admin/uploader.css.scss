@@ -1,0 +1,32 @@
+.fmx_uploader_loading_file{
+	.fmx_uploader_file_name{
+	    display: block;
+	}
+	.fmx_uploader_file_preloader{
+	    position: relative;
+	}
+	.fmx_uploader_file_loading_bar{
+	    position: absolute;
+	    left: 0;
+	    top: 0;
+	}
+	.fmx_uploader_file_status{
+	    display: block;
+	}
+	.fmx_uploader_icon{
+		float: left;
+	    display: block;
+	}
+	.fmx_uploader_loading_file{
+		.fmx_uploader_ready_msg{
+			float: left;
+		}
+		.fmx_uploader_remove_icon{
+			display: block;
+			float: right;
+		}
+	} 
+}
+.fmx_uploader_ready_container{
+	display: none;
+}

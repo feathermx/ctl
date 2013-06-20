@@ -1,0 +1,7 @@
+<% content_for :section_actions do %>
+	<%= render partial: 'admin/shared/section/actions/add', locals: { opts: @section.merge(perm: add?) } %>
+	<%= render partial: 'admin/shared/section/actions/edit', locals: { opts: @section.merge(perm: edit?) } %>
+	<%= render partial: 'admin/shared/section/actions/show', locals: { opts: @section.merge(show_icon: 'cities', lang_key: 'app.admin.views.countries.actions.cities', show_action: { controller: :cities, action: :index }) } %>
+	<%= render partial: 'admin/shared/section/actions/delete', locals: { opts: @section.merge(perm: delete?) } %>
+<% end %>
+<%= render partial: 'admin/shared/section/action', locals: { opts: @section } %>

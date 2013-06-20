@@ -1,0 +1,470 @@
+(function(){
+	var nil = $();
+	$.fmx_table_grid = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			container: nil,
+			namespace: null,
+			labels: {
+			    not_found: 'No records found',
+			    filters: 'Filter by',
+				sort: 'Order by',
+				field_select: 'Select',
+				asc: 'Ascending',
+				desc: 'Descending'
+			},
+			not_found_container: null,
+			pager: null,
+			pager_opts: {},
+			fields: null,
+			formats: {},
+			ajax_request: null,
+			actions_container: null,
+			aborted: false,
+			url: '',
+			type: 'post',
+			params: {},
+			actions: [],
+			page: 0,
+			filters: [],
+			filters_container: null,
+			sort_container: null,
+			num_sortable: 0,
+			wrapper: null,
+			top_container: null,
+			init: function(){
+				this.initTopContainer();
+				this.initFilters();
+				this.initSortContainer();
+				this.initFields();
+				this.initWrapper();
+				this.initNotFoundContainer();
+				this.initFormats();
+				this.initPager();
+				this.doRequest();
+			},
+			initTopContainer: function(){
+				this.top_container = $('<div class="fmx_table_grid_top_container"></div>');
+				this.top_container.insertBefore(this.container);
+			},
+			initFilters: function(){
+				if(this.filters.length > 0){
+					this.filters_container = $('<div class="fmx_table_filters_container"></div>');
+					this.filters_container.appendTo(this.top_container);
+					this.initFiltersLabel();
+					var _self = this;
+					for(var i=0; i<this.filters.length; ++i){
+						_self.addFilter(this.filters[i]);
+					}
+					this.filters_container.append('<div class="clear"></div>');
+				}
+			},
+			initSortContainer: function(){
+				this.sort_container = {};
+				$.extend(this.sort_container, {
+					parent: this,
+					container: null,
+					field_select: null,
+					by_select: null,
+					selected: null,
+					by: null,
+					init: function(){
+						this.initContainer();
+					},
+					initLabel: function(){
+						var label = $('<div class="fmx_table_sort_label"></div>');
+						label.html(this.parent.labels.sort);
+						label.appendTo(this.container);
+					},
+					initContainer: function(){
+						this.container = $('<div class="fmx_table_sort_container"></div>');
+						this.container.appendTo(this.parent.top_container);
+						this.initLabel();
+						this.initFieldSelect();
+						this.initBySelect();
+						this.container.append('<div class="clear"></div>');
+						this.parent.top_container.append('<div class="clear"></div>');
+					},
+					initFieldSelect: function(){
+						var _self = this;
+						this.field_select = this.getSelect();
+						this.field_select.change(function(){
+							_self.fieldSelectOnChange();
+						});
+						this.addOption(this.field_select, this.parent.labels.field_select, '');
+						this.field_select.appendTo(this.container);
+					},
+					addField: function(field){
+						++this.parent.num_sortable;
+						this.addOption(this.field_select, field.label, field.name);
+					},
+					fieldSelectOnChange: function(){
+						var key = this.field_select.val();
+						if(key){
+							var field = this.parent.fields[key];
+							if(field != null){
+								this.selected = field;
+							}
+						}
+						else{
+							this.selected = null;
+						}
+						this.parent.doRequest();
+					},
+					initBySelect: function(){
+						var _self = this;
+						this.by_select = this.getSelect();
+						this.by_select.change(function(){
+							_self.bySelectOnChange();
+						});
+						this.addOption(this.by_select, this.parent.labels.asc, $.fmx_table_sort_status.asc);
+						this.addOption(this.by_select, this.parent.labels.desc, $.fmx_table_sort_status.desc);
+						this.by_select.appendTo(this.container);
+						this.setByValue();
+					},
+					bySelectOnChange: function(){
+						this.setByValue();
+						this.parent.doRequest();
+					},
+					setByValue: function(){
+						var val = parseInt(this.by_select.val());
+						this.by = val;
+					},
+					getSelect: function(){
+						var select = $('<select></select>').addClass('fmx_table_sort_select');
+						return select;
+					},
+					addOption: function(select, name, value){
+						var option = $('<option value="' + value + '">' + name + '</option>');
+						option.appendTo(select);
+					},
+					show: function(){
+						this.container.css('display', 'block');
+					},
+					hide: function(){
+						this.container.css('display', 'none')
+					},
+					serialize: function(){
+					    var field = this.selected.sort == null ? this.selected.name : this.selected.sort;
+						return { field: field, by: this.by };
+					}
+				});
+				this.sort_container.init();
+			},
+			initFiltersLabel: function(){
+				var filters_label = $('<div class="fmx_table_filters_label">' + this.labels.filters + ':</div>');
+				filters_label.appendTo(this.filters_container);
+			},
+			addFilter: function(filter){
+				var _self = this;
+				filter.setParent({
+					parent_container: this.filters_container,
+					onChange: function(which){
+						_self.filterOnChange(which);
+					}
+				});
+			},
+			filterOnChange: function(which){
+				this.doRequest();
+			},
+			initPager: function(){
+				var _self = this;
+				this.pager = $.fmx_table_pager($.extend({
+					onChange: function(page){
+						_self.pagerOnChange(page);
+					}
+				}, this.pager_opts));
+				this.pager.container.insertAfter(this.container);
+			},
+			pagerOnChange: function(page){
+				this.page = page;
+				this.doRequest();
+			},
+			initFormats: function(){
+				var _self = this;
+				$.each(this.formats, function(key, format){
+					_self.setFormat(key, format);
+				});
+			},
+			setFormat: function(key, format){
+				if(!$.isFunction(format)){
+					this.formats[key] = $.fmx_table_formats[format];
+				}
+			},
+			initNotFoundContainer: function(){
+				this.not_found_container = $('<div class="fmx_table_not_found_container">' + this.labels.not_found + '</div>');
+				this.not_found_container.insertBefore(this.container);
+			},
+			initWrapper: function(){
+				this.wrapper = $('<div class="fmx_table_grid_wrapper"></div>');
+				this.wrapper.appendTo(this.container);
+			},
+			abort: function(){
+				if(this.ajax_request != null){
+					this.aborted = true;
+					this.ajax_request.abort();
+					this.ajax_request = null;
+				}
+			},
+			doRequest: function(){
+				var params = this.getParams();
+				this._loading();
+				this.ajax_request = $.ajax({
+					type: this.type,
+					url: this.url,
+					data: $.extend(params, this.params),
+					success: function(data){
+						_self._success(data);
+					},
+					error: function(){
+						_self._error();
+					}
+				});
+			},
+			_success: function(data){
+				var _self = this;
+				this.wrapper.empty();
+				this._loaded();
+				this.pager.update(this.page, data.total, data.show);
+				data.total = parseInt(data.total);
+				if(data.contents == null || data.contents.length == 0){
+					this.container.css('display', 'none');
+					this.not_found_container.css('display', 'block');
+				}
+				else{
+					this.container.css('display', 'table');
+					$.each(data.contents, function(key, value){
+						_self.addElement(key, value);
+					});
+					this.wrapper.append('<div class="clear"></div>');
+				}
+				this.success(data);
+			},
+			addElement: function(key, data){
+				data = this.getData(data);
+				var element = {};
+				$.extend(element, {
+					parent: this,
+					key: key,
+					data: data,
+					container: null,
+					root: this,
+					init: function(){
+						this.initContainer();
+						this.initFields();
+					},
+					initContainer: function(){
+						this.container = $('<div class="fmx_table_grid_element"></div>');
+						if(this.key % 2 == 0){
+							this.container.addClass('even');
+						}
+						this.container.appendTo(this.parent.wrapper);
+					},
+					initFields: function(){
+						var _self = this;
+						$.each(this.parent.fields, function(key, field){
+							var field_name = field.name;
+							_self.addField(field_name, _self.data[field_name]);
+						});
+						if(this.parent.actions.length > 0){
+							this.renderActions();
+						}
+					},
+					addField: function(key, val){
+						var field = {};
+						$.extend(field, {
+							key: key,
+							val: val,
+							parent: this,
+							root: null,
+							container: null,
+							init: function(){
+								this.root = this.parent.root;
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container = $('<div class="fmx_table_grid_field"></div>');
+								var field = this.root.fields[this.key];
+								if(field.has_label){
+									this.initLabel();
+									this.initValue();
+									this.container.append('<div class="clear"></div>');
+								}
+								else{
+									this.container.html(this.getValue());
+								}
+								this.container.appendTo(this.parent.container);
+							},
+							initLabel: function(){
+								var label = $('<div class="fmx_table_grid_field_label"></div>');
+								var field = this.root.fields[this.key];
+								label.html(field.label + ":");
+								label.appendTo(this.container);
+							},
+							initValue: function(){
+								var value = $('<div class="fmx_table_grid_field_value"></div>');
+								value.html(this.getValue());
+								value.appendTo(this.container);
+							},
+							getValue: function(){
+								var val = null;
+								var format = this.root.formats[key];
+								if(format){
+									val = format(this.val, this.parent.data, this.parent);
+								}
+								else{
+									val = this.val;
+								}
+								return val;
+							}
+						});
+						field.init();
+					},
+					renderActions: function(){
+						var _self = this;
+						var actions_container = $('<div class="fmx_table_actions"></div>');
+						var actions_wrapper = $('<div class="fmx_table_actions_wrapper"></div>');
+						actions_wrapper.appendTo(actions_container);
+						$.each(this.parent.actions, function(key, action){
+							_self.addAction(action, actions_wrapper);
+						});
+						actions_wrapper.append('<div class="clear"></div>');
+						actions_container.appendTo(this.container);
+					},
+					addAction: function(action, container){
+						container.append(action.getContainer(this.data.id, this.data, this));
+					}
+				});
+				element.init();
+			},
+			getData: function(data){
+				if(this.namespace != null){
+					data = data[this.namespace];
+				}
+				return data;
+			},
+			success: function(data){},
+			_error: function(){
+				this._loaded();
+				if(this.aborted){
+					this.aborted = false;
+				}
+				else{
+					this.error();
+				}
+			},
+			error: function(){},
+			_loading: function(){
+				this.not_found_container.css('display', 'none');
+				this.abort();
+				this.loading();
+			},
+			loading: function(){},
+			_loaded: function(){
+				this.ajax_request = null;
+				this.loaded();
+			},
+			loaded: function(){},
+			getParams: function(){
+				var params = {};
+				params.page = this.page;
+				if(this.sort_container.selected != null){
+					params.order = this.sort_container.serialize();
+				}
+				$.each(this.filters, function(key, filter){
+					var value = filter.getValue();
+					if(value != null){
+						params[filter.field] = value;
+					}
+				});
+				return params;
+			},
+			initFields: function(){
+				var _self = this;
+				this.fields = {};
+				var i = 0;
+				var fields_container = this.container.find('.fmx_table_grid_fields_container');
+				var fields = fields_container.find('.fmx_table_grid_field');
+				fields.each(function(){
+					_self.addField($(this), i);
+					++i;
+				});
+				fields_container.remove();
+				if(this.num_sortable == 0){
+					this.sort_container.hide();
+				}
+			},
+			addField: function(container, index){
+				var field = {};
+				$.extend(field, {
+					parent: this,
+					container: container,
+					label: null,
+					name: null,
+					sort: null,
+					has_label: false,
+					init: function(){
+						this.initName();
+						this.initHasLabel();
+						if(!this.container.is('.no_sort')){
+							this.initLabel();
+							this.initSort();
+							this.parent.sort_container.addField(this);
+						}
+					},
+					initHasLabel: function(){
+						var label = this.container.attr('data-label');
+						if(label){
+							label = parseInt(label);
+							this.has_label = label == 1;
+						}
+					},
+					initLabel: function(){
+						this.label = this.container.html();
+					},
+					initSort: function(){
+					    this.sort = this.container.attr('data-sort');
+					},
+					initName: function(){
+						this.name = this.container.attr('data-name');
+					},
+					toggle: function(){
+						this.container.removeClass('asc').removeClass('desc');
+						switch(this.status){
+							case $.fmx_table_sort_status.desc:
+							case $.fmx_table_sort_status.none:
+								this.status = $.fmx_table_sort_status.asc;
+								this.container.addClass('asc');
+							break;
+							case $.fmx_table_sort_status.asc:
+								this.status = $.fmx_table_sort_status.desc;
+								this.container.addClass('desc');
+							break;
+						}
+					},
+					reset: function(){
+						this.status = $.fmx_table_sort_status.none;
+						this.container.removeClass('asc').removeClass('desc');
+					}
+				});
+				field.init();
+				this.fields[field.name] = field;
+			},
+			setTh: function(which){
+				if(which == this.active){
+					this.active.toggle();
+				}
+				else{
+					if(this.active != null){
+						this.active.reset();
+					}
+					this.active = which;
+					this.active.toggle();
+				}
+				this.doRequest();
+			}
+		}, opts)
+		_self.init();
+		return _self;
+	};
+})(jQuery);

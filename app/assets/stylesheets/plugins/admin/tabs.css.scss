@@ -1,0 +1,114 @@
+@import 'fmx/mixins.css.scss';
+.backend_tabs_container{
+	.backend_tabs_triggers{
+		float: left;
+		width: 230px;
+		@include link('a.backend_tabs_trigger') {
+			display: block;
+			background: none repeat scroll 0 0 #F0F6FA;
+			text-decoration: none;
+			font-size: 13px;
+			color: #557386;
+			border-left: 2px solid #C5D5E0;
+			border-bottom: 1px solid #FFFFFF;
+			height: 40px;
+		}
+		a.backend_tabs_trigger{
+			position: relative;
+			img.backend_tabs_trigger_hover_icon{
+				border: 0 none;
+				outline: none;
+				position: absolute;
+				width: 5px;
+				height: 9px;
+				top: 50%;
+				left: 228px;
+				margin-top: -4px;
+				display: none;
+			}
+			.backend_tabs_trigger_icon_container{
+				width: 40px;
+				height: 40px;
+				background: none repeat scroll 0 0 #E0EAF1;
+				position: relative;
+				display: block;
+				float: left;
+				.backend_tabs_trigger_icon_wrapper{
+					width: 16px;
+					height: 16px;
+					position: absolute;
+					left: 50%;
+					top: 50%;
+					margin-left: -8px;
+					margin-top: -8px;
+					overflow: hidden;
+					img.backend_tabs_trigger_icon{
+						width: 16px;
+						height: 32px;
+						border: 0 none;
+						outline: none;
+						position: absolute;
+						left: 0px;
+						top: 0px;
+					}
+				}
+			}
+			.backend_tabs_trigger_label_container{
+				float: left;
+				position: relative;
+				display: block;
+				width: 186px;
+				.backend_tabs_trigger_label{
+					display: block;
+					margin: 12px 0 0 10px;
+					width: 170px;
+				}
+			}
+		}
+		a.backend_tabs_trigger:hover{
+			background: none repeat scroll 0 0 #E0EAF1;
+			border-left: 2px solid #C5D5E0;
+			.backend_tabs_trigger_icon_container{
+				background: none repeat scroll 0 0 #C5D5E0;
+				.backend_tabs_trigger_icon_wrapper{
+					img.backend_tabs_trigger_icon{
+						top: -16px;
+					}
+				}
+			}
+		}
+		@include link('a.backend_tabs_trigger.active') { 
+			cursor: auto;
+			background: none repeat scroll 0 0 #249CFB;
+			border-left: 2px solid #1C8FEB;
+			color: #FFFFFF;
+			.backend_tabs_trigger_icon_container{
+				background: none repeat scroll 0 0 #1C8FEB;
+			}
+		}
+		a.backend_tabs_trigger.active{
+			img.backend_tabs_trigger_hover_icon{
+				display: block;
+			}
+			.backend_tabs_trigger_icon_container{
+				.backend_tabs_trigger_icon_wrapper{
+					img.backend_tabs_trigger_icon{
+						top: -16px;
+					}
+				}
+			}
+		}
+	}
+	#backend_tabs_wrapper{
+		.fmx_form{
+			label{
+				width: 80px;
+			}
+			.field{
+				.field_container{
+					width: 260px;
+				}
+			}
+		}
+	}
+}

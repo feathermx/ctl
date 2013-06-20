@@ -1,0 +1,89 @@
+<% opts = section_form_actions_defaults(opts, params) %>
+(function(){
+	$(function(){
+		<%= opts[:js_parent_obj_form] %> = {};
+		$.extend(<%= opts[:js_parent_obj_form] %>, {
+			parent: <%= opts[:js_parent_obj] %>,
+			root: null,
+			form: null,
+			cancel_btn: null,
+			view: null,
+			init: function(){
+				this.initRoot();
+				this.initCancelBtn();
+				this.initForm();
+				this.initView();
+			},
+			initView: function(){
+				<%= yield :form_view %>
+			},
+			initCancelBtn: function(){
+				var _self = this;
+				this.cancel_btn = $('#<%= opts[:cancel_btn_id] %>').click(function(e){
+					e.preventDefault();
+					_self.cancelBtnOnClick(e, $(this));
+				});
+				var overlay_msg = this.cancel_btn.attr('data-overlay');
+				if(overlay_msg){
+					this.root.fmx.overlay({
+						trigger: this.cancel_btn,
+						msg: overlay_msg,
+						position: $.fmx_overlay_positions.left
+					});
+				}
+			},
+			cancelBtnOnClick: function(e, element){
+				if(!element.is('.disabled')){
+					this.root.view_stack.popView();
+				}
+			},
+			initForm: function(){
+				var _self = this;
+				this.form = this.root.fmx.form({
+					container: $('#<%= opts[:form_id] %>'),
+					loading: function(){
+						_self.formLoading();
+					},
+					loaded: function(){
+						_self.formLoaded();
+					},
+					error: function(){
+						_self.error();
+					},
+					success: function(data){
+						_self.formOnSuccess(data);
+					}
+				});
+			},
+			formOnSuccess: function(data){
+				this.parent.table.doRequest();
+				this.root.view_stack.popView();
+				<%= yield :form_success %>
+				this.root.fmx.notification({
+					msg: '<%= t opts[:success_lang_key] %>'
+				});
+			},
+			formLoading: function(){
+				this.cancel_btn.addClass('disabled');
+				this.loading();
+			},
+			formLoaded: function(){
+				this.cancel_btn.removeClass('disabled');
+				this.loaded();
+			},
+			loading: function(){
+				this.root.loading();
+			},
+			loaded: function(){
+				this.root.loaded();
+			},
+			error: function(){
+				this.root.error();
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			}
+		});
+		<%= opts[:js_parent_obj_form] %>.init();
+	});
+})(jQuery);

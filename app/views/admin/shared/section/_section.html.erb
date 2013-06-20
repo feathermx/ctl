@@ -1,0 +1,29 @@
+<% opts = section_defaults(opts) %>
+<div id="<%= opts[:section_wrapper_id] %>" class="backend_section_wrapper">
+	<%= render partial: 'admin/shared/section/header', locals: { opts: opts } %>
+	<div class="table_container">
+		<%= yield :before_table_content %>
+		<div class="table_wrapper <%= opts[:table_wrapper_cls] %>">
+			<div class="table_wrapper_content">
+				<% case opts[:display] %>
+				<% when :table %>
+				<table id="<%= opts[:table_id] %>" class="fmx_table">
+					<thead>
+						<tr>
+							<%= yield :table_fields %>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+				<% when :grid %>
+				<div id="<%= opts[:table_id] %>">
+					<div class="fmx_table_grid_fields_container">
+						<%= yield :table_fields %>
+					</div>
+				</div>
+				<% end %>
+			</div>
+		</div>
+		<%= yield :after_table_content %>
+	</div>
+</div>

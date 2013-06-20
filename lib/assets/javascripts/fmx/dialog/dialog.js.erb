@@ -1,0 +1,269 @@
+(function(){
+	var nil = $();
+	$.fmx_dialog_globals = {
+		id: 0,
+		z_index: 5000,
+		body: null,
+		_window: null,
+		initialized: false,
+		num_instances: 0,
+		instances: {},
+		has_touch: false,
+		overlay_opacity: 0.5,
+		init: function(opts){
+			$.extend(this, opts);
+			this.initialized = true;
+			this.initBody();
+			this.initWindow();
+			this.initOverlay();
+			this.windowOnResize();
+		},
+		initWindow: function(){
+			var _self = this;
+			this._window = $(window)
+			if(this.has_touch){
+				window.addEventListener('orientationchange', function(e){
+					_self.windowOnResize();
+				}, false);
+			}
+			else{
+				this._window.resize(function(){
+					_self.windowOnResize();
+				});
+			}
+		},
+		windowOnResize: function(){
+			this.overlay.css({
+				width: this._window.width(),
+				height: this._window.height()
+			});
+		},
+		initBody: function(){
+			this.body = $('body');
+		},
+		initOverlay: function(){
+			this.overlay = $('<div class="fmx_dialog_overlay"></div>');
+			this.overlay.css({
+				'z-index': this.z_index,
+				opacity: this.overlay_opacity
+			});
+		},
+		addInstance: function(instance){
+			++this.num_instances;
+			var id = ++this.id;
+			instance.id = id;
+			this.instances[id] = instance;
+			if(this.num_instances == 1){
+				this.overlay.appendTo(this.body);
+			}
+		},
+		removeInstance: function(instance){
+			--this.num_instances;
+			var id = instance.id;
+			delete this.instances[id];
+			if(this.num_instances == 0){
+				this.overlay.remove();
+			}
+		}
+	};
+	$.fmx_dialog = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			labels: {
+				close: 'Close'
+			},
+			title: null,
+			has_touch: false,
+			id: null,
+			url: null,
+			type: 'post',
+			params: {},
+			content: nil,
+			actions: [],
+			width: 500,
+			height: 400,
+			globals: $.fmx_dialog_globals,
+			container: null,
+			header: null,
+			close_btn: null,
+			closable: true,
+			content_container: null,
+			actions: [],
+			actions_container: null,
+			error_container: null,
+			loading_container: null,
+			init: function(){
+				this.initGlobals();
+				this.initContainer();
+			},
+			initHeader: function(){
+				this.header = $('<div class="fmx_dialog_header"></div>');
+				this.initTitle();
+				this.initCloseBtn();
+				this.header.append('<div class="clear"></div>');
+				this.header.appendTo(this.container);
+			},
+			initCloseBtn: function(){
+				if(this.closable){
+					var _self = this;
+					this.close_btn = $('<div class="fmx_dialog_close_btn"></div>').click(function(e){
+						e.preventDefault();
+						_self.closeBtnOnClick(e, $(this));
+					});
+					this.close_btn.appendTo(this.header);
+					this.initCloseOverlay();
+				}
+			},
+			initCloseOverlay: function(){
+				$.fmx_overlay({
+					trigger: this.close_btn,
+					msg: this.labels.close
+				});
+			},
+			closeBtnOnClick: function(e, element){
+				this.close();
+			},
+			initTitle: function(){
+				if(this.title){
+					var title = $('<div class="fmx_dialog_title">' + this.title + '</div>');
+					title.appendTo(this.header);
+				}
+			},
+			initContentContainer: function(){
+				this.content_container = $('<div class="fmx_dialog_content"></div>');
+				this.content_container.css({
+					height: this.height
+				});
+				if(this.url == null){
+					this.setImages();
+					this.content.appendTo(this.content_container);
+				}
+				else{
+					this.doRequest();
+				}
+				this.content_container.appendTo(this.container);
+			},
+			setImages: function(){
+				var _self = this;
+				var images = this.content.find('img');
+				images.each(function(){
+					$(this).load(function(){
+						_self.imageOnLoad();
+					});
+				});
+			},
+			doRequest: function(){
+				var _self = this;
+				this._loading();
+				$.ajax({
+					type: this.type,
+					url: this.url,
+					data: this.params,
+					success: function(data){
+						_self.success(data);
+					},
+					error: function(){
+						_self._error();
+					}
+				});
+			},
+			success: function(data){
+				this._loaded();
+				this.content = $('<div class="fmx_dialog_response_wrapper">' + data + '</div>');
+				this.content.appendTo(this.content_container);
+				this.setHeight();
+				this.setImages();
+				this.onLoad();
+			},
+			_error: function(){
+				this._loaded();
+				this.error();
+			},
+			error: function(){},
+			onLoad: function() {},
+			imageOnLoad: function(){
+				this.setHeight();
+			},
+			initContainer: function(){
+				this.container = $('<div class="fmx_dialog_container"></div>');
+				this.container.css({
+					'z-index': ++this.globals.z_index,
+					width: this.width
+				});
+				this.initHeader();
+				this.initContentContainer();
+				this.initActions();
+				this.container.appendTo(this.globals.body);
+				this.setHeight();
+			},
+			initActions: function(){
+				if(this.actions.length > 0){
+					var _self = this;
+					this.initActionsContainer();
+					$.each(this.actions, function(key, action){
+						_self.addAction(action);
+					});
+					this.actions_container.append('<div class="clear"></div>');
+				}
+			},
+			_loading: function(){
+				$.each(this.actions, function(key, action){
+					action.loading();
+				});
+				this.loading();
+			},
+			loading: function(){},
+			_loaded: function(){
+				$.each(this.actions, function(key, action){
+					action.loaded();
+				});
+				this.loaded();
+			},
+			loaded: function(){},
+			addAction: function(action){
+				action.setOpts({
+					dialog: this
+				});
+				action.container.appendTo(this.actions_container);
+			},
+			close: function(){
+				this.container.remove();
+				this.globals.removeInstance(this);
+			},
+			initActionsContainer: function(){
+				this.actions_container = $('<div class="fmx_dialog_actions_container"></div>');
+				this.actions_container.appendTo(this.container);
+			},
+			setHeight: function(){
+				var content_height = this.content.height();
+				var content_width = this.content.width();
+				this.content_container.css({
+					'overflow-y': 'auto',
+					'overflow-x': 'auto'
+				});
+				if(content_height > this.height){
+					this.content_container.css('overflow-y', 'scroll');
+				}
+				if(content_width > this.width){
+					this.content_container.css('overflow-x', 'scroll');
+				}
+				var width = this.container.width();
+				var height = this.container.height();
+				this.container.css({
+					'margin-left': width / -2,
+					'margin-top': height / -2
+				});	
+			},
+			initGlobals: function(){
+				if(!this.globals.initialized){
+					this.globals.init({
+						has_touch: this.has_touch
+					});
+				}
+				this.globals.addInstance(this);
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

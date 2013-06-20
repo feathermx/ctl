@@ -1,0 +1,63 @@
+@import 'admin/shared.css.scss';
+$field-width: 465px;
+.fmx_form .field_container.fmx_coordinates_selector_container{
+	width: $field-width;
+}
+.fmx_coordinates_selector_container{
+	.fmx_coordinates_selector_top_bar{
+		background: none repeat scroll 0 0 $base;
+		border: 1px solid $base;
+	    height: 40px;
+	}
+	.fmx_coordinates_selector_search_container{
+		margin: 8px 8px 0 0;
+	}
+	.fmx_coordinates_selector_search_label{
+		color: #FFFFFF;
+	    font-size: 11px;
+	    font-weight: bold;
+	    margin: 7px 7px 0 0;
+	    text-align: right;
+	    width: 50px;
+	}
+	.fmx_coordinates_selector_top_bar input[type="text"].fmx_coordinates_selector_search_field{
+		width: 190px;
+		padding: 1px 3px;
+		font-size: 11px;
+	}
+	.fmx_coordinates_selector_map_container{
+		width: $field-width - 2;
+		height: 300px;
+		border-left: 1px solid $base;
+		border-right: 1px solid $base;
+		border-bottom: 1px solid $base;
+	}
+	.fmx_coordinates_selector_coordinates_container{
+		margin: 8px 0 0 8px;
+	}
+	.fmx_coordinates_selector_cooordinate_wrapper{
+		background: none repeat scroll 0 0 #F5F5F5;
+	    border: 1px solid #E7E7E7;
+		@include border-radius(2px, 2px, 2px, 2px);
+		@include box-shadow(0, 1px, 0, #FFFFFF, 0 1px 3px rgba(0, 0, 0, 0.1));
+	    padding: 5px 6px;
+	}
+	.fmx_coordinates_selector_cooordinate_label{
+		color: #3C5868;
+	    font-size: 11px;
+	    margin: 1px 5px 0 0;
+	}
+	.fmx_coordinates_selector_coordinate_value{
+		color: #3C5868;
+	    font-size: 11px;
+	    font-weight: bold;
+	    margin: 1px 0 0;
+	}
+	.fmx_coordinates_selector_coordinates_delete_btn{
+		margin: 5px 0 0 6px;
+		width: 16px;
+		height: 15px;
+		$url: asset-path('fmx/icons/delete_white.png');
+		background: url('#{$url}') no-repeat scroll 0 0 transparent;
+	}
+}

@@ -1,0 +1,201 @@
+// Dear Firefox - screw you. Window resize not triggering rendering new view
+(function(){
+	var nil = $();
+	$.fmx_view_stack = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			_window: null,
+			has_touch: false,
+			container: nil,
+			views: [],
+			callbacks: [],
+			views_container: null,
+			views_wrapper: null,
+			widths: {},
+			clear_div: null,
+			new_view: false,
+			timeouts: {
+				slide: 500
+			},
+			type: 'post',
+			init: function(){
+				this.initWindow();
+				this.initViewsContainer();
+				this.initViewsWrapper();
+				this.windowOnResize();
+			},
+			initViewsContainer: function(){
+				this.views_container = $('<div class="fmx_view_stack_views_container"></div>');
+				this.views_container.appendTo(this.container);
+			},
+			initViewsWrapper: function(){
+				this.views_wrapper = $('<div class="fmx_view_stack_views_wrapper"></div>');
+				this.views_wrapper.appendTo(this.views_container);
+			},
+			empty: function(){
+				this.views = [];
+				this.views_wrapper.empty();
+				this.views_wrapper.css('margin-left', 0);
+				this.initClearDiv();
+			},
+			initClearDiv: function(){
+				this.clear_div = $('<div class="clear"></div>');
+				this.clear_div.appendTo(this.views_wrapper);
+			},
+			popView: function(){
+				if(this.views.length > 1){
+					var _self = this;
+					var index = this.views.length - 2;
+					this.views_wrapper.stop(true, false).animate({
+						'margin-left': (index * this.widths.container) * -1
+					}, this.timeouts.slide, 'linear', function(){
+						_self.popViewCallback();
+					});
+				}
+			},
+			popViewCallback: function(){
+				var view = this.views.pop();
+				view.remove();
+				this.windowOnResize();
+			},
+			initWindow: function(){
+				var _self = this;
+				if(this.has_touch){
+					window.addEventListener('orientationchange', function(){
+						_self.windowOnResize();
+					});
+				}
+				else{
+					this._window.resize(function(){
+						_self.windowOnResize();
+					});
+				}
+			},
+			windowOnResize: function(){
+				this.widths.container = this.container.width();
+				var left = 0;
+				if(this.views.length > 1){
+					var last = this.views.length - 1;
+					left = ((last * this.widths.container) * -1);
+				}
+				this.views_container.css({
+					width: this.widths.container
+				});
+				var wrapper_css = {};
+				wrapper_css.width = this.widths.container * this.views.length;
+				if(this.new_view){
+					this.new_view = false;
+				}
+				else{
+					wrapper_css['margin-left'] = left;
+				}
+				$.each(this.views, function(key, view){
+					view.setWidth();
+				});
+				this.views_wrapper.css(wrapper_css);
+			},
+			loadView: function(url, params){
+				params = params == null ? {} : params;
+				var _self = this;
+				this._loading();
+				$.ajax({
+					type: this.type,
+					url: url,
+					data: params,
+					success: function(data){
+						_self.success(data);
+					},
+					error: function(){
+						_self._error();
+					}
+				});
+			},
+			_loading: function(){
+				this.loading();
+			},
+			loading: function(){},
+			_loaded: function(){
+				this.loaded();
+			},
+			loaded: function(){},
+			_error: function(){
+				this._loaded();
+				this.error();
+			},
+			error: function(){},
+			success: function(data){
+				this._loaded();
+				this.pushView(data);
+			},
+			pushView: function(data){
+				var view = {};
+				$.extend(view, {
+					parent: this,
+					container: $(data),
+					view_container: null,
+					view_wrapper: null,
+					init: function(){
+						this.initViewContainer();
+						this.initViewWrapper();
+						this.initContainer();
+						this.setWidth();
+					},
+					initViewContainer: function(){
+						this.view_container = $('<div class="view"></div>');
+						this.view_container.insertBefore(this.parent.clear_div);
+					},
+					initViewWrapper: function(){
+						this.view_wrapper = $('<div class="view_wrapper"></div>');
+						this.view_wrapper.appendTo(this.view_container);
+					},
+					initContainer: function(){
+						this.container.appendTo(this.view_wrapper);
+					},
+					setWidth: function(){
+						this.view_container.css({
+							width: this.parent.widths.container
+						});
+					},
+					remove: function(){
+						this.view_container.remove();
+					}
+				});
+				this.new_view = true;
+				this.views.push(view);
+				view.init();
+				if(this.has_touch){
+					this.windowOnResize();
+				}
+				else{
+					this._window.resize();
+				}
+				this.navigate();
+			},
+			navigate: function(){
+				if(this.views.length > 1){
+					var _self = this;
+					var last = this.views.length - 1;
+					this.views_wrapper.stop(true, false).animate({
+						'margin-left': (last * this.widths.container) * -1
+					}, this.timeouts.slide, 'linear', function(){
+						_self.navigationCallback();
+					});
+				}
+				else{
+					this.navigationCallback();
+				}
+			},
+			addCallback: function(callback){
+				this.callbacks.push(callback);
+			},
+			navigationCallback: function(){
+				while(this.callbacks.length > 0){
+					var callback = this.callbacks.pop();
+					callback();
+				}
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

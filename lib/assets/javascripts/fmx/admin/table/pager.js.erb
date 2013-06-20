@@ -1,0 +1,192 @@
+(function(){
+	$.fmx_table_pager = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			page: 0,
+			total: 0,
+			show: 10,
+			offset: 5,
+			table: null,
+			container: null,
+			status_container: null,
+			status_wrapper: null,
+			pages_container: null,
+			pages_wrapper: null,
+			labels: {
+				next: 'Next',
+				prev: 'Prev',
+				showing: 'Showing page',
+				of: 'of'
+			},
+			page_container: null,
+			total_container: null,
+			nav_btns: $(),
+			next_btn: null,
+			prev_btn: null,
+			init: function(){
+				this.initContainer();
+				this.initPagesContainer();
+				this.initNavBtns();
+				this.initStatusContainer();
+			},
+			initStatusContainer: function(){
+				this.status_container = $('<div class="fmx_table_pager_status_container"></div>');
+				this.initStatusWrapper();
+				this.status_container.append('<div class="clear"></div>');
+				this.status_container.appendTo(this.container);
+			},
+			initStatusWrapper: function(){
+				this.status_wrapper = $('<div class="fmx_table_pager_status_wrapper"></div>');
+				this.initShowingLabel();
+				this.initPageContainer();
+				this.initOfLabel();
+				this.initTotalContainer();
+				this.status_wrapper.append('<div class="clear"></div>');
+				this.status_wrapper.appendTo(this.status_container);
+			},
+			initTotalContainer: function(){
+				this.total_container = $('<div class="fmx_table_pager_total_container"></div>');
+				this.total_container.appendTo(this.status_wrapper);
+			},
+			initOfLabel: function(){
+				var of_label = $('<div class="fmx_table_pager_of_label">' + this.labels.of + '</div>');
+				of_label.appendTo(this.status_wrapper);
+			},
+			initPageContainer: function(){
+				this.page_container = $('<div class="fmx_table_pager_page_container"></div>');
+				this.page_container.appendTo(this.status_wrapper);
+			},
+			initShowingLabel: function(){
+				var showing_label = $('<div class="fmx_table_pager_showing_label">' + this.labels.showing + '</div>');
+				showing_label.appendTo(this.status_wrapper);
+			},
+			initNavBtns: function(){
+				this.initNextBtn();
+				this.initPrevBtn();
+			},
+			initNextBtn: function(){
+				var _self = this;
+				this.next_btn = $('<div class="fmx_table_pager_page button fmx_table_pager_nav_btn"></div>');
+				this.next_btn.html(this.labels.next);
+				this.nav_btns = this.nav_btns.add(this.next_btn);
+			},
+			initPrevBtn: function(){
+				this.prev_btn = $('<div class="fmx_table_pager_page button fmx_table_pager_nav_btn"></div>');
+				this.prev_btn.html(this.labels.prev);
+				this.nav_btns = this.nav_btns.add(this.prev_btn);
+			},
+			nextBtnOnClick: function(e, element){
+				if(!element.is('.disabled')){
+					this.onChange(this.page + 1);
+				}
+			},
+			prevBtnOnClick: function(e, element){
+				if(!element.is('.disabled')){
+					this.onChange(this.page - 1);
+				}
+			},
+			initPagesContainer: function(){
+				this.pages_container = $('<div class="fmx_table_pager_pages_container"></div>');
+				this.pages_container.appendTo(this.container);
+				this.initPagesWrapper();
+				this.pages_container.append('<div class="clear"></div>');
+			},
+			initPagesWrapper: function(){
+				this.pages_wrapper = $('<div class="fmx_table_pager_pages_wrapper"></div>');
+				this.pages_wrapper.appendTo(this.pages_container);
+			},
+			initContainer: function(){
+				this.container = $('<div class="fmx_table_pager_container"></div>');
+			},
+			update: function(page, total, show){
+				this.page = page;
+				this.total = total;
+				this.show = show;
+				if(this.total == 0){
+					this.container.css('display', 'none');
+				}
+				else{
+					this.container.css('display', 'block');
+					this.pages_wrapper.empty();
+					this.prev_btn.appendTo(this.pages_wrapper);
+					this.setPages();
+					this.next_btn.appendTo(this.pages_wrapper);
+					this.setNavEventListeners();
+					this.pages_wrapper.append('<div class="clear"></div>');
+				}
+			},
+			setNavEventListeners: function(){
+				var _self = this;
+				this.next_btn.click(function(e){
+					_self.nextBtnOnClick(e, $(this));
+				});
+				this.prev_btn.click(function(e){
+					_self.prevBtnOnClick(e, $(this));
+				});
+			},
+			setPages: function(){
+				var _self = this;
+				this.nav_btns.removeClass('disabled');
+				var num_pages = Math.ceil(this.total / this.show);
+				this.page_container.html(this.page + 1);
+				this.total_container.html(num_pages);
+				var start_page = this.page - this.offset;
+				var end_page = this.page + this.offset;
+				if(start_page < 0){
+					start_page = 0;
+				}
+				if(end_page > num_pages){
+					end_page = num_pages;
+				}
+				if(this.page == 0){
+					this.prev_btn.addClass('disabled');
+				}
+				if((this.page + 1) == num_pages){
+					this.next_btn.addClass('disabled');
+				}
+				for(var i=start_page; i<this.page; ++i){
+					_self.addPage(i);
+				}
+				this.addPage(this.page, true);
+				var next_page = this.page + 1;
+				for(var i=next_page; i<end_page; ++i){
+					_self.addPage(i);
+				}
+			},
+			addPage: function(index, active){
+				active = active == null ? false : active;
+				var page = {};
+				$.extend(page, {
+					parent: this,
+					index: index,
+					active: active,
+					container: null,
+					init: function(){
+						this.initContainer();
+					},
+					initContainer: function(){
+						var _self = this;
+						this.container = $('<div class="fmx_table_pager_page button">' + (this.index + 1) + '</div>');
+						if(!this.active){
+							this.container.click(function(e){
+								e.preventDefault();
+								_self.containerOnClick(e, _self.container);
+							});	
+						}
+						else{
+							this.container.addClass('active');
+						}
+						this.container.appendTo(this.parent.pages_wrapper);
+					},
+					containerOnClick: function(e, element){
+						this.parent.onChange(this.index);
+					}
+				});
+				page.init();
+			},
+			onChange: function(page){}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

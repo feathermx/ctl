@@ -1,0 +1,85 @@
+(function(){
+    var nil = $();
+    $.fmx_login = function(opts){
+        var _self = {};
+        $.extend(_self,{
+            form: nil,
+            submit_url: '',
+            success_url: '',
+			labels: {
+				invalid_login: 'Invalid username/password combination'
+			},
+            submit_btn: null,
+			placeholders: [],
+            init: function(){
+                this.initForm();
+                this.initSubmitBtn();
+            },
+			addPlaceHolder: function(placeholder){
+				this.placeholders.push(placeholder);
+			},
+			initSubmitBtn: function(){
+				this.submit_btn = this.form.find('input[type="submit"]');
+			},
+            initForm: function(){
+               this.form.submit(function(e){
+                   e.preventDefault();
+                   _self.formOnSubmit();
+               });
+            },
+            formOnSubmit: function(){
+                if(!this.submit_btn.is('.disabled')){
+                    this._loading();
+					this.clearPlaceholders();
+                    $.ajax({
+                        type: 'post',
+                        url: this.submit_url,
+                        data: this.form.serialize(),
+                        context: this,
+                        success: this.success,
+                        error: this._error
+                    });
+					this.restorePlaceHolders();
+                }
+            },
+			clearPlaceholders: function(){
+				$.each(this.placeholders, function(key, placeholder){
+					placeholder.focusin();
+				});
+			},
+			restorePlaceHolders: function(){
+				$.each(this.placeholders, function(key, placeholder){
+					placeholder.focusout();
+				});
+			},
+            success: function(data){
+                this._loaded();
+				if(data.logged_in){
+					window.location = this.success_url;
+				}else{
+					$.fmx_notification({
+						icon_src: 'error',
+						msg: this.labels.invalid_login
+					});
+				}
+            },
+            _error: function(){
+                this._loaded();
+                this.error();
+            },
+            error: function(){},
+            _loading: function(){
+                this.submit_btn.addClass('disabled');
+                this.loading();
+            },
+            _loaded: function(){
+                this.submit_btn.removeClass('disabled');
+                this.loaded();
+            },
+            loading: function(){},
+            loaded: function(){}
+        },opts);
+        _self.init();
+        return _self;
+    }
+})(jQuery);

@@ -1,0 +1,32 @@
+.fmx_form .field_container.fmx_coordinates_selector_container{
+	width: 730px;
+}
+.fmx_coordinates_selector_container{
+	.fmx_coordinates_selector_search_container{
+		float: right;
+	}
+	.fmx_coordinates_selector_search_label{
+	    float: left;
+	}
+	.fmx_coordinates_selector_top_bar input[type="text"].fmx_coordinates_selector_search_field{
+		float: left;
+	}
+	.fmx_coordinates_selector_coordinates_container{
+		float: left;
+		display: none;
+	}
+	.fmx_coordinates_selector_cooordinate_wrapper{
+		float: left;
+	}
+	.fmx_coordinates_selector_cooordinate_label{
+	    float: left;
+	}
+	.fmx_coordinates_selector_coordinate_value{
+	    float: left;
+	}
+	.fmx_coordinates_selector_coordinates_delete_btn{
+		display: block;
+		float: left;
+		cursor: pointer;
+	}
+}

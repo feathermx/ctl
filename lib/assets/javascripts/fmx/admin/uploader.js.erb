@@ -1,0 +1,294 @@
+var fmx_uploader_instances = [];
+(function(){
+	var nil = $();
+	$.fmx_uploader_globals = {
+		instance_count: 0
+	};
+	$.fmx_uploader_states = {
+		uploading: 0,
+		ready: 1
+	};
+	$.fmx_uploader = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			form: null,
+			globals: $.fmx_uploader_globals,
+			max_files: 1,
+			allowed_extensions: ['jpg', 'png', 'gif'],
+			max_size: 1048576,
+			container: nil,
+			identity: '',
+			swf_src: '',
+			field_namespace: null,
+			field_name: '',
+			upload_url: '',
+			delete_url: '',
+			intance_id: null, 
+			loading_wrapper: null,
+			loading_files: {},
+			token: {},
+			labels : {
+				reading: 'Reading file...',
+				uploading: 'Uploading file...',
+				ready: 'File ready',
+				error: 'Could not upload #{name}. Please try again later.'
+			},
+			max_length: 40,
+			opts: null,
+			hidden_field: null,
+			init: function(){
+				this.state = $.fmx_uploader_states.ready;
+				this.initContainer();
+				this.initHiddenField();
+				this.setFieldName();
+				this.initInstance();
+				this.initLoadingWrapper();
+				this.initForm();
+				this.setFlashOpts();
+			},
+			setFieldName: function(){
+				if(this.field_namespace != null){
+					this.field_name = this.field_namespace + "[" + this.field_name + "]";
+				}
+			},
+			initHiddenField: function(){
+				this.hidden_field = $('<input />', {
+					type: 'hidden',
+					name: 'upload[' + this.field_name + ']'
+				});
+				this.hidden_field.appendTo(this.container);
+			},
+			initForm: function(){
+				if(this.form != null){
+					this.form.uploaders[this.instance_id] = this;
+					this.form.addField(this.container.parent());
+				}
+			},
+			initLoadingWrapper: function(){
+				this.loading_wrapper = $('<div class="fmx_uploader_loading_wrapper"></div>');
+				this.loading_wrapper.appendTo(this.container);
+			},
+			initContainer: function(){
+				this.container.flash({
+					wmode: 'transparent',
+					swf: this.swf_src,
+					width: 164,
+					height: 31
+				});
+			},
+			setFlashOpts: function(){
+				var max_files = this.max_files || 1;
+				this.opts = {
+					instance_id: this.intance_id,
+					max_files: max_files,
+					allowed_extensions: this.allowed_extensions,
+					max_size: this.max_size,
+					upload_url: this.upload_url,
+					delete_url: this.delete_url,
+					token: this.token.token.token,
+					token2: this.token.token.secret,
+					identity: this.identity
+				};
+				this.sendFlashOpts();
+			},
+			sendFlashOpts: function(){
+				var sent = false;
+				var _self = this;
+				this.container.flash(function(){
+					try{
+						this['setOpts'](_self.opts);
+					}
+					catch(e){
+						setTimeout(function(){
+							_self.sendFlashOpts();
+						}, 500);
+					}
+				});
+			},
+			initInstance: function(){
+				this.intance_id = this.globals.instance_count;
+				fmx_uploader_instances.push(this);
+				++this.globals.instance_count;
+			},
+			uploaderSetUploadingState: function(){
+				this.state = $.fmx_uploader_states.uploading;
+			},
+			uploaderSetReadyState: function(){
+				this.state = $.fmx_uploader_states.ready;
+			},
+			uploaderErrorCallback: function(message){
+				$.fmx_notification({
+					icon_src: 'error',
+					msg: message
+				});
+			},
+			uploaderAddFileCallback: function(file, index){
+				this.addFile(file, index);
+			},
+			addFile: function(data, index){
+				var file = {};
+				$.extend(file, {
+					parent: this,
+					data: data,
+					index: index,
+					container: null,
+					name: null,
+					status: null,
+					preloader: null,
+					loading_bar: null,
+					ready_container: null,
+					success_icon: null,
+					ready_msg: null,
+					remove_btn: null,
+					token_field: null,
+					token2_field: null,
+					init: function(){
+						this.initContainer();
+						this.initName();
+						this.initStatus();
+						this.initReadyContainer();
+						this.initPreloader();
+						this.initFlash();
+					},
+					initReadyContainer: function(){
+						this.ready_container = $('<div class="fmx_uploader_ready_container"></div>');
+						this.initSuccessIcon();
+						this.initReadyMsg();
+						this.initRemoveBtn();
+						this.initTokenFields();
+						this.ready_container.append('<div class="clear"></div>');
+						this.ready_container.appendTo(this.container);
+					},
+					initTokenFields: function(){
+						this.initTokenField();
+						this.initToken2Field();
+					},
+					getTokenField: function(name){
+						return $('<input />', {
+							type: 'hidden',
+							name: this.parent.field_name + "[" + this.index + "]" + "[" + name + "]"
+						});
+					},
+					initTokenField: function(){
+						this.token_field = this.getTokenField("token");
+						this.token_field.appendTo(this.ready_container);
+					},
+					initToken2Field: function(){
+						this.token2_field = this.getTokenField("secret");
+						this.token2_field.appendTo(this.ready_container);
+					},
+					initSuccessIcon: function(){
+						this.success_icon = $('<span class="fmx_uploader_icon success"></span>');
+						this.success_icon.appendTo(this.ready_container);
+					},
+					initReadyMsg: function(){
+						this.ready_msg = $('<span class="fmx_uploader_ready_msg">' + this.parent.labels.ready
+						 + '</div>');
+						this.ready_msg.appendTo(this.ready_container);
+					},
+					initRemoveBtn: function(){
+						var _self = this;
+						this.remove_btn = $('<span class="fmx_uploader_icon remove"></span>').click(function(e){
+							e.preventDefault();
+							_self.removeBtnOnClick(e, $(this));
+						});
+						this.remove_btn.appendTo(this.ready_container);
+					},
+					remove: function(){
+						this.container.remove();
+					},
+					removeBtnOnClick: function(e, element){
+						var _self = this;
+						this.remove();
+						this.parent.container.flash(function(){
+							this['deleteUploadedFile' + _self.index]();
+						})
+					},
+					initFlash: function(){
+						var _self = this;
+						this.parent.container.flash(function(){
+							this['fileAddedCallback' + _self.index]();
+						});
+					},
+					uploaderOnComplete: function(){
+						this.setStatus(this.parent.labels.uploading);
+					},
+					uploadOnProgress: function(which, progress, ready){
+						var half_progress = (progress / 2);
+						progress = ready ? (50 + half_progress) : half_progress;
+						this.setProgress(progress);
+					},
+					uploadOnComplete: function(token, token2){
+						this.status.css('display', 'none');
+						this.ready_container.css('display', 'block');
+						this.preloader.css('display', 'none');
+						this.token_field.val(token);
+						this.token2_field.val(token2);
+					},
+					setStatus: function(msg){
+						this.status.html(msg);
+					},
+					setProgress: function(percentage){
+						this.loading_bar.css('width', percentage + "%");
+					},
+					initPreloader: function(){
+						this.preloader = $('<div class="fmx_uploader_file_preloader"></div>');
+						this.initLoadingBar();
+						this.preloader.appendTo(this.container);
+					},
+					initLoadingBar: function(){
+						this.loading_bar = $('<div class="fmx_uploader_file_loading_bar"></div>');
+						this.loading_bar.appendTo(this.preloader);
+					},
+					initStatus: function(){
+						this.status = $('<span class="fmx_uploader_file_status">' + this.parent.labels.reading + '</span>');
+						this.status.appendTo(this.container);
+					},
+					initName: function(){
+						var name = data.name;
+						if(name != null){
+							if(name.length > this.max_length) {
+								name = name.substring(0, this.max_length - 3) + "...";
+							}
+						}
+						this.name = $('<span class="fmx_uploader_file_name">' + name + '</span>');
+						this.name.appendTo(this.container);
+					},
+					initContainer: function(){
+						this.container = $('<div class="fmx_uploader_loading_file"></div>');
+						this.container.appendTo(this.parent.loading_wrapper);
+					},
+					getErrorMessage: function(){
+						return this.parent.labels.error.replace("#{name}", this.data.name);
+					}
+				});
+				file.init();
+				this.loading_files[index] = file;
+			},
+			uploaderOnProgressCallback: function(which, progress, ready){
+				this.loading_files.uploaderOnProgress(which, progress, ready);
+			},
+			uploaderOnCompleteCallback: function(which){
+				this.loading_files[which].uploaderOnComplete();
+			},
+			uploaderOnUploadCompleteCallback: function(which, token, token2){
+				this.loading_files[which].uploadOnComplete(token, token2);
+			},
+			uploaderOnUploadError: function(which){
+				this.container.flash(function(){
+					this['uploaderOnErrorComplete' + which]();
+				});
+				var file = this.loading_files[which];
+				var message = file.getErrorMessage();
+				$.fmx_notification({
+					icon_src: 'error',
+					msg: message
+				});
+				this.loading_files[which].remove();
+				delete this.loading_files[which];
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	};
+})(jQuery);

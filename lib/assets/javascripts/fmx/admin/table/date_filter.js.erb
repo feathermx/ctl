@@ -1,0 +1,202 @@
+(function(){
+	$.fmx_date_table_filter_globals = {
+		initialized: false,
+		ui: false,
+		ui_interval: 500,
+		datepicker_div: null,
+		body: null,
+		init: function(){
+			if(!this.initialized){
+				this.initialized = true;
+				this.initBody();
+			}
+		},
+		initBody: function(){
+			this.body = $('body');
+		},
+		setJqueryUi: function(){
+			if(!this.ui){
+				this.ui = true;
+				this.datepicker_div = this.body.find('#ui-datepicker-div');
+				var _self = this;
+				this.ui_interval = setInterval(function(){
+					_self.intervalCallback();
+				}, 500);
+			}
+		},
+		intervalCallback: function(){
+			var select = this.datepicker_div.find('select');
+			if(select.length > 0){
+				clearInterval(this.ui_interval);
+				select.click(function(e){
+					e.stopPropagation();
+				});
+			}
+		}
+	};
+	$.fmx_date_table_filter = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			field: '',
+			name: '',
+			labels: {
+				_start: 'From',
+				end: 'To'
+			},
+			state: $.fmx_table_filter_states.hidden,
+			date_globals: $.fmx_date_table_filter_globals,
+			globals: $.fmx_table_filter_globals,
+			container: null,
+			start_field: null,
+			end_field: null,
+			date_picker_opts: null,
+			init: function(){
+				this.initGlobals();
+				this.initDateGlobals();
+				this.initContainer();
+				this.initTrigger();
+				this.initContentsContainer();
+			},
+			initDateGlobals: function(){
+				this.date_globals.init();
+			},
+			initContainer: function(){
+				this.container = this.globals.getContainer();
+			},
+			initContentsContainer: function(){
+				this.contents_container = $('<div class="fmx_date_table_filter_contents_container fmx_table_filter_contents_container"></div>');
+				this.contents_container.css({
+					'z-index': ++this.globals.z_index
+				});
+				this.initStartLabel();
+				this.initStartField();
+				this.initEndLabel();
+				this.initEndField();
+				this.contents_container.append('<div class="clear"></div>');
+				this.contents_container.appendTo(this.container);
+			},
+			initStartField: function(){
+				this.start_field = this.getDateField();
+			},
+			initEndField: function(){
+				this.end_field = this.getDateField();
+			},
+			getDateField: function(){
+				var field = {};
+				$.extend(field, {
+					parent: this,
+					container: null,
+					val: null,
+					init: function(){
+						this.initContainer();
+						this.initField();
+					},
+					initField: function(){
+						var _self = this;
+						var field = $('<input />', {
+							type: 'text'
+						}).addClass('fmx_date_table_filter_field').attr('readonly', true)
+						field.datepicker(
+							$.extend({
+								onSelect: function(dateText, instance){
+									_self.datePickerOnSelect(dateText, instance);
+								},
+								beforeShow: function(){
+									_self.datePickerOnShow();
+								}
+							}, this.parent.date_picker_opts)
+						);
+						field.click(function(e){
+							e.stopPropagation();
+						});
+						field.appendTo(this.container);
+					},
+					datePickerOnShow: function(){
+						this.parent.date_globals.setJqueryUi();
+					},
+					datePickerOnSelect: function(dateText, instance){
+						var date = new Date(instance.selectedYear, instance.selectedMonth, instance.selectedDay);
+						this.val = date.getTime();
+						this.onChange();
+					},
+					onChange: function(){
+						this.parent.dateFieldOnChange();
+					},
+					initContainer: function(){
+						this.container = $('<div class="fmx_date_table_filter_field_container"></div>');
+						this.container.appendTo(this.parent.contents_container);
+					}
+				});
+				field.init();
+				return field;
+			},
+			dateFieldOnChange: function(){
+				this.onChange(this);
+			},
+			initEndLabel: function(){
+				var label = this.getContentLabel(this.labels.end);
+				label.appendTo(this.contents_container);
+			},
+			initStartLabel: function(){
+				var label = this.getContentLabel(this.labels._start);
+				label.appendTo(this.contents_container);
+			},
+			getContentLabel: function(name){
+				var label = $('<div class="fmx_date_table_filter_label"></div>');
+				label.html(name);
+				return label;
+			},
+			initTrigger: function(){
+				var _self = this;
+				this.trigger = this.globals.getTrigger(this.name).click(function(e){
+					e.preventDefault();
+					e.stopPropagation();
+					_self.triggerOnClick(e, $(this));
+				});
+				this.trigger.appendTo(this.container);
+			},
+			triggerOnClick: function(e, element){
+				switch(this.state){
+					case $.fmx_table_filter_states.hidden:
+						this.showContents();
+					break;
+					case $.fmx_table_filter_states.visible:
+						this.hideContents();
+					break;
+				}
+			},
+			showContents: function(){
+				this.state = $.fmx_table_filter_states.visible;
+				this.contents_container.css('display', 'block');
+				this.globals.setActive(this);
+			},
+			hideContents: function(){
+				this.state = $.fmx_table_filter_states.hidden;
+				this.contents_container.css('display', 'none');
+				this.globals.removeActive();
+			},
+			initGlobals: function(){
+				if(!this.globals.initialized){
+					this.globals.init();
+				}
+			},
+			setParent: function(opts){
+				$.extend(_self, opts);
+				this.container.appendTo(this.parent_container);
+			},
+			getValue: function(){
+				var value = {};
+				if(this.start_field.val != null){
+					value.start = this.start_field.val;
+				}
+				if(this.end_field.val != null){
+					value.end = this.end_field.val;
+				}
+				return value;
+			},
+			onChange: function(which){}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

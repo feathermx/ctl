@@ -1,0 +1,6 @@
+<% content_for :table_fields do %>
+	<th data-name="name"><%= t 'app.admin.views.cities.fields.name' %></th>
+<% end %>
+<% action_url = @section[:params].merge(action: :action) %>
+<%= javascript_include_tag url_for(action_url) %>
+<%= render partial: 'admin/shared/section/section', locals: { opts: @section.merge(show_add_btn: add?) } %>

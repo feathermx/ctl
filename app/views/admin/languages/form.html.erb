@@ -1,0 +1,18 @@
+<% opts = section_form_defaults(@element, @section) %>
+<%= javascript_include_tag url_for(action: :form_action, new_record: opts[:new_record]) %>
+<%= render partial: 'admin/shared/section/header', locals: { opts: opts } %>
+<%= form_for @element, url: url_for(opts[:form_url]), html: { class: 'fmx_form', id: opts[:form_id], method: 'post' } do |f| %>
+	<fieldset>
+		<div class="field">
+			<label><%= t('app.admin.views.languages.fields.name')  %></label>
+			<div class="field_container">
+				<%= f.text_field :name %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="form_actions">
+			<%= submit_tag t('app.admin.actions.submit'), class: 'button' %>
+			<div class="clear"></div>
+		</div>
+	</fiedset>
+<% end %>

@@ -1,0 +1,66 @@
+(function(){
+	var nil = $();
+	$.fmx_fullscreen = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			_window: null,
+			has_touch: false,
+			container: nil,
+			wrapper_id: 'fmx_fullscreen_wrapper',
+			static_elements: nil,
+			heights: {},
+			wrapper: null,
+			init: function(){
+				this.initContainer();
+				this.initWrapper();
+				this.initStaticElements();
+				this.initWindow();
+				this.windowOnResize();
+				this.show();
+			},
+			show: function(){
+				this.container.css('opacity', 1);
+			},
+			initContainer: function(){
+				this.container.css({
+					display: 'block',
+					opacity: 0
+				});
+			},
+			initWrapper: function(){
+				this.wrapper = this.container.find('#' + this.wrapper_id);
+			},
+			initStaticElements: function(){
+				var _self = this;
+				this.heights.static_elements = 0;
+				this.static_elements.each(function(){
+					_self.addStaticElement($(this));
+				});
+			},
+			addStaticElement: function(element){
+				this.heights.static_elements += element.height();
+			},
+			initWindow: function(){
+				var _self = this;
+				if(this.has_touch){
+					window.addEventListener('orientationchange', function(){
+						_self.windowOnResize();
+					}, false);
+				}
+				else{
+					this._window.resize(function(){
+						_self.windowOnResize();
+					});
+				}
+			},
+			windowOnResize: function(){
+				var height = this._window.height() - this.heights.static_elements;
+				this.wrapper.css({
+					'min-height': height
+				});
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

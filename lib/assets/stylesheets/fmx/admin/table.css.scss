@@ -1,0 +1,148 @@
+.fmx_table{
+    display: none;
+    thead{
+        th{
+            cursor: pointer;
+        }
+		th.no_sort{
+			cursor: auto;
+		}
+    }
+    .fmx_table_th_wrapper{
+        position: relative;
+    }
+    .fmx_table_sort_status{
+	    background-position: 0px 0px;
+	    position: absolute;
+    }
+}
+/** images */
+.fmx_table_image{
+	display: block;
+}
+/** actions */
+.fmx_table_action{
+    cursor: pointer;
+    float: left;
+}
+.fmx_table_not_found_container{
+	display: none;
+}
+/** table_pager */
+.fmx_table_pager_container{
+	display: none;
+	.fmx_table_pager_pages_wrapper{
+		float: right;
+	}
+	.fmx_table_pager_page{
+		float: left;
+	}
+	.fmx_table_pager_status_wrapper{
+		float: right;
+	}
+	.fmx_table_pager_showing_label{
+		float: left;
+	}
+	.fmx_table_pager_page_container{
+		float: left;
+	}
+	.fmx_table_pager_of_label{
+		float: left;
+	}
+	.fmx_table_pager_total_container{
+		float: left;
+	}
+}
+
+/** filters */
+.fmx_table_filters_label{
+	float: left;
+}
+.fmx_table_filter_container{
+	float: left;
+	position: relative;
+	.fmx_table_filter_contents_container{
+		position: absolute;
+		display: none;
+	}
+	.fmx_table_filter_loading_container, .fmx_table_filter_not_found_container, .fmx_table_filter_error_container{
+		display: none;
+	}
+	.fmx_table_filter{
+		cursor: pointer;
+	}
+	/** fmx_date_table_filter */
+	.fmx_date_table_filter_label{
+		float: left;
+	}
+	.fmx_date_table_filter_field_container{
+		float: left;
+	}
+}
+/** grid */
+.fmx_table_grid_fields_container{
+	display: none;
+}
+.fmx_table_grid_wrapper{
+	padding: 30px;
+	.fmx_table_grid_element{
+	    display: block;
+	    width: 150px;
+	    padding: 15px 15px 15px 15px;
+	    margin: 0 25px 30px 25px;
+	    border: 1px solid #D5D9DC;
+	    background: none repeat scroll 0 0 #FFFFFF;
+	    -webkit-box-shadow: 3px 3px 2px #B0B0B0;
+		-moz-box-shadow: 3px 3px 2px #B0B0B0;
+		-ms-box-shadow: 3px 3px 2px #B0B0B0;
+		-o-box-shadow: 3px 3px 2px #B0B0B0;
+		box-shadow: 3px 3px 2px #B0B0B0;
+		.fmx_table_grid_field{
+		    margin: 0 0 7px 0;
+		    text-align: left;
+			font-size: 11px;
+		}
+		.fmx_table_grid_field_label{
+			float: left;
+			font-weight: bold;
+			margin: 0 5px 0 0;
+			width: 80px;
+			text-align: right;
+		}
+		.fmx_table_grid_field_value{
+			float: left;
+			width: 60px;
+		}
+	}
+}
+.fmx_table_sort_container{
+	.fmx_table_grid_top_container{
+		.fmx_table_filters_container{
+		    float: left;
+		}
+		.fmx_table_sort_container{
+		    float: right;
+		}
+		.fmx_table_sort_select{
+			float: left;
+		}
+		.fmx_table_sort_label{
+			float: left;
+		}
+	}
+}
+.fmx_table_grid_wrapper{
+	.fmx_table_grid_element{
+	    float: left;   
+		display: block;
+	}
+	.fmx_table_grid_field_label{
+		float: left;
+	}
+	.fmx_table_grid_field_value{
+		float: left;
+	}
+	.fmx_table_actions_wrapper{
+	    float: right;
+	}
+}

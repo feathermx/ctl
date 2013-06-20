@@ -1,0 +1,17 @@
+//= require admin/application
+//= require jquery-ui-1.10.2.custom.min
+//= require fmx/overlay
+//= require fmx/form
+//= require fmx/admin/fullscreen
+//= require fmx/admin/fixed
+//= require fmx/admin/collapse
+//= require fmx/admin/view_stack
+//= require fmx/admin/navigation
+//= require fmx/admin/table/table
+//= require fmx/admin/table/action
+//= require fmx/admin/table/filter_globals
+//= require fmx/admin/table/filter
+//= require fmx/admin/table/date_filter
+//= require fmx/admin/table/formats
+//= require fmx/admin/table/grid
+//= require fmx/admin/table/pager

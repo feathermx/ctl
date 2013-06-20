@@ -1,0 +1,69 @@
+(function(){
+	$(function(){
+		app.login = {};
+		$.extend(app.login, {
+			parent: app,
+			root: null,
+			login: null,
+			config: null,
+			init: function(){
+				this.initRoot();
+				this.initConfig();
+				this.initLogin();
+				this.initPlaceHolders();
+				this.initRememberCheckbox();
+			},
+			initConfig: function(){
+				this.config = config.views.login;
+			},
+			initPlaceHolders: function(){
+				var _self = this;
+				this.login.form.find(':input[placeholder]').each(function(){
+					_self.addPlaceHolder($(this));
+				});
+			},
+			addPlaceHolder: function(container){
+				this.root.fmx.placeholder({
+					container: container,
+					form: this.login
+				});
+			},
+			initRememberCheckbox: function(){
+				this.root.fmx.checkbox({
+					container: this.login.form.find('#login_form_remember_checkbox'),
+					field_name: 'remember'
+				});
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			},
+			initLogin: function(){
+				var _self = this;
+				this.login = this.root.fmx.login(
+					$.extend({
+						form: $('#login_form'),
+						loading: function(){
+							_self.loading();
+						},
+						loaded: function(){
+							_self.loaded();
+						},
+						error: function(){
+							_self.error();
+						}
+					}, this.config.login)	
+				);
+			},
+			loading: function(){
+				this.root.loading();
+			},
+			loaded: function(){
+				this.root.loaded();
+			},
+			error: function(){
+				this.root.error();
+			}
+		});
+		app.login.init();
+	});
+})(jQuery);

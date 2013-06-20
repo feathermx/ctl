@@ -1,0 +1,20 @@
+#fmx_notification_container{
+    width: 250px;
+    top: 50px;
+    right: 20px;
+}
+
+.fmx_notification{
+	background: none repeat scroll 0 0 #000000;
+	padding: 15px 15px;
+	font-size: 11px;
+	color: #EEEEEE;
+	line-height: 1.5em;
+	margin: 0px 0px 20px 0;
+	border: 1px solid #000000;
+	cursor: pointer;
+}
+
+.fmx_notification:hover{
+	border: 1px solid #EEEEEE;
+}

@@ -1,0 +1,73 @@
+<div id="profile_city">
+<% if @element.city.nil? %>
+	<div class="fmx_table_not_found_container visible">
+		<%= t 'app.admin.views.profile.tabs.city.labels.not_found' %>
+	</div>
+<% else %>
+	<%= javascript_include_tag url_for(action: :city_action) %>
+	<%= form_for @element.city, url: url_for(action: :update_city), html: { class: 'fmx_form', id: 'profile_city_form', method: 'post' } do |f| %>
+		<fieldset>
+			<div class="field">
+				<label><%= t('app.admin.views.cities.fields.name')  %></label>
+				<div class="field_container">
+					<%= f.text_field :name %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="field">
+				<label><%= t('app.admin.views.cities.fields.language_id')  %></label>
+				<div class="field_container">
+					<%= f.select :language_id, Admin::Language.select_list, prompt: true %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="field">
+				<label><%= t('app.admin.views.cities.fields.population')  %></label>
+				<div class="field_container">
+					<%= f.text_field :population %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="field">
+				<label><%= t('app.admin.views.cities.fields.population_density')  %></label>
+				<div class="field_container">
+					<%= f.text_field :population_density %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="field">
+				<label><%= t('app.admin.views.cities.fields.area')  %></label>
+				<div class="field_container">
+					<%= f.text_field :area %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="field">
+				<label><%= t('app.admin.views.cities.fields.us_exchange_rate')  %></label>
+				<div class="field_container">
+					<%= f.text_field :us_exchange_rate %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="field">
+				<label><%= t('app.admin.views.cities.fields.gdp')  %></label>
+				<div class="field_container">
+					<%= f.text_field :gdp %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="field">
+				<label><%= t('app.admin.views.cities.fields.big_mac_index')  %></label>
+				<div class="field_container">
+					<%= f.text_field :big_mac_index %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="form_actions">
+				<%= submit_tag t('app.admin.actions.submit'), class: 'button' %>
+				<div class="clear"></div>
+			</div>
+		</fieldset>
+	<% end %>
+<% end %>
+</div>

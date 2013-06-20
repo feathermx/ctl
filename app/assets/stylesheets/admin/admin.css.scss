@@ -1,0 +1,28 @@
+@import "admin/shared.css.scss";
+
+body{
+	background: none repeat scroll 0 0 $sidebar-color;
+	font-family: $font-family;
+}
+
+/** buttons */
+
+@include link('.button') {
+	text-decoration: 0 none;
+	background: none repeat scroll 0 0 $base;
+	padding: 7px 10px;
+	color: #FFFFFF;
+	display: block;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.button:hover{
+	background: none repeat scroll 0 0 $base-hover;
+}
+
+@include link('.button.disabled') {
+	background: none repeat scroll 0 0 $base;
+	cursor: auto;
+	color: $base-disabled;
+}

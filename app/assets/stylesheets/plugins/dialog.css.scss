@@ -1,0 +1,35 @@
+@import 'fmx/mixins.css.scss';
+.fmx_dialog_overlay{
+	background: none repeat scroll 0 0 #FFFFFF;
+}
+.fmx_dialog_container{
+	background: none repeat scroll 0 0 #FFFFFF;
+	border: 1px solid #ACACAC;
+	@include box-shadow(0, 4px, 16px, #CCCCCC);
+	.fmx_dialog_header{
+		border-bottom: 1px solid #E5E5E5;
+		padding: 15px;
+	}
+	.fmx_dialog_title{
+		color: #000000;
+		font-size: 20px;
+	}
+	.fmx_dialog_close_btn{
+		$url: asset-path('fmx/icons/delete.png');
+		background: url('#{$url}') no-repeat scroll 0 0 transparent;
+		width: 16px;
+		height: 15px;
+		cursor: pointer;
+		margin: 3px 0 0 0;
+	}
+	.fmx_dialog_content{
+		padding: 15px;
+	}
+	.fmx_dialog_actions_container{
+		border-top: 1px solid #E5E5E5;
+		padding: 15px;
+	}
+	.fmx_dialog_action{
+		margin: 0 5px 0 0;
+	}
+}

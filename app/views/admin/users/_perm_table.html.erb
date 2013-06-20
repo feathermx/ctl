@@ -1,0 +1,44 @@
+<div class="field">
+	<label><%= t('app.admin.views.users.fields.perm.title')  %></label>
+	<div class="field_container">
+		<table class="field_table">
+			<thead>
+				<tr>
+					<th></th>
+					<th><%= t 'app.admin.views.users.fields.perm.fields.list' %></th>
+					<th><%= t 'app.admin.views.users.fields.perm.fields.add' %></th>
+					<th><%= t 'app.admin.views.users.fields.perm.fields.edit' %></th>
+					<th><%= t 'app.admin.views.users.fields.perm.fields.delete' %></th>
+				</tr>
+			</thead>
+			<tbody>
+			<% i = 0 %>
+			<% User::Perm::List.each_pair do |perm, el| %>
+				<% ev_cls = list_ch = add_ch = edit_ch = delete_ch = "" %>
+				<% ev_cls = 'class="even"' if(i % 2 == 0) %>
+				<% list_ch = 'checked="checked"' if list?(user: element, perm: perm) %>
+				<% add_ch = 'checked="checked"' if add?(user: element, perm: perm) %>
+				<% edit_ch = 'checked="checked"' if edit?(user: element, perm: perm) %>
+				<% delete_ch = 'checked="checked"' if delete?(user: element, perm: perm) %>
+				<tr<%= ev_cls %>>
+					<td><%= t "app.admin.perm.#{el[:key]}" %></td>
+					<td>
+						<input <%= list_ch %> type="checkbox" name="perms[list][]" value="<%= perm %>" />
+					</td>
+					<td>
+						<input <%= add_ch %> type="checkbox" name="perms[add][]" value="<%= perm %>" />
+					</td>
+					<td>
+						<input <%= edit_ch %> type="checkbox" name="perms[edit][]" value="<%= perm %>" />
+					</td>
+					<td>
+						<input <%= delete_ch %> type="checkbox" name="perms[delete][]" value="<%= perm %>" />
+					</td>
+				</tr>
+				<% i = i + 1 %>
+			<% end %>
+			</tbody>
+		</table>
+	</div>
+	<div class="clear"></div>
+</div>

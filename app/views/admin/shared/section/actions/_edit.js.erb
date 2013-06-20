@@ -1,0 +1,36 @@
+<% opts = section_edit_action_defaults(opts) %>
+<% if(opts[:perm]) %>
+this.<%= opts[:js_obj] %> = {};
+$.extend(this.<%= opts[:js_obj] %>,{
+    parent: this,
+    root: null,
+    trigger: null,
+    init: function(){
+        this.initRoot();
+        this.initTrigger();
+    },
+    initTrigger: function(){
+        var _self = this;
+        this.trigger = this.root.fmx.table_action({
+            callback: function(id, data, instance){
+                _self.editBtnOnClick(id, data, instance);
+            },
+            icon_cls: 'edit',
+            name: '<%= t opts[:lang_key] %>'
+        });
+    },
+    editBtnOnClick: function(id, data, instance){
+        var params = <%= opts[:edit_params].to_json.html_safe %>;
+        var _self = this;
+		$.extend(params, {
+			id: id
+		});
+		this.root.view_stack.loadView('<%= url_for opts[:edit_action] %>', params);
+    },
+    initRoot: function(){
+        this.root = this.parent.root;
+    }
+});
+this.<%= opts[:js_obj] %>.init();
+this.table_actions.push(this.<%= opts[:js_obj] %>.trigger);
+<% end %>

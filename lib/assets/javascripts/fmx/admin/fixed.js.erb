@@ -1,0 +1,35 @@
+// Dear IE, screw you. Fixed position works only on IE 7+
+(function(){
+	var nil = $();
+	$.fmx_fixed = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			_window: null,
+			container: nil,
+			top: null,
+			init: function(){
+				this.initContainer();
+				this.initWindow();
+				this.windowOnScroll();
+			},
+			initWindow: function(){
+				var _self = this;
+				this._window.scroll(function(){
+					_self.windowOnScroll();
+				});
+			},
+			windowOnScroll: function(){
+				var top = this._window.scrollTop() + this.top;
+				this.container.css({
+					top: top
+				});
+			},
+			initContainer: function(){
+				var position = this.container.position();
+				this.top = position.top;
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	};
+})(jQuery);

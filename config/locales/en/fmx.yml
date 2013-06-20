@@ -1,0 +1,50 @@
+en:
+  fmx:
+    dialog:
+      labels: 
+        close: 'Close'
+    form:
+      labels:
+        upload_in_progress: 'File upload in progress. Please wait.'
+    admin:
+      table:
+        labels:
+          filters: 'Filter by'
+      table_grid:
+        labels:
+          sort: 'Order by'
+          field_select: 'Select'
+          asc: 'Asc'
+          desc: 'Desc'
+      table_filter:
+        labels: 
+          _default: 'All'
+      date_table_filter:
+        labels:
+          _start: 'From'
+          end: 'To'
+      table_pager:
+        labels:
+          next: 'Next'
+          prev: 'Prev'
+          showing: 'Showing page'
+          of: 'of'
+      login:
+        labels:
+          invalid_login: 'Incorrect username or password.'
+      uploader:
+        labels:
+          reading: 'Reading file...'
+          uploading: 'Uploading file...'
+          ready: 'File ready'
+          error: 'Could not upload #{name}. Please try again later.'
+      coordinates_selector:
+        labels:
+          search: 'Search'
+          lat: 'Lat'
+          lng: 'Lng'
+      csv_uploader:
+        labels:
+          fields:
+            delimiter: 'Delimiter'
+            exclude_count: 'Exclude rows'

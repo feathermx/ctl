@@ -1,0 +1,165 @@
+@import "admin/shared.css.scss";
+body{
+	$url: asset-path('admin/backgrounds/login.png');
+	background: url('#{$url}') repeat scroll 0 0 #656565;
+}
+
+#login_container{
+	margin: 60px 0 20px 0;
+}
+
+#login_wrapper{
+	margin: 0 auto;
+	width: 330px;
+}
+
+@include link('a#login_logo') {
+	text-decoration: none;
+	border: 0 none;
+	outline: none;
+	width: 153px;
+	height: 59px;
+	display: block;
+	margin: 0 auto;
+}
+
+a#login_logo img{
+	border: 0 none;
+	outline: none;
+	width: 165px;
+	height: 47px;
+	display: block;
+}
+
+#login_panel{
+	background: none repeat scroll 0 0 #FFFFFF;
+	padding: 30px 0;
+	margin: 15px 0 0 0;
+}
+
+h1#login_legend{
+	font-weight: 300;
+	color: #000000;
+	display: block;
+	font-size: 18px;
+	padding: 0 20px;
+}
+
+/** form */
+
+form#login_form{
+	margin: 10px 0 0 0;
+}
+
+#login_form .field{
+	padding: 0 20px;
+}
+
+#login_form .field_container{
+	border-left: 2px solid $base;
+	border-top: 1px solid #E5E5E5;
+	border-right: 1px solid #E5E5E5;
+	border-bottom: 1px solid #E5E5E5;
+	height: 32px;
+	margin: 10px 0 15px 0;
+}
+
+#login_form .field_icon{
+	width: 16px;
+	height: 16px;
+	display: block;
+	float: left;
+	margin: 9px 9px 0px 11px;
+}
+
+#login_form input[type="text"],
+#login_form input[type="password"]{
+	font-family: 'Open Sans', Arial, sans-serif;
+	float: left;
+	width: 230px;
+	border: 0 none;
+	font-size: 14px;
+	background: none repeat scroll 0 0 #FFFFFF;
+	color: #4F4F4F;
+	height: 17px;
+	margin: 6px 0 0 0;
+}
+
+#login_form input[type="submit"]{
+	float: right;
+	border: 0 none;
+}
+
+#login_form .form_actions{
+	padding: 0 20px 25px 20px;
+}
+
+#login_form_remember_container{
+	float: left;
+	margin: 10px 0 0 0;
+}
+
+#login_form_remember_label{
+	font-size: 14px;
+	color: #333333;
+	display: block;
+	float: left;
+	margin: 0 0 0 8px;
+}
+
+#login_form_remember_checkbox{
+	$url: asset-path('admin/ui/checkboxes/login.png');
+	cursor: pointer;
+	background-image: url('#{$url}');
+	background-repeat: no-repeat;
+	background-scroll: 0px 0px;
+	background-color: transparent;
+	background-position: 0px 0px;
+	width: 14px;
+	height: 14px;
+	display: block;
+	float: left;
+	margin: 1px 0 0 0;
+}
+
+#login_form_remember_checkbox.active{
+	background-position: 0px -14px;
+}
+
+.hl{
+	height: 1px;
+	background: none repeat scroll 0 0 #EEEEEE;
+}
+
+/** forgot */
+
+#login_forgot_container{
+	margin: 20px 20px 0 20px;
+}
+
+h2#login_forgot_legend{
+	color: #555555;
+	font-size: 14px;
+}
+
+#login_forgot_instructions{
+	margin: 20px 0 0 0;
+	color: #222222;
+	font-size: 12px;
+}
+
+@include link('a#login_forgot_link') {
+	text-decoration: none;
+	color: #0D638F;
+}
+
+a#login_forgot_link:hover{
+	text-decoration: underline;
+}
+
+#login_wrapper #legal{
+	margin: 10px 0;
+	text-align: center;
+	color: #FFFFFF;
+	font-size: 11px;
+}

@@ -1,0 +1,8 @@
+<% content_for :table_fields do %>
+	<th data-sort="cities.name" data-name="city_full_name"><%= t 'app.admin.views.users.fields.city_id' %></th>
+	<th data-name="name"><%= t 'app.admin.views.users.fields.name' %></th>
+	<th data-name="last_names"><%= t 'app.admin.views.users.fields.last_names' %></th>
+	<th data-name="mail"><%= t 'app.admin.views.users.fields.mail' %></th>
+<% end %>
+<%= javascript_include_tag url_for(action: :action) %>
+<%= render partial: 'admin/shared/section/section', locals: { opts: @section.merge(show_add_btn: add?) } %>

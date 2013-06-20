@@ -1,0 +1,39 @@
+<%= javascript_include_tag url_for(action: :info_action) %>
+<div id="profile_info">
+	<%= form_for @element, url: url_for(action: :update_info), html: { class: 'fmx_form', id: 'profile_info_form', method: 'post' } do |f| %>
+		<fieldset>
+			<div class="field">
+				<label><%= t('app.admin.views.users.fields.name')  %></label>
+				<div class="field_container">
+					<%= f.text_field :name %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="field">
+				<label><%= t('app.admin.views.users.fields.last_names')  %></label>
+				<div class="field_container">
+					<%= f.text_field :last_names %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="field">
+				<label><%= t('app.admin.views.users.fields.mail')  %></label>
+				<div class="field_container">
+					<%= f.text_field :mail %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="field">
+				<label><%= t('app.admin.views.users.fields.city_id')  %></label>
+				<div class="field_container">
+					<%= f.select :city_id, Admin::City.select_list, prompt: true %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="form_actions">
+				<%= submit_tag t('app.admin.actions.submit'), class: 'button' %>
+				<div class="clear"></div>
+			</div>
+		</fieldset>
+	<% end %>
+</div>

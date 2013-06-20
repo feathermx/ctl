@@ -1,0 +1,52 @@
+(function(){
+	$(function(){
+		app.dashboard.profile = {};
+		$.extend(app.dashboard.profile, {
+			parent: app.dashboard,
+			root: null,
+			lang: null,
+			container: null,
+			init: function(){
+				this.initRoot();
+				this.initLang();
+				this.initContainer();
+				this.initTabs();
+			},
+			initLang: function(){
+				this.lang = lang.views.profile;
+			},
+			initTabs: function(){
+				var _self = this;
+				this.root.fmx.tabs({
+					container: this.container.find('#backend_tabs_wrapper'),
+					triggers: this.container.find('.backend_tabs_trigger'),
+					loading: function(){
+						_self.tabsLoading();
+					},
+					loaded: function(){
+						_self.tabsLoaded();
+					},
+					error: function(){
+						_self.tabsError();
+					}
+				});
+			},
+			tabsLoading: function(){
+				this.root.loading();
+			},
+			tabsLoaded: function(){
+				this.root.loaded();
+			},
+			tabsError: function(){
+				this.root.error();
+			},
+			initContainer: function(){
+				this.container = this.parent.container.find('#profile');
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			}
+		});
+		app.dashboard.profile.init();
+	});
+})(jQuery);

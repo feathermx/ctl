@@ -1,0 +1,49 @@
+<% opts = section_form_actions_defaults(@section, params) %>
+(function(){
+	$(function(){
+		<%= opts[:js_parent_obj_form] %> = {};
+		$.extend(<%= opts[:js_parent_obj_form] %>, {
+			parent: <%= opts[:js_parent_obj] %>,
+			root: null,
+			container: null,
+			init: function(){
+				this.initRoot();
+				this.initCancelBtn();
+				this.initContainer();
+				this.initCsvUploader();
+			},
+			initCsvUploader: function(){
+				this.root.fmx.csv_uploader({
+					container: this.container.find('#track_csv_uploader')
+				});
+			},
+			initContainer: function(){
+				this.container = this.root.dashboard.container.find('#track_new');
+			},
+			initCancelBtn: function(){
+				var _self = this;
+				this.cancel_btn = $('#<%= opts[:cancel_btn_id] %>').click(function(e){
+					e.preventDefault();
+					_self.cancelBtnOnClick(e, $(this));
+				});
+				var overlay_msg = this.cancel_btn.attr('data-overlay');
+				if(overlay_msg){
+					this.root.fmx.overlay({
+						trigger: this.cancel_btn,
+						msg: overlay_msg,
+						position: $.fmx_overlay_positions.left
+					});
+				}
+			},
+			cancelBtnOnClick: function(e, element){
+				if(!element.is('.disabled')){
+					this.root.view_stack.popView();
+				}
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			}
+		});
+		<%= opts[:js_parent_obj_form] %>.init();
+	});
+})(jQuery);

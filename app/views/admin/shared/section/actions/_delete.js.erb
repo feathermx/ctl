@@ -1,0 +1,71 @@
+<% opts = section_delete_action_defaults(opts) %>
+<% if opts[:perm] %>
+this.<%= opts[:js_obj] %> = {};
+$.extend(this.<%= opts[:js_obj] %>,{
+    parent: this,
+    root: null,
+    trigger: null,
+    confirm_dialog: null,
+    init: function(){
+        this.initRoot();
+        this.initTrigger();
+    },
+    initTrigger: function(){
+        var _self = this;
+        this.trigger = this.root.fmx.table_action({
+            callback: function(id, data, instance){
+                _self.deleteBtnOnClick(id, data, instance);
+            },
+            icon_cls: 'delete',
+            name: '<%= t opts[:lang_key] %>'
+        });
+    },
+    deleteBtnOnClick: function(id, data, instance){
+        var _self = this;
+        this.root.getConfirmationDialog(function(dialog){
+            _self.confirmationDialogOnConfirm(dialog, id);
+        });
+    },
+    confirmationDialogOnConfirm: function(dialog, id){
+        this.confirm_dialog = dialog;
+        this.loading();
+        var params = <%= opts[:delete_params].to_json.html_safe %>;
+        $.ajax({
+            type: 'post',
+            url: '<%= url_for opts[:delete_action] %>',
+            data: $.extend({
+                id: id
+            }, params),
+            context: this,
+            success: this.confirmOnSuccess,
+            error: this.confirmOnError
+        });
+    },
+    confirmOnSuccess: function(data){
+        this.loaded();
+        if(data.deleted){
+            this.confirm_dialog.dialog.close();
+            this.confirm_dialog = null;
+            this.parent.table.doRequest();
+			this.root.fmx.notification({
+				msg: '<%= t opts[:success_lang_key] %>'
+			});
+        }
+    },
+    confirmOnError: function(){
+        this.loaded();
+        this.root.error();
+    },
+    loading: function(){
+        this.root.loading();
+    },
+    loaded: function(){
+        this.root.loaded();
+    },
+    initRoot: function(){
+        this.root = this.parent.root;
+    }
+});
+this.<%= opts[:js_obj] %>.init();
+this.table_actions.push(this.<%= opts[:js_obj] %>.trigger);
+<% end %>

@@ -1,0 +1,39 @@
+(function(){
+	$.fmx_dialog_action = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			dialog: null,
+			container: null,
+			name: '',
+			cls: null,
+			init: function(){
+				this.initContainer();
+			},
+			initContainer: function(){
+				this.container = $('<div class="fmx_dialog_action button">' + this.name + '</div>');
+				if(this.cls != null){
+				    this.container.addClass(this.cls);
+				}
+			},
+			setOpts: function(opts){
+			    $.extend(this, opts);
+			    var _self = this;
+				this.container.click(function(e){
+				    e.preventDefault();
+				    if(!_self.container.is('.disabled')){
+				        _self.containerOnClick(e, $(this), _self);
+				    }
+				});
+			},
+			containerOnClick: function(e, element, instance){},
+			loading: function(){
+			    this.container.addClass('disabled');
+			},
+			loaded: function(){
+			    this.container.removeClass('disabled');
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

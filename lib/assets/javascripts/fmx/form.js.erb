@@ -1,0 +1,214 @@
+(function(){
+	var nil = $();
+	$.fmx_form = function(opts){
+		var _self = {};
+		$.extend(_self, {
+		    container: nil,
+		    type: null,
+			url: null,
+			submit_btn: null,
+			reset_btn: null,
+			labels: {
+				upload_in_progress: 'There are uploads in progress, please wait.'
+			},
+			has_field_namespace: true,
+			uploaders: {},
+			uploader_count: 0,
+			fields: {},
+			ajax_opts: {},
+			error_count: 0,
+			placeholders: [],
+			init: function(){
+				this.initUrl();
+				this.initType();
+				this.initFields();
+				this.initSubmitBtn();
+				this.initResetBtn();
+				this.initForm();
+			},
+			addPlaceHolder: function(placeholder){
+				this.placeholders.push(placeholder);
+			},
+			addUploader: function(uploader){
+				this.uploaders[uploader.field_name] = uploader;
+				this.addField(uploader.container.parent());
+				++this.uploader_count;
+			},
+			initForm: function(){
+			    var _self = this;
+			    this.container.submit(function(e){
+			        e.preventDefault();
+			        _self.onSubmit();
+			    });
+			},
+			initUrl: function(){
+				this.url = this.container.attr('action');
+			},
+			initType: function(){
+				this.type = this.container.attr('method');
+			},
+			initFields: function(){
+				var _self = this;
+				this.container.find('.field').each(function(){
+					_self.addField($(this));
+				});
+			},
+			initSubmitBtn: function(){
+			    this.submit_btn = this.container.find('input[type="submit"]');
+			},
+			initResetBtn: function(){
+			    this.reset_btn = $('<input />',{
+			        type: 'reset'
+			    });
+			    this.reset_btn.insertAfter(this.submit_btn);
+			},
+			reset: function(){
+			    this.reset_btn.click();
+			},
+			onSubmit: function(){
+				if(this.uploader_count > 0){
+					var can_submit = true;
+					$.each(this.uploaders, function(key, uploader){
+						if(uploader.is_loading){
+							can_submit = false;
+						}
+						return can_submit;
+					});
+					if(can_submit){
+						this.doRequest();
+					}
+					else{
+						$.fmx_notification({
+							icon_src: 'error',
+							msg: this.labels.upload_in_progress
+						});
+					}
+				}
+				else{
+					this.doRequest();
+				}
+			},
+			doRequest: function(){
+			    if(!this.submit_btn.is('.disabled')){
+			        this.removeErrors();
+			        this._loading();
+					this.clearPlaceholders();
+			        $.ajax($.extend({
+			            type: this.type,
+			            url: this.url,
+			            data: this.container.serialize(),
+			            context: this,
+			            success: this._success,
+			            error: this._error
+			        }, this.ajax_opts));
+					this.restorePlaceHolders();
+			    }
+			},
+			clearPlaceholders: function(){
+				$.each(this.placeholders, function(key, placeholder){
+					placeholder.focusin();
+				});
+			},
+			restorePlaceHolders: function(){
+				$.each(this.placeholders, function(key, placeholder){
+					placeholder.focusout();
+				});
+			},
+			removeErrors: function(){
+			    $.each(this.fields, function(key, field){
+			        field.clearErrors();
+			    });
+			},
+			renderErrors: function(errors){
+			    var _self = this;
+			    this.error_count = 0;
+			    $.each(errors, function(field, errors){
+			        var field = _self.fields[field];
+			        if(field != null){
+			            field.setErrors(errors);
+			        }
+			        ++_self.error_count;
+			    });
+			},
+			response: function(data){},
+			_success: function(data){
+			    this._loaded();
+				this.renderErrors(data.errors);
+			    if(this.error_count == 0){
+			        this.success(data);
+			    }
+				this.response(data);
+			},
+			_error: function(){
+			    this._loaded();
+			    this.error();
+			},
+			_loading: function(){
+                this.submit_btn.addClass('disabled');
+			    this.loading();
+			},
+			_loaded: function(){
+			    this.submit_btn.removeClass('disabled');
+			    this.loaded();
+			},
+			success: function(data){},
+			error: function(){},
+			getName: function(name){
+			    var patt =/\[[\w\d_]+\]/;
+			    var value = patt.exec(name);
+			    if(value != null){
+			        value = value[0];
+			        name = value.substring(1, value.length - 1);
+			    }
+			    return name;
+			},
+			addField: function(container){
+				var input = container.find(':input');
+				var name = input.attr('name');
+				if(name){
+				    name = this.getName(name);
+					var field = {};
+					$.extend(field, {
+					    parent: this,
+						container: container,
+						field_container: null,
+						input: input,
+						name: name,
+						error_container: null,
+						has_errors: false,
+						init: function(){
+						    this.initFieldContainer();
+						    this.initErrorContainer();
+						},
+						initFieldContainer: function(){
+						    this.field_container = this.container.find('.field_container');
+						},
+						initErrorContainer: function(){
+						    this.error_container = $('<div class="field_errors"></div>');
+						    this.error_container.appendTo(this.field_container);
+						},
+						clearErrors: function(){
+							if(this.has_errors){
+							    this.error_container.empty();
+							    this.container.removeClass('field_with_errors');
+							    this.has_errors = false;
+							}
+						},
+						getValue: function(){
+						    return this.input.val();
+						},
+						setErrors: function(errors){
+						    this.error_container.html(errors.join(", "));
+						    this.container.addClass('field_with_errors');
+						    this.has_errors = true;
+						}
+					});
+					field.init();
+					this.fields[name] = field;
+				}
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

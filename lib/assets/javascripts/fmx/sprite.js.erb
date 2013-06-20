@@ -1,0 +1,102 @@
+(function(){
+	var nil = $();
+	$.fmx_sprite = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			container: nil,
+			fps: 30,
+			timeout_interval: null,
+			active: 0,
+			num_slides: null,
+			width: null,
+			src: null,
+			repeat: true,
+			img: null,
+			auto_start: true,
+			animating: false,
+			timeout: null,
+			repeat: true,
+			dimensions: {
+				width: 80,
+				height: 60
+			},
+			init: function(){
+				this.initData();
+				this.initContainer();
+			},
+			initData: function(){
+				this.src = this.container.attr('data-src');
+				this.width = parseInt(this.container.attr('data-width'));
+				this.timeout_interval = 1000 / this.fps;
+				this.num_slides = this.width / this.dimensions.width;
+			},
+			initContainer: function(){
+				var _self = this;
+				this.container.addClass('fmx_sprite_container');
+				this.container.css(this.dimensions);
+				this.container.click(function(e){
+					e.preventDefault();
+					_self.containerOnClick(e, $(this));
+				});
+				this.initImg();
+			},
+			initImg: function(){
+				var _self = this;
+				this.img = $('<img />', {
+					width: this.width,
+					height: this.dimensions.height,
+					src: this.src,
+					load: function(){
+						_self.imgOnLoad();
+					}
+				});
+				this.img.appendTo(this.container);
+			},
+			containerOnClick: function(e, element){
+				this.click(e, element, this);
+			},
+			click: function(e, element, instance){},
+			imgOnLoad: function(){
+				if(this.auto_start){
+					this.startTimeout();
+				}
+			},
+			startTimeout: function(){
+				var _self = this;
+				if(this.timeout != null){
+					clearTimeout(this.timeout);
+					this.timeout = null;
+				}
+				this.timeout = setTimeout(function(){
+					_self.timeoutCallback();
+				}, this.timeout_interval);
+			},
+			timeoutCallback: function(){
+				var index = this.active % this.num_slides;
+				if((index + 1) == this.num_slides){
+					this.animating = false;
+					if(this.repeat){
+						this.nextFrame();
+					}
+				}
+				else{
+					this.nextFrame();
+				}
+			},
+			start: function(){
+				if(!this.animating){
+					this.nextFrame();
+				}
+			},
+			nextFrame: function(){
+				this.animating = true;
+				++this.active;
+				var index = this.active % this.num_slides;
+				this.img.css('left', (index * this.dimensions.width * -1));
+				this.startTimeout();
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

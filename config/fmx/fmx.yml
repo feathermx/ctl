@@ -1,0 +1,10 @@
+globals:
+  session_name: user
+  lang: es
+  salt: yjlm
+  paths:
+    upload: 'uploads'
+development:
+  scope: ''
+production:
+  scope: ''

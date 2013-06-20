@@ -1,0 +1,39 @@
+<% content_for :form_view do %>
+	this.view = {};
+	$.extend(this.view, {
+		parent: this,
+		root: null,
+		new_record: true,
+		element: null,
+		init: function(){
+			this.initRoot();
+			this.initElement();
+			this.initCoordinatesSelector();
+		},
+		initCoordinatesSelector: function(){
+			var opts = {};
+			$.extend(opts, {
+				field_name: 'admin_city',
+				container: this.parent.form.container.find('#cities_coordinates_selector')
+			});
+			if(!this.new_record){
+				$.extend(opts, {
+					lat: this.element.lat,
+					lng: this.element.lng
+				});
+			}
+			this.root.fmx.coordinates_selector(opts);
+		},
+		initElement: function(){
+			<% if params[:new_record].to_i == 0 %>
+			this.new_record = false;
+			this.element = <%= @element.to_json(root: false).html_safe %>;
+			<% end %>
+		},
+		initRoot: function(){
+			this.root = this.parent.root;
+		}
+	});
+	this.view.init();
+<% end %>
+<%= render partial: 'admin/shared/section/form_action', locals: { opts: @section } %>

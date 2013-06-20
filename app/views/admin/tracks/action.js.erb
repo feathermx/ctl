@@ -1,0 +1,168 @@
+<% content_for :table_opts do %>
+	,
+	autoload: false,
+	add_pager: false,
+	success: function(data){
+		_self.view.success(data);
+	}
+<% end %>
+<% content_for :view do %>
+	this.view = {};
+	$.extend(this.view, {
+		parent: this,
+		root: null,
+		config: null,
+		element: <%= @km.to_json(root: false).html_safe %>,
+		container: null,
+		map: null,
+		center: null,
+		polyline: null,
+		marker: null,
+		coords: [],
+		init: function(){
+			this.initRoot();
+			this.initConfig();
+			this.initContainer();
+			this.initGmaps();
+		},
+		initConfig: function(){
+			this.config = config.views.tracks;
+		},
+		initCenter: function(){
+			this.center = new google.maps.LatLng(this.element.lat, this.element.lng);
+		},
+		initPolyline: function(){
+			this.polyline = new google.maps.Polyline(
+				$.extend({
+					
+				}, this.config.polyline)
+			);
+			this.polyline.setMap(this.map);
+		},
+		initContainer: function(){
+			this.container = $('#tracks_table_map');
+		},
+		initGmaps: function(){
+			var _self = this;
+			this.root.google_maps_loader.load(function(){
+				_self.googleMapsOnLoad();
+			});
+		},
+		resetMarker: function(){
+			if(this.marker != null){
+				this.marker.setMap(null);
+				this.marker = null;
+			}
+		},
+		resetCoords: function(){
+			var found = true;
+			while(found){
+				var coord = this.coords.pop();
+				if(coord != null) coord.remove();
+				else found = false;
+			}
+		},
+		success: function(data){
+			var _self = this;
+			this.resetCoords();
+			this.resetMarker();
+			$.each(data.contents, function(key, data){
+				_self.addCoord(data);
+			});
+		},
+		addCoord: function(data){
+			var coord = {};
+			$.extend(coord, {
+				parent: this,
+				root: null,
+				data: data,
+				lat_lng: null,
+				init: function(){
+					this.initRoot();
+					this.initData();
+					this.initLatLng();
+					this.add();
+				},
+				initData: function(){
+					this.data = this.data['<%= @section[:namespace] %>'];
+				},
+				initLatLng: function(){
+					this.lat_lng = new google.maps.LatLng(this.data.lat, this.data.lng);
+				},
+				initRoot: function(){
+					this.root = this.parent.root;
+				},
+				remove: function(){
+					var polyline = this.parent.polyline;
+					polyline.getPath().pop();
+				},
+				add: function(){
+					var polyline = this.parent.polyline;
+					polyline.getPath().push(this.lat_lng);
+				}
+			});
+			coord.init();
+			this.coords.push(coord);
+		},
+		googleMapsOnLoad: function(){
+			this.initCenter();
+			this.initMap();
+			this.initPolyline();
+			this.parent.table.doRequest();
+		},	
+		initMap: function(){
+			var container = this.container.get(0);
+			this.map = new google.maps.Map(container, 
+				$.extend({
+					center: this.center,
+					mapTypeId: google.maps.MapTypeId.ROADMAP
+				}, this.config.map)
+			);
+		},
+		show: function(id, data, instance){
+			var coord = this.coords[instance.key];
+			if(coord != null){
+				this.resetMarker();
+				this.marker = new google.maps.Marker({});
+				this.marker.setPosition(coord.lat_lng);
+				this.marker.setMap(this.map);
+			}
+		},
+		initRoot: function(){
+			this.root = this.parent.root;
+		}
+	});
+	this.view.init();
+<% end %>
+<% content_for :table_formats do %>
+var table_formats = {};
+$.extend(table_formats, {
+	parent: this,
+	root: null,
+	list: {},
+	init: function(){
+		this.initRoot();
+		this.initList();
+	},
+	initList: function(){
+		var _self = this;
+		$.extend(this.list, {
+			t_at: 'date'
+		});
+	},
+	initRoot: function(){
+		this.root = this.parent.root;
+	}
+});
+table_formats.init();
+this.table_formats = table_formats.list;
+<% end %>
+<% content_for :js_callback do %>
+	this.parent.view.show(id, data, instance);
+<% end %>
+<% content_for :section_actions do %>
+	<%= render partial: 'admin/shared/section/actions/add', locals: { opts: @section.merge(perm: edit?) } %>
+	<%= render partial: 'admin/shared/section/actions/js', locals: { opts: @section.merge(js_icon: 'location', lang_key: 'app.admin.views.tracks.actions.show') } %>
+	<%= render partial: 'admin/shared/section/actions/delete', locals: { opts: @section.merge(perm: edit?) } %>
+<% end %>
+<%= render partial: 'admin/shared/section/action', locals: { opts: @section } %>

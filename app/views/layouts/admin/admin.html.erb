@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<%= render partial: 'shared/ui/meta' %>
+		<%= render partial: 'admin/shared/ui/home_stylesheets' %>
+		<%= render partial: 'admin/shared/ui/home_javascripts' %>
+		<title><%= t 'app.admin.title' %></title>
+		<%= yield :head %>
+	</head>
+	<body>
+		<%= render partial: 'shared/ui/main_loader' %>
+		<%= render partial: 'admin/shared/ui/topbar/topbar' %>
+		<div id="container">
+			<%= render partial: 'admin/shared/ui/sidebar/sidebar' %>
+			<div id="wrapper"></div>
+			<div class="clear"></div>
+		</div>
+	</body>
+</html>

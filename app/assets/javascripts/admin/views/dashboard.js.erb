@@ -1,0 +1,154 @@
+(function(){
+	$(function(){
+		app.dashboard = {};
+		$.extend(app.dashboard, {
+			parent: app,
+			root: null,
+			container: null,
+			top_bar: null,
+			init: function(){
+				this.initRoot();
+				this.initContainer();
+				this.initTopBar();
+				this.initFullScreen();
+				this.setTopBar();
+				this.initViewStack();
+				this.initNavigation();
+			},
+			initViewStack: function(){
+				var _self = this;
+				var container = this.container.find('#wrapper');
+				this.root.view_stack = this.root.fmx.view_stack({
+					container: container,
+					loading: function(){
+						_self.viewStackLoading();
+					},
+					loaded: function(){
+						_self.viewStackLoaded();
+					},
+					error: function(){
+						_self.viewStackError();
+					}
+				});
+			},
+			viewStackLoading: function(){
+				this.root.loading();
+			},
+			viewStackLoaded: function(){
+				this.root.loaded();
+			},
+			viewStackError: function(){
+				this.root.error();
+			},
+			initNavigation: function(){
+				var _self = this;
+				var menu_elements = this.container.find('.menu_element');
+				this.root.navigation = this.root.fmx.navigation({
+					view_stack: this.root.view_stack,
+					extra_triggers_cls: 'fmx_navigation_trigger',
+					triggers: menu_elements,
+					loading: function(){
+						_self.navigationLoading();
+					},
+					loaded: function(){
+						_self.navigationLoaded();
+					},
+					error: function(){
+						_self.navigationError();
+					}
+				});
+				this.initMenuElements(menu_elements);
+			},
+			initMenuElements: function(menu_elements){
+				var last = menu_elements.filter(':last');
+				if(last.length > 0){
+					last.addClass('last');
+				}
+			},
+			navigationLoading: function(){
+				this.root.loading();
+			},
+			navigationLoaded: function(){
+				this.root.loaded();
+			},
+			navigationError: function(){
+				this.root.error();
+			},
+			setTopBar: function(){
+				this.top_bar.windowOnResize();
+			},	
+			initTopBar: function(){
+				this.top_bar = {};
+				$.extend(this.top_bar, {
+					parent: this,
+					root: null,
+					container: null,
+					user_info: null,
+					init: function(){
+						this.initRoot();
+						this.initContainer();
+						this.initUserInfo();
+						this.show();
+						this.initWindow();
+					},
+					initUserInfo: function(){
+						var container = this.container.find('#user_info_trigger');
+						var wrapper = container.find('#user_menu');
+						this.root.fmx.collapse({
+							container: container,
+							wrapper: wrapper
+						});
+					},
+					show: function(){
+						this.container.css('opacity', 1);
+					},
+					initContainer: function(){
+						this.container = $('#topbar');
+						this.container.css({
+							display: 'block',
+							opacity: 0
+						});
+						this.root.fmx.fixed({
+							container: this.container
+						});
+					},
+					initWindow: function(){
+						var _self = this;
+						if(this.root.has_touch){
+							window.addEventListener('orientationchange', function(){
+								_self.windowOnResize();
+							}, false);
+						}
+						else{
+							this.root._window.resize(function(){
+								_self.windowOnResize();
+							});
+						}
+					},
+					windowOnResize: function(){
+						var width = this.parent.container.width();
+						this.container.css('width', width);
+					},
+					initRoot: function(){
+						this.root = this.parent.root;
+					}
+				});
+				this.top_bar.init();
+			},
+			initFullScreen: function(){
+				this.root.fmx.fullscreen({
+					container: this.container,
+					wrapper_id: 'wrapper',
+					static_elements: $('.static_element')
+				});
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			},
+			initContainer: function(){
+				this.container = $('#container');
+			}
+		});
+		app.dashboard.init();
+	});
+})(jQuery);

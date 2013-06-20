@@ -1,0 +1,129 @@
+en:
+  app:
+    admin:
+      title: 'CTL'
+      legal:
+        copyright: '&copy; 2013 MIT'
+      perm:
+        users: 'Users'
+        languages: 'Languages'
+        countries: 'Countries'
+        kms: 'km2'
+      menu:
+        users: 'Users'
+        languages: 'Languages'
+        countries: 'Countries'
+        kms: 'km2'
+      messages:
+        loading: 'Loading'
+        not_found: 'No records found.'
+        error: 'There was an error. Please try again later.'
+        create_success: 'Record created successfully'
+        update_success: 'Record updated successfully'
+        delete_success: 'Record deleted successfully'
+      confirm_dialog:
+        title: 'Confirm Action'
+        message: 'Are you sure?'
+      user_menu:
+        profile: 'Profile'
+        password: 'Update Password'
+        logout: 'Logout'
+      actions:
+        show: 'Show'
+        confirm: 'Confirm'
+        cancel: 'Cancel'
+        submit: 'Continue'
+        add: 'Add'
+        edit: 'Edit'
+        delete: 'Delete'
+        back: 'Back'
+        add_title: 'New record'
+        edit_title: 'Edit record'
+      views:
+        login:
+          legend: 'Please login to continue'
+          labels:
+            remember: 'Remember me?'
+          fields:
+            mail: 'E-mail'
+            password: 'Password'
+        profile:
+          title: 'User Profile'
+          tabs:
+            info:
+              title: 'Personal info'
+              labels:
+                update_success: 'Info updated successfully'
+            password:
+              title: 'Change Password'
+              labels:
+                update_success: 'Password updated successfully'
+            city:
+              title: 'City info'
+              labels:
+                update_success: 'City info updated successfully'
+                not_found: 'A city has not being assigned yet. Please update your personal info first.'
+        users:
+          title: 'Users'
+          fields:
+            name: 'Name'
+            city_id: 'City'
+            last_names: 'Last Names'
+            mail: 'E-mail'
+            old_password: 'Old Password'
+            new_password: 'New Password'
+            password: 'Password'
+            password_confirmation: 'Confirmation'
+            perm:
+              title: 'Permissions'
+              fields:
+                list: 'List'
+                add: 'Add'
+                edit: 'Edit'
+                delete: 'Delete'
+        languages:
+          title: 'Languages'
+          fields:
+            name: 'Name'
+        countries:
+          title: 'Countries'
+          fields:
+            name: 'Name'
+            city_count: 'City Count'
+          actions:
+            cities: 'Cities'
+        cities:
+          title: '%{country} - Cities'
+          fields:
+            language_id: 'Language'
+            name: 'Name'
+            location: 'Location'
+            population: 'Population'
+            population_density: 'Pop. Density'
+            area: 'Area(km2)'
+            us_exchange_rate: 'US Exchange rate'
+            gdp: 'GDP(USD)'
+            big_mac_index: 'Big Mac Index'
+        kms:
+          title: '%{city} - km2'
+          labels:
+            city_not_found: 'Please select a city before capturing data.'
+          actions:
+            tracks: 'GPS Tracks'
+          fields:
+            name: 'Name'
+            track_count: 'Track Count'
+            description: 'Description'
+            comments: 'Comments'
+            center: 'Center'
+            captured_at: 'Capture date'
+        tracks:
+          title: '%{km} - GPS Tracks'
+          actions:
+            show: 'Show'
+          fields:
+            lat: 'Lat'
+            lng: 'Lng'
+            tracked_at: 'Time'
+          new:
+            title: 'Upload GPS data'

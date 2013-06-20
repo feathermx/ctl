@@ -1,0 +1,14 @@
+<% content_for :after_table_content do %>
+	<div class="fmx_table_map_container">
+		<div id="tracks_table_map" class="fmx_table_map_wrapper"></div>
+	</div>
+	<div class="clear"></div>
+<% end %>
+<% content_for :table_fields do %>
+	<th data-name="lat"><%= t 'app.admin.views.tracks.fields.lat' %></th>
+	<th data-name="lng"><%= t 'app.admin.views.tracks.fields.lng' %></th>
+	<th data-name="t_at" data-sort="tracked_at"><%= t 'app.admin.views.tracks.fields.tracked_at' %></th>
+<% end %>
+<% action_url = @section[:params].merge(action: :action) %>
+<%= javascript_include_tag url_for(action_url) %>
+<%= render partial: 'admin/shared/section/section', locals: { opts: @section.merge(show_add_btn: edit?) } %>

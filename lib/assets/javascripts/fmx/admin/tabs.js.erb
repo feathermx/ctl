@@ -1,0 +1,153 @@
+(function(){
+	var nil = $();
+	$.fmx_tabs = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			triggers: nil,
+			container: nil,
+			req: null,
+			aborted: false,
+			active: null,
+			type: 'post',
+			params: {},
+			init: function(){
+				this.initTriggers();
+			},
+			initTriggers: function(){
+				var _self = this;
+				var triggers = this.triggers;
+				this.triggers = [];
+				triggers.each(function(){
+					_self.addTrigger($(this));
+				});
+				if(this.triggers.length > 0){
+					var first = this.triggers[0];
+					this.setActive(first);
+				}
+			},
+			setActive: function(which){
+				if(this.active != which){
+					if(this.active != null) this.active.disable();
+					this.active = which;
+					this.active.enable();
+				}
+			},
+			addTrigger: function(container){
+				var trigger = {};
+				$.extend(trigger, {
+					parent: this,
+					container: container,
+					tab: null,
+					url: null,
+					init: function(){
+						this.initContainer();
+						this.initUrl();
+						this.initTab();
+					},
+					initUrl: function(){
+						this.url = this.container.attr('href');
+					},
+					initTab: function(){
+						this.tab = this.parent.getTab(this);
+					},
+					initContainer: function(){
+						var _self = this;
+						this.container.click(function(e){
+							e.preventDefault();
+							_self.containerOnClick(e, $(this));
+						});
+					},
+					containerOnClick: function(e, element){
+						this.parent.setActive(this);
+					},
+					enable: function(){
+						this.container.addClass('active');
+						this.tab.show();
+					},
+					disable: function(){
+						this.container.removeClass('active');
+						this.tab.hide();
+					}
+				});
+				trigger.init();
+				this.triggers.push(trigger);
+			},
+			getTab: function(trigger){
+				var tab = {};
+				$.extend(tab, {
+					parent: this,
+					container: null,
+					trigger: trigger,
+					is_loaded: false,
+					init: function(){
+						this.initContainer();
+					},
+					initContainer: function(){
+						this.container = $('<div class="fmx_tab"></div>');
+						this.container.appendTo(this.parent.container);
+					},
+					show: function(){
+						if(!this.is_loaded) this.doRequest();
+						this.container.css('display', 'block');
+					},
+					hide: function(){
+						this.container.css('display', 'none');
+					},
+					abort: function(){
+						if(this.parent.req != null){
+							this.parent.aborted = true;
+							this.parent.req.abort();
+						}
+					},
+					doRequest: function(){
+						var _self = this;
+						this.abort();
+						this.loading();
+						this.req = $.ajax({
+							type: this.parent.type,
+							url: this.trigger.url,
+							data: $.extend({
+								
+							}, this.parent.params),
+							success: function(data){
+								_self.success(data);
+							},
+							error: function(){
+								_self.error();
+							}
+						});
+					},
+					success: function(data){
+						this.is_loaded = true;
+						this.container.html(data);
+						this.loaded();
+					},
+					error: function(){
+						this.loaded();
+						if(this.parent.aborted){
+							this.parent.aborted = false;
+						}
+						else{
+							this.is_loaded = true;
+							this.parent.error();
+						}
+					},
+					loading: function(){
+						this.parent.loading();
+					},
+					loaded: function(){
+						this.parent.req = null;
+						this.parent.loaded();
+					}
+				});
+				tab.init();
+				return tab;
+			},
+			loading: function(){},
+			loaded: function(){},
+			error: function(){}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

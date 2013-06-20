@@ -1,0 +1,8 @@
+en:
+  app:
+    model:
+      user:
+        perm:
+          users: 'Users'
+          countries: 'Countries'
+          blocks: 'Blocks'

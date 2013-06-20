@@ -1,0 +1,117 @@
+<% opts = section_action_defaults(opts) %>
+(function(){
+	$(function(){
+		<%= opts[:js_parent_obj] %> = {};
+		$.extend(<%= opts[:js_parent_obj] %>, {
+			parent: <%= opts[:js_parent] %>,
+			table: null,
+			table_actions: [],
+			table_filters: [],
+			table_formats: {},
+			root: null,
+			add_btn: null,
+			<% if opts[:is_subsection] %>
+			back_btn: null,
+			<% end %>
+			view: null,
+			init: function(){
+				this.initRoot();
+				this.initTableActions();
+				this.initTableFormats();
+				this.initTableFilters();
+				this.initTable();
+				this.initView();
+				<% if opts[:is_subsection] %>
+				this.initBackBtn();
+			    <% end %>
+			},
+			initView: function(){
+				<%= yield :view %>
+			},
+			initTableFilters: function(){
+				<%= yield :table_filters %>
+			},
+			<% if opts[:is_subsection] %>
+			initBackBtn: function(){
+			    var _self = this;
+			    this.back_btn = $('#<%= opts[:namespace] %>_cancel_btn').click(function(e){
+			        e.preventDefault(); 
+			        _self.backBtnOnClick(e, $(this));
+			    });
+				var overlay_msg = this.back_btn.attr('data-overlay');
+				if(overlay_msg){
+					this.root.fmx.overlay({
+						trigger: this.back_btn,
+						msg: overlay_msg,
+						position: $.fmx_overlay_positions.left
+					});
+				}
+			},
+			backBtnOnClick: function(e, element){
+				this.root.view_stack.popView();
+				<%= yield :subview_pop_callback %>
+			},
+			<% end %>
+			initTableFormats: function(){
+			    <%= yield :table_formats %>
+			},
+			initTableActions: function(){
+				<%= yield :section_actions %>
+			},
+			initTable: function(){
+				var _self = this;
+				var type = null;
+				<% case opts[:display] %>
+				<% when :table %>
+				type = this.root.fmx.table;
+				<% when :grid %>
+				type = this.root.fmx.table_grid;
+				<% end %>
+				this.table = type({
+					loading: function(){
+						_self.tableLoading();
+					},
+					loaded: function(){
+						_self.tableLoaded();
+					},
+					error: function(){
+						_self.tableError();
+					},
+					container: $('#<%= opts[:table_id] %>'),
+					url: '<%= url_for(opts[:list_action]) %>',
+					namespace: '<%= opts[:namespace] %>',
+					actions: this.table_actions,
+					formats: this.table_formats,
+					filters: this.table_filters,
+					params: <%= opts[:list_params].to_json.html_safe %>
+					<%= yield :table_opts %>
+				});
+			},
+			tableLoading: function(){
+				this.loading();
+			},
+			tableLoaded: function(){
+				this.loaded();
+			},
+			tableError: function(){
+				this.error();
+			},
+			loading: function(){
+				this.root.loading();
+			},
+			loaded: function(){
+				this.root.loaded();
+			},
+			error: function(){
+				this.root.error();
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			}
+		});
+		<%= opts[:js_parent] %>.root.view_stack.addCallback(function(){
+			<%= opts[:js_parent_obj] %>.init();
+		});
+	});
+})(jQuery);
+<%= yield :global_scope %>

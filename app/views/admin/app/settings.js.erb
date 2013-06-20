@@ -1,0 +1,212 @@
+var config = {};
+$.extend(config, {
+	init: function(){
+		this.fmx.parent = this;
+	},
+	images: {
+		base: '<%= image_url '%{image}', alt: 'base' %>',
+		formats: {
+			b_true: '<%= image_url 'admin/formats/true.png' %>',
+			b_false: '<%= image_url 'admin/formats/false.png' %>'
+		}
+	},
+	views: {
+		login: {
+			login: {
+				submit_url: '<%= url_for controller: :splash, action: :login %>',
+				success_url: '<%= url_for controller: :home, action: :index %>'
+			}
+		},
+		tracks: {
+			map:{
+				zoom: 15
+			},
+			polyline: {
+				strokeColor: '#1E6FAA',
+				strokeOpacity: 1.0,
+				strokeWeight: 2
+			}
+		}
+	},
+	fmx: {
+		parent: null,
+		date_picker_opts: {
+			date_picker_opts: {
+				changeMonth : true,
+				changeYear : true,
+				dateFormat: 'mm/dd/yy'
+			}
+		},
+		tabs: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.tabs());
+			return opts;
+		},
+		notification: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.notification());
+			return opts;
+		},
+		
+		overlay: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.overlay());
+			return opts;
+		},
+		dialog: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.dialog());
+			return opts;
+		},
+		dialog_action: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.dialog_action());
+			return opts;
+		},
+		table: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.table());
+			return opts;
+		},
+		table_grid: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.table_grid());
+			return opts;
+		},
+		table_filter: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.table_filter());
+			return opts;
+		},
+		table_action: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.table_action())
+			return opts;
+		},
+		date_table_filter: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.date_table_filter(), this.date_picker_opts);
+			return opts;
+		},
+		form: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.form());
+			return opts;
+		},
+		checkbox: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.checkbox());
+			return opts;
+		},
+		placeholder: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.placeholder());
+		},
+		login: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.login());
+			return opts;
+		},
+		sprite: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.sprite());
+			return opts;
+		},
+		uploader: function(){
+			var opts = {};
+			$.extend(opts, {
+				swf_src: '<%= asset_path('swf/uploader.swf') %>',
+				upload_url: '<%= url_for controller: 'admin/shared', action: :upload %>',
+				delete_url: '<%= url_for controller: 'admin/shared', action: :delete_upload %>'
+			}, lang.fmx.uploader());
+			return opts;
+		},
+		fullscreen: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.fullscreen());
+			return opts;
+		},
+		fixed: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.fixed());
+			return opts;
+		},
+		collapse: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.collapse());
+			return opts;
+		},
+		view_stack: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.view_stack());
+			return opts;
+		},
+		navigation: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.navigation());
+			return opts;
+		},
+		coordinates_selector: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.coordinates_selector());
+			return opts;
+		},
+		date_picker: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.date_picker(), this.date_picker_opts);
+			return opts;
+		},
+		csv_uploader: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.csv_uploader());
+			return opts;
+		}
+	}
+});
+config.init();

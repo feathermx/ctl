@@ -1,0 +1,67 @@
+(function(){
+	var nil = $();
+	$.fmx_placeholder = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			container: nil,
+			placeholder: null,
+			form: null,
+			val: null,
+			is_password: false,
+			init: function(){
+				this.initPlaceHolder();
+				this.initContainer();
+				this.initIsPassword();
+				this.container.focusout();
+				this.initForm();
+			},
+			initIsPassword: function(){
+				this.is_password = this.container.attr('type') == 'password';
+			},
+			initForm: function(){
+				if(this.form != null){
+					this.form.addPlaceHolder(this);
+				}
+			},
+			initContainer: function(){
+				var _self = this;
+				this.container
+					.focusin(function(){
+						_self.focusin();
+					})
+					.focusout(function(){
+						_self.focusout();
+					})
+					.change(function(){
+						_self.change();
+					})
+				;
+			},
+			change: function(){
+				this.val = this.container.val();
+			},
+			focusin: function(){
+				if(this.val == null || this.val == ''){
+					if(this.is_password){
+						this.container.attr('type', 'password');
+					}
+					this.container.val('');
+				}
+			},
+			focusout: function(){
+				if(this.val == null || this.val == ''){
+					if(this.is_password){
+						this.container.attr('type', 'text');
+					}
+					this.container.val(this.placeholder);
+				}
+			},
+			initPlaceHolder: function(){
+				this.placeholder = this.container.attr('placeholder');
+				this.container.attr('placeholder', '');
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

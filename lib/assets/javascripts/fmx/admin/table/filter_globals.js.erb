@@ -1,0 +1,44 @@
+(function(){
+	$.fmx_table_filter_globals = {
+		z_index: 7000,
+		body: null,
+		initialized: false,
+		active: null,
+		init: function(){
+			this.initialized = true;
+			this.initBody();
+		},
+		getContainer: function(){
+			return $('<div class="fmx_table_filter_container"></div>');
+		},
+		getTrigger: function(name){
+			return $('<div class="fmx_table_filter_trigger button">' + name + '</div>');
+		},
+		setActive: function(which){
+			if(which != this.active){
+				if(this.active != null){
+					this.active.hideContents();
+				}
+				this.active = which;
+			}
+		},
+		removeActive: function(){
+			this.active = null;
+		},
+		initBody: function(){
+			var _self = this;
+			this.body = $('body').click(function(e){
+				_self.bodyOnClick(e, $(this));
+			});
+		},
+		bodyOnClick: function(e, element){
+			if(this.active != null && this.active.state == $.fmx_table_filter_states.visible){
+				this.active.hideContents();
+			}
+		}
+	};
+	$.fmx_table_filter_states = {
+		hidden: 0,
+		visible: 1
+	};
+})(jQuery)

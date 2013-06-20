@@ -1,0 +1,6 @@
+<% opts = section_form_defaults(Admin::Track.new, @section).merge(@section) %>
+<%= javascript_include_tag url_for(action: :new_action, km_id: @km.id) %>
+<div id="track_new" class="backend_section_wrapper">
+	<%= render partial: 'admin/shared/section/header', locals: { opts: opts } %>
+	<div id="track_csv_uploader"></div>
+</div>

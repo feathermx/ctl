@@ -1,0 +1,13 @@
+<% lang_key = "app.admin.views.profile.tabs.#{el[:key]}.title" %>
+<a class="backend_tabs_trigger" href="<%= url_for el[:url] %>">
+	<%= image_tag 'admin/ui/hover/tabs.png', width: 5, height: 9, class: 'backend_tabs_trigger_hover_icon' %>
+	<span class="backend_tabs_trigger_icon_container">
+		<span class="backend_tabs_trigger_icon_wrapper">
+			<%= image_tag "admin/icons/profile_tabs/#{el[:key]}.png", width: 16, height: 32, class: 'backend_tabs_trigger_icon' %>
+		</span>
+	</span>
+	<span class="backend_tabs_trigger_label_container">
+		<span class="backend_tabs_trigger_label"><%= t lang_key %></span>
+	</span>
+	<span class="clear"></span>
+</a>

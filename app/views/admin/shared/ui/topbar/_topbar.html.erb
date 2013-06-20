@@ -1,0 +1,7 @@
+<div class="static_element" id="topbar">
+	<a href="<%= url_for controller: :home, action: :index %>" id="topbar_logo">
+		<%= image_tag 'admin/logos/dashboard.png', width: 84, height: 25 %>
+	</a>
+	<%= render partial: 'admin/shared/ui/topbar/user_info' %>
+	<div class="clear"></div>
+</div>

@@ -1,0 +1,16 @@
+<% if @city.nil? %>
+<div class="fmx_table_not_found_container visible">
+	<%= t 'app.admin.views.kms.labels.city_not_found' %>
+</div>
+<% else %>
+<% content_for :table_fields do %>
+	<th data-name="name"><%= t 'app.admin.views.kms.fields.name' %></th>
+	<th data-name="track_count"><%= t 'app.admin.views.kms.fields.track_count' %></th>
+	<th data-name="c_at" data-sort="captured_at"><%= t 'app.admin.views.kms.fields.captured_at' %></th>
+<% end %>
+<%= render partial: 'admin/shared/plugins/csv_uploader' %>
+<%= render partial: 'admin/shared/plugins/coordinates_selector' %>
+<%= render partial: 'admin/shared/plugins/date_picker' %>
+<%= javascript_include_tag url_for(action: :action) %>
+<%= render partial: 'admin/shared/section/section', locals: { opts: @section.merge(show_add_btn: add?) } %>
+<% end %>

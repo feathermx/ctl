@@ -1,0 +1,31 @@
+<% opts = section_js_action_defaults(opts) %>
+<% if(opts[:perm]) %>
+this.<%= opts[:js_obj] %> = {};
+$.extend(this.<%= opts[:js_obj] %>,{
+    parent: this,
+    root: null,
+	trigger: null,
+    init: function(){
+        this.initRoot();
+        this.initTrigger();
+    },
+	initRoot: function(){
+        this.root = this.parent.root;
+    },
+    initTrigger: function(){
+        var _self = this;
+		this.trigger = this.root.fmx.table_action({
+            callback: function(id, data, instance){
+                _self.triggerOnClick(id, data, instance);
+            },
+            icon_cls: '<%= opts[:js_icon] %>',
+            name: '<%= t opts[:lang_key] %>'
+        });
+    },
+    triggerOnClick: function(id, data, instance){
+		<%= yield :js_callback %>
+    }
+});
+this.<%= opts[:js_obj] %>.init();
+this.table_actions.push(this.<%= opts[:js_obj] %>.trigger);
+<% end %>

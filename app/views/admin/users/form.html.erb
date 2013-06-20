@@ -1,0 +1,56 @@
+<% opts = section_form_defaults(@element, @section) %>
+<%= javascript_include_tag url_for(action: :form_action, new_record: opts[:new_record]) %>
+<%= render partial: 'admin/shared/section/header', locals: { opts: opts } %>
+<%= form_for @element, url: url_for(opts[:form_url]), html: { class: 'fmx_form', id: opts[:form_id], method: 'post' } do |f| %>
+	<fieldset>
+		<div class="field">
+			<label><%= t('app.admin.views.users.fields.name')  %></label>
+			<div class="field_container">
+				<%= f.text_field :name %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.users.fields.last_names')  %></label>
+			<div class="field_container">
+				<%= f.text_field :last_names %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.users.fields.mail')  %></label>
+			<div class="field_container">
+				<%= f.text_field :mail %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.users.fields.city_id')  %></label>
+			<div class="field_container">
+				<%= f.select :city_id, Admin::City.select_list, prompt: true %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<% if @element.new_record? %>
+		<div class="field">
+			<label><%= t('app.admin.views.users.fields.password')  %></label>
+			<div class="field_container">
+				<%= f.password_field :password %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.users.fields.password_confirmation')  %></label>
+			<div class="field_container">
+				<%= f.password_field :password_confirmation %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<% end %>
+		<%= render partial: 'admin/users/perm_table', locals: { element: @element } %>
+		<div class="form_actions">
+			<%= submit_tag t('app.admin.actions.submit'), class: 'button' %>
+			<div class="clear"></div>
+		</div>
+	</fiedset>
+<% end %>

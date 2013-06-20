@@ -1,0 +1,372 @@
+(function(){
+	var nil = $();
+	$.fmx_table_sort_status = {
+		none: -1,
+		asc: 0,
+		desc: 1
+	};
+	$.fmx_table = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			container: nil,
+			autoload: true,
+			add_pager: true,
+			namespace: null,
+			labels: {
+			    not_found: 'No records found',
+			    filters: 'Filter by'
+			},
+			not_found_container: null,
+			pager: null,
+			pager_opts: {},
+			ths: null,
+			tbody: null,
+			active: null,
+			formats: {},
+			ajax_request: null,
+			actions_container: null,
+			aborted: false,
+			url: '',
+			type: 'post',
+			params: {},
+			actions: [],
+			page: 0,
+			filters: [],
+			filters_container: null,
+			init: function(){
+				this.initThs();
+				this.initTbody();
+				this.initFilters();
+				this.initNotFoundContainer();
+				this.initFormats();
+				if(this.add_pager) this.initPager();
+				if(this.autoload) this.doRequest();
+			},
+			initFilters: function(){
+				if(this.filters.length > 0){
+					this.filters_container = $('<div class="fmx_table_filters_container"></div>');
+					this.filters_container.insertBefore(this.container);
+					this.initFiltersLabel();
+					var _self = this;
+					for(var i=0; i<this.filters.length; ++i){
+						_self.addFilter(this.filters[i]);
+					}
+					this.filters_container.append('<div class="clear"></div>');
+				}
+			},
+			initFiltersLabel: function(){
+				var filters_label = $('<div class="fmx_table_filters_label">' + this.labels.filters + ':</div>');
+				filters_label.appendTo(this.filters_container);
+			},
+			addFilter: function(filter){
+				var _self = this;
+				filter.setParent({
+					parent_container: this.filters_container,
+					onChange: function(which){
+						_self.filterOnChange(which);
+					}
+				});
+			},
+			filterOnChange: function(which){
+				this.doRequest();
+			},
+			initPager: function(){
+				var _self = this;
+				this.pager = $.fmx_table_pager($.extend({
+					onChange: function(page){
+						_self.pagerOnChange(page);
+					}
+				}, this.pager_opts));
+				this.pager.container.insertAfter(this.container);
+			},
+			pagerOnChange: function(page){
+				this.page = page;
+				this.doRequest();
+			},
+			initFormats: function(){
+				var _self = this;
+				$.each(this.formats, function(key, format){
+					_self.setFormat(key, format);
+				});
+			},
+			setFormat: function(key, format){
+				if(!$.isFunction(format)){
+					this.formats[key] = $.fmx_table_formats[format];
+				}
+			},
+			initNotFoundContainer: function(){
+				this.not_found_container = $('<div class="fmx_table_not_found_container">' + this.labels.not_found + '</div>');
+				this.not_found_container.insertBefore(this.container);
+			},
+			initTbody: function(){
+				this.tbody = this.container.find('tbody');
+			},
+			abort: function(){
+				if(this.ajax_request != null){
+					this.aborted = true;
+					this.ajax_request.abort();
+					this.ajax_request = null;
+				}
+			},
+			doRequest: function(){
+				var _self = this;
+				var params = this.getParams();
+				this._loading();
+				this.ajax_request = $.ajax({
+					type: this.type,
+					url: this.url,
+					data: $.extend(params, this.params),
+					success: function(data){
+						_self._success(data);
+					},
+					error: function(){
+						_self._error();
+					}
+				});
+			},
+			_success: function(data){
+				var _self = this;
+				this.tbody.empty();
+				this._loaded();
+				if(this.add_pager) this.pager.update(this.page, data.total, data.show);
+				data.total = parseInt(data.total);
+				if(data.contents == null || data.contents.length == 0){
+					this.container.css('display', 'none');
+					this.not_found_container.css('display', 'block');
+				}
+				else{
+					this.container.css('display', 'table');
+					$.each(data.contents, function(key, value){
+						_self.addRow(key, value);
+					});
+				}
+				this.success(data);
+			},
+			addRow: function(key, data){
+				data = this.getData(data);
+				var row = {};
+				$.extend(row, {
+					parent: this,
+					key: key,
+					root: this,
+					data: data,
+					container: null,
+					init: function(){
+						this.initContainer();
+						this.initFields();
+					},
+					initContainer: function(){
+						this.container = $('<tr></tr>');
+						if(this.key % 2 == 0){
+							this.container.addClass('even');
+						}
+						this.container.appendTo(this.parent.tbody);
+					},
+					initFields: function(){
+						var _self = this;
+						$.each(this.parent.ths, function(key, th){
+							var field_name = th.name;
+							_self.addField(field_name, _self.data[field_name]);
+						});
+						if(this.parent.actions.length > 0){
+							this.renderActions();
+						}
+					},
+					renderActions: function(){
+						var _self = this;
+						var td = $('<td></td>');
+						var actions_container = $('<div class="fmx_table_actions"></div>');
+						actions_container.appendTo(td);
+						$.each(this.parent.actions, function(key, action){
+							_self.addAction(action, actions_container);
+						});
+						actions_container.append('<div class="clear"></div>');
+						td.appendTo(this.container);
+					},
+					addAction: function(action, container){
+						container.append(action.getContainer(this.data.id, this.data, this));
+					},
+					addField: function(key, val){
+						var field = {};
+						$.extend(field, {
+							key: key,
+							val: val,
+							parent: this,
+							root: null,
+							container: null,
+							init: function(){
+								this.root = this.parent.root;
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container = $('<td></td>');
+								var format = this.root.formats[key];
+								var val = null;
+								if(format){
+									val = format(this.val, this.parent.data, this.parent);
+								}
+								else{
+									val = this.val;
+								}
+								this.container.html(val);
+								this.container.appendTo(this.parent.container);
+							}
+						});
+						field.init();
+					}
+				});
+				row.init();
+			},
+			getData: function(data){
+				if(this.namespace != null){
+					data = data[this.namespace];
+				}
+				return data;
+			},
+			success: function(data){},
+			_error: function(){
+				this._loaded();
+				if(this.aborted){
+					this.aborted = false;
+				}
+				else{
+					this.error();
+				}
+			},
+			error: function(){},
+			_loading: function(){
+				this.not_found_container.css('display', 'none');
+				this.abort();
+				this.loading();
+			},
+			loading: function(){},
+			_loaded: function(){
+				this.ajax_request = null;
+				this.loaded();
+			},
+			loaded: function(){},
+			getParams: function(){
+				var params = {};
+				params.page = this.page;
+				if(this.active != null){
+					params.order = this.active.serialize();
+				}
+				$.each(this.filters, function(key, filter){
+					var value = filter.getValue();
+					if(value != null){
+						params[filter.field] = value;
+					}
+				});
+				return params;
+			},
+			initThs: function(){
+				var _self = this;
+				this.ths = [];
+				var i = 0;
+				var tr = this.container.find('thead tr');
+				var ths = tr.find('th');
+				var limit = ths.length - 1;
+				var has_actions = this.actions.length == 1;
+				ths.each(function(){
+					_self.addTh($(this), i);
+					++i;
+				});
+				if(this.actions.length > 0){
+					this.actions_container = $('<th class="no_sort"></th>');
+					this.actions_container.appendTo(tr);
+				}
+			},
+			addTh: function(container, index){
+				var th = {};
+				$.extend(th, {
+					parent: this,
+					container: container,
+					wrapper: null,
+					status: $.fmx_table_sort_status.none,
+					sort_status: null,
+					label: null,
+					name: null,
+					sort: null,
+					init: function(){
+						this.initName();
+						if(!this.container.is('.no_sort')){
+						    this.initSort();
+							this.initContainer();
+							this.initLabel();
+							this.initWrapper();
+							this.initSortStatus();
+							this.wrapper.append('<div class="clear"></div>');
+						}
+					},
+					initSort: function(){
+					    this.sort = this.container.attr('data-sort');
+					},
+					initWrapper: function(){
+						this.wrapper = $('<div class="fmx_table_th_wrapper"></div>');
+						this.label.appendTo(this.wrapper);
+						this.wrapper.appendTo(this.container);
+					},
+					initLabel: function(){
+						this.label = $('<div class="fmx_table_th_label">' + this.container.html() + '</div>');
+						this.container.empty();
+					},
+					initSortStatus: function(){
+						this.sort_status = $('<div class="fmx_table_sort_status"></div>');
+						this.sort_status.appendTo(this.wrapper);
+					},
+					initName: function(){
+						this.name = this.container.attr('data-name');
+					},
+					initContainer: function(){
+						var _self = this;
+						this.container.click(function(e){
+							_self.containerOnClick(e, $(this));
+						});
+					},
+					containerOnClick: function(){
+						this.parent.setTh(this);
+					},
+					toggle: function(){
+						this.container.removeClass('asc').removeClass('desc');
+						switch(this.status){
+							case $.fmx_table_sort_status.desc:
+							case $.fmx_table_sort_status.none:
+								this.status = $.fmx_table_sort_status.asc;
+								this.container.addClass('asc');
+							break;
+							case $.fmx_table_sort_status.asc:
+								this.status = $.fmx_table_sort_status.desc;
+								this.container.addClass('desc');
+							break;
+						}
+					},
+					reset: function(){
+						this.status = $.fmx_table_sort_status.none;
+						this.container.removeClass('asc').removeClass('desc');
+					},
+					serialize: function(){
+					    var field = this.sort == null ? this.name : this.sort;
+						return { field: field, by: this.status };
+					}
+				});
+				th.init();
+				this.ths.push(th);
+			},
+			setTh: function(which){
+				if(which == this.active){
+					this.active.toggle();
+				}
+				else{
+					if(this.active != null){
+						this.active.reset();
+					}
+					this.active = which;
+					this.active.toggle();
+				}
+				this.doRequest();
+			}
+		}, opts)
+		_self.init();
+		return _self;
+	};
+})(jQuery);

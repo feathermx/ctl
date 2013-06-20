@@ -1,0 +1,12 @@
+<%= render partial: 'admin/shared/plugins/tabs' %>
+<%= javascript_include_tag url_for(action: :profile_action) %>
+<div id="profile" class="backend_section_wrapper">
+	<%= render partial: 'admin/shared/section/header', locals: { opts: @section } %>
+	<div class="table_container">
+		<div class="backend_tabs_container">
+			<%= render partial: 'admin/my/tabs/triggers/triggers' %>
+			<div id="backend_tabs_wrapper"></div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>

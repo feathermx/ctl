@@ -1,0 +1,43 @@
+(function(){
+	$.fmx_table_formats = {
+		nil: function(val){
+			return val ? val : '-';
+		},
+		date: function(time){
+			time = parseInt(time);
+			var res = '';
+			if(isNaN(time) || !isFinite(time)){
+				res = '-';
+			}
+			else{
+				var date = new Date(time);
+				var month = date.getMonth() + 1;
+				var day = date.getDate();
+				month = month < 10 ? ("0" + month) : month;
+				day = day < 10 ? ("0" + day) : day;
+				res = month + "/" + day + "/" + date.getFullYear();
+			}
+			return res;
+		},
+		dateTime: function(time){
+			time = parseInt(time);
+			var res = "";
+			if(isNaN(time) || !isFinite(time)){
+				res = "-";
+			}
+			else{
+				var date = new Date(time);
+				var month = date.getMonth() + 1;
+				var day = date.getDate();
+				var hour = date.getHours();
+				var min = date.getMinutes();
+				month = month < 10 ? ("0" + month) : month;
+				day = day < 10 ? ("0" + day) : day;
+				hour = hour < 10 ? ("0" + hour) : hour;
+				min = min < 10 ? ("0" + min) : min;
+				res = month + "/" + day + "/" + date.getFullYear() + " " + hour + ":" + min;
+			}
+			return res;
+		}
+	};
+})(jQuery);

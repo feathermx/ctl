@@ -1,0 +1,9 @@
+<div id="sidebar">
+	<div id="menu">
+	<% @menu.each do |el| %>
+		<% if list?(perm: el[:perm].to_i) %>
+			<%= render partial: 'admin/shared/ui/sidebar/element', locals: { el: el, active: false } %>
+		<% end %>
+	<% end %>
+	</div>
+</div>

@@ -1,0 +1,108 @@
+(function(){
+	var nil = $();
+	$.fmx_navigation = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			has_touch: false,
+			url: null,
+			extra_triggers_cls: '',
+			triggers: nil,
+			timeout: 500,
+			type: 'post',
+			params: {},
+			view_stack: null,
+			init: function(){
+				this.initTriggers();
+				this.setInitSelected();
+				this.checkHash();
+				this.initExtraTriggers();
+			},
+			checkHash: function(){
+				var _self = this;
+				if(this.url != window.location.hash){
+					this.url = window.location.hash;
+					this.navigate();
+				}
+				setTimeout(function(){
+					_self.checkHash();
+				}, this.timeout);
+			},
+			initTriggers: function(){
+				var _self = this;
+				if(this.has_touch){
+					this.triggers.each(function(){
+						_self.addMobileTrigger($(this));
+					});
+				}
+				else{
+					this.triggers.click(function(e){
+						e.preventDefault();
+						_self.triggerOnClick(e, $(this));
+					});
+				}
+			},
+			addMobileTrigger: function(container){
+				var container_dom = container.get(0);
+				container_dom.addEventListener('touchstart', function(e){
+					e.preventDefault();
+					_self.triggerOnClick(e, container);
+				}, false);
+			},
+			initExtraTriggers: function(){
+				var _self = this;
+				this.extra_triggers = $('.' + this.extra_triggers_cls).click(function(e){
+					e.preventDefault();
+					_self.triggerOnClick(e, $(this));
+				});
+			},
+			triggerOnClick: function(e, element){
+				window.location = '#' + element.attr('href');
+			},
+			_loading: function(){
+				this.loading();
+			},
+			loading: function(){},
+			_loaded: function(){
+				this.loaded();
+			},
+			loaded: function(){},
+			_error: function(){
+				this._loaded();
+				this.error();
+			},
+			error: function(){},
+			success: function(data){
+				this._loaded();
+				var _self = this;
+				this.view_stack.empty();
+				this.view_stack.pushView(data);
+			},
+			navigate: function(){
+				var url = this.url.substring(1, this.url.length);
+				if(url){
+					var _self = this;
+					this.triggers.filter('.active').removeClass('active');
+					this.triggers.filter('[href="' + url + '"]').addClass('active');
+					this._loading();
+					$.ajax({
+						type: this.type,
+						url: url,
+						error: function(){
+							_self._error();
+						},
+						success: function(data){
+							_self.success(data);
+						}
+					});
+				}
+			},
+			setInitSelected: function(){
+				if(!window.location.hash){
+					this.triggers.eq(0).click();
+				}
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	};
+})(jQuery);

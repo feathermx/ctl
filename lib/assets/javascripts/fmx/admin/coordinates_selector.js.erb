@@ -1,0 +1,246 @@
+(function(){
+    var nil = $();
+	$.fmx_coordinates_selector = function(opts){
+		var _self = {
+			google_maps_loader: null,
+			editable: true,
+			field_name: 'element',
+			lat_field_name: 'lat',
+			lng_field_name: 'lng',
+			labels: {
+				search: 'Search',
+				lat: 'Lat',
+				lng: 'Lng'
+			},
+			container: nil,
+			map: null,
+			map_container: null,
+			center: null,
+			lat_field: null,
+			lng_field: null,
+			marker: null,
+			autocomplete: null,
+			lat: null,
+			lng: null,
+			default_lat: 37.09024,
+			default_lng: -95.71289100000001,
+			default_zoom: 3,
+			selected_zoom: 17,
+			top_bar: null,
+			search_container: null,
+			search_field: null,
+			current_position: null,
+			coordinates_container: null,
+			lat_wrapper: null,
+			lng_wrapper: null,
+			lat_wrapper_value: null,
+			lng_wrapper_value: null,
+			init_zoom: null,
+			coordinates_delete_btn: null,
+			hidden_coordinate_fields_container: null,
+			lat_hidden_field: null,
+			lng_hidden_field: null,
+			init: function(){
+				this.initContainer();
+				this.initTopBar();
+				this.initSearchContainer();
+				this.initCoordinatesContainer();
+				this.top_bar.append('<div class="clear"></div>');
+				this.initMapContainer();
+				this.initHiddenCoordinateFieldsContainer();
+				this.initGoogleMaps();
+			},
+			initContainer: function(){
+				this.container.addClass('fmx_coordinates_selector_container');
+			},
+			initHiddenCoordinateFieldsContainer: function() {
+				this.hidden_coordinate_fields_container = $('<div class="fmx_coordinates_hidden_fields_container"></div>');
+				this.initHiddenLatField();
+				this.initHiddenLngField();
+				this.hidden_coordinate_fields_container.appendTo(this.container);
+			},
+			initHiddenLatField: function(){
+				this.lat_hidden_field = $('<input />', {
+					type: 'hidden',
+					name:  this.getFieldName(this.lat_field_name)
+				});
+				this.lat_hidden_field.appendTo(this.hidden_coordinate_fields_container);
+			},
+			initHiddenLngField: function(){
+				this.lng_hidden_field = $('<input />', {
+					type: 'hidden',
+					name: this.getFieldName(this.lng_field_name)
+				});
+				this.lng_hidden_field.appendTo(this.hidden_coordinate_fields_container);
+			},
+			getFieldName: function(name){
+				return this.field_name + '[' + name + ']';
+			},
+			initCoordinatesContainer: function(){
+				this.coordinates_container = $('<div class="fmx_coordinates_selector_coordinates_container"></div>');
+				this.initLatWrapper();
+				this.initLngWrapper();
+				this.initCoordinatesDeleteBtn();
+				this.coordinates_container.append('<div class="clear"></div>');
+				this.coordinates_container.appendTo(this.top_bar);
+			},
+			initCoordinatesDeleteBtn: function(){
+				if(this.editable){
+					this.coordinates_delete_btn = $('<span class="fmx_coordinates_selector_coordinates_delete_btn"></span>').click(function(e){
+						e.preventDefault();
+						_self.coordinatesDeleteBtnOnClick();	
+					});
+					this.coordinates_delete_btn.appendTo(this.coordinates_container);	
+				}
+			},
+			coordinatesDeleteBtnOnClick: function(){
+				this.setMapLocation(null);
+			},
+			initLatWrapper: function(){
+				var s = '<div class="fmx_coordinates_selector_cooordinate_wrapper">';
+				s += '<span class="fmx_coordinates_selector_cooordinate_label">' + this.labels.lat + ':</span>';
+				s += '</div>';
+				this.lat_wrapper = $(s);
+				this.lat_wrapper_value = $('<span class="fmx_coordinates_selector_coordinate_value"></span>');
+				this.lat_wrapper_value.appendTo(this.lat_wrapper);
+				this.lat_wrapper.append('<div class="clear"></div>');
+				this.lat_wrapper.appendTo(this.coordinates_container);
+			},
+			initLngWrapper: function(){
+				var s = '<div class="fmx_coordinates_selector_cooordinate_wrapper">';
+				s += '<span class="fmx_coordinates_selector_cooordinate_label">' + this.labels.lng + '</span>';
+				s += '</div>';
+				this.lng_wrapper = $(s);
+				this.lng_wrapper_value = $('<span class="fmx_coordinates_selector_coordinate_value"></span>');
+				this.lng_wrapper_value.appendTo(this.lng_wrapper);
+				this.lng_wrapper.append('<div class="clear"></div>');
+				this.lng_wrapper.appendTo(this.coordinates_container);
+			},
+			initGoogleMaps: function(){
+				var _self = this;
+				this.google_maps_loader.load(function(){
+					_self.googleMapsOnLoad();
+				});
+			},
+			googleMapsOnLoad: function(){
+				this.initMap();
+			},
+			initCenter: function(){
+				var lat;
+				var lng;
+				if(this.lat && this.lat){
+					var lat = this.lat;
+					var lng = this.lng;
+					this.init_zoom = this.selected_zoom;
+				}
+				else{
+					var lat = this.default_lat;
+					var lng = this.default_lng;
+					this.init_zoom = this.default_zoom;
+				}
+				this.center = new google.maps.LatLng(lat, lng);
+           	},
+           	setMapLocation: function(location){
+           		if(location == null){
+           			this.map.setCenter(new google.maps.LatLng(this.default_lat, this.default_lng));
+           			this.map.setZoom(this.default_zoom);
+           			this.search_field.val('');
+           			this.marker.setMap(null);
+           			this.marker = null;
+           			this.coordinates_container.hide();
+           			this.lat_hidden_field.val('');
+           			this.lng_hidden_field.val('');
+           		}
+           		else{
+           			if(this.marker == null){
+           				this.initMarker();
+           				this.marker.setMap(this.map);
+           			}
+           			this.marker.setPosition(location);
+           			this.map.setCenter(location);
+					this.map.setZoom(this.selected_zoom);
+					var lat = location.lat();
+					var lng = location.lng()
+           			this.lat_wrapper_value.html(this.truncateCoordinate("" + lat, 8));
+           			this.lng_wrapper_value.html(this.truncateCoordinate("" + lng, 8));
+           			this.coordinates_container.show();
+           			this.lat_hidden_field.val(lat);
+           			this.lng_hidden_field.val(lng);
+           		}
+           	},
+           	truncateCoordinate: function(str, max_length){
+           		return str.length > max_length ? (str.substring(0, (max_length - 3)) + "...") : str; 
+           	},
+			initMap: function(){
+				this.initCenter();
+				this.initAutoComplete();
+				this.map = new google.maps.Map(this.map_container.get(0), {
+					zoom: this.init_zoom,
+					center: this.center,
+					mapTypeId: google.maps.MapTypeId.ROADMAP
+				});
+				if(this.lat && this.lng){
+					this.setMapLocation(new google.maps.LatLng(this.lat, this.lng));
+				}
+			},
+			initAutoComplete: function(){
+				if(this.editable){
+					this.autocomplete = new google.maps.places.Autocomplete(this.search_field.get(0));
+					google.maps.event.addListener(this.autocomplete, 'place_changed', function(){
+						_self.autoCompleteOnChange();
+					});	
+				}
+			},
+			autoCompleteOnChange: function(){
+				var place = this.autocomplete.getPlace();
+				this.setMapLocation(place.geometry.location);
+			},
+			initMapContainer: function(){
+				this.map_container = $('<div class="fmx_coordinates_selector_map_container"></div>');
+				this.map_container.appendTo(this.container);
+			},
+			initSearchContainer: function(){
+				if(this.editable){
+					var s = '<div class="fmx_coordinates_selector_search_container">';
+					s += '<span class="fmx_coordinates_selector_search_label">' + this.labels.search + '</span>';
+					s += '</div>';
+					this.search_container = $(s);
+					this.initSearchField();
+					this.search_container.append('<div class="clear"></div>');
+					this.search_container.appendTo(this.top_bar);	
+				}
+			},
+			initSearchField: function(){
+				this.search_field = $('<input />', {
+					type: 'text'
+				}).addClass('fmx_coordinates_selector_search_field');
+				this.search_field.keypress(this.searchFieldOnKeyPress);
+				this.search_field.appendTo(this.search_container);
+			},
+			searchFieldOnKeyPress: function(e){
+				var key = window.event ? window.event.keyCode : e.which;
+				if(key == 13) e.preventDefault();
+			},
+			initTopBar: function(){
+				this.top_bar = $('<div class="fmx_coordinates_selector_top_bar"></div>');
+				this.top_bar.appendTo(this.container);
+			},
+			initMarker: function(){
+				this.marker = new google.maps.Marker({
+					draggable: this.editable
+				});
+				if(this.editable){
+					google.maps.event.addListener(this.marker, 'dragend', function(){
+						_self.markerOnDragEnd();	
+					});	
+				}
+			},
+			markerOnDragEnd: function(){
+				this.setMapLocation(this.marker.getPosition());
+			}
+		}
+		$.extend(_self, opts);
+		_self.init();
+		return _self;
+	};
+})(jQuery);

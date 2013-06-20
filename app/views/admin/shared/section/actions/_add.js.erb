@@ -1,0 +1,41 @@
+<% opts = section_add_action_defaults(opts) %>
+<% if(opts[:perm]) %>
+this.add_btn = {};
+$.extend(this.add_btn, {
+	parent: this,
+	root: null,
+	clicked: false,
+	init: function(){
+		this.initRoot();
+		this.initTrigger();
+	},
+	initTrigger: function(){
+		var _self = this;
+		var trigger = $('#<%= opts[:add_btn_id] %>').click(function(e){
+			e.preventDefault();
+			_self.addBtnOnClick(e, $(this));
+		});
+		this.initOverlay(trigger);
+	},
+	initOverlay: function(trigger){
+		var msg = trigger.attr('data-overlay');
+		if(msg){
+			this.root.fmx.overlay({
+				trigger: trigger,
+				msg: msg,
+				position: $.fmx_overlay_positions.left
+			});
+		}
+	},
+	addBtnOnClick: function(e, element){
+        var _self;
+		if (!this.clicked) {
+			this.root.view_stack.loadView('<%= url_for opts[:add_action] %>', <%= opts[:add_params].to_json.html_safe %>);
+		}
+	},
+	initRoot: function(){
+		this.root = this.parent.root;
+	}
+});
+this.add_btn.init();
+<% end %>

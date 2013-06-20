@@ -1,0 +1,31 @@
+@import 'fmx/mixins.css.scss';
+.clear{
+	clear: both;
+	display: block;
+}
+/** main loader */
+#main_loader{
+	background: none repeat scroll 0 0 #000000;
+	padding: 10px;
+	position: fixed;
+	width: 100px;
+	left: 50%;
+	margin-left: -50px;
+	bottom: 20px;
+	@include border-radius(4px, 4px, 4px, 4px);
+	display: none;
+	z-index: 9999;
+	#main_loader_sprite{
+		width: 20px;
+		height: 20px;
+		display: block;
+		margin: 10px auto;
+	}
+
+	#main_loader_label{
+		color: #FFFFFF;
+		text-align: center;
+		font-size: 12px;
+		margin: 0 0 10px 0;
+	}
+}

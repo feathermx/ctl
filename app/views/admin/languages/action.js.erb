@@ -1,0 +1,6 @@
+<% content_for :section_actions do %>
+	<%= render partial: 'admin/shared/section/actions/add', locals: { opts: @section.merge(perm: add?) } %>
+	<%= render partial: 'admin/shared/section/actions/edit', locals: { opts: @section.merge(perm: edit?) } %>
+	<%= render partial: 'admin/shared/section/actions/delete', locals: { opts: @section.merge(perm: delete?) } %>
+<% end %>
+<%= render partial: 'admin/shared/section/action', locals: { opts: @section } %>

@@ -1,0 +1,250 @@
+var lang = {};
+$.extend(lang, {
+	init: function(){
+		this.fmx.parent = this.app.parent = this;
+	},
+	messages: {
+		not_found: '<%= t 'app.admin.messages.not_found' %>',
+		loading: '<%= t 'app.admin.messages.loading' %>',
+		error: '<%= t 'app.admin.messages.error' %>'
+	},
+	views: {
+		profile: {
+			update_labels: {
+				info: '<%= t 'app.admin.views.profile.tabs.info.labels.update_success' %>',
+				password: '<%= t 'app.admin.views.profile.tabs.password.labels.update_success' %>',
+				city: '<%= t 'app.admin.views.profile.tabs.city.labels.update_success' %>'
+			}
+		}
+	},
+	fmx: {
+		parent: null,
+		tabs: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		notification: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		overlay: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		dialog: function(){
+			var opts = {};
+			$.extend(opts, {
+				labels: {
+					close: '<%= t 'fmx.dialog.labels.close' %>'
+				}
+			});
+			return opts;
+		},
+		dialog_action: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		table: function(){
+			var opts = {};
+			$.extend(opts, {
+				labels: {
+					not_found: this.parent.messages.not_found,
+					filters: '<%= t "fmx.admin.table.labels.filters" %>',
+				},
+				pager_opts: {
+					labels: {
+						next: '<%= t 'fmx.admin.table_pager.labels.next' %>',
+						prev: '<%= t 'fmx.admin.table_pager.labels.prev' %>',
+						showing: '<%= t 'fmx.admin.table_pager.labels.showing' %>',
+						of: '<%= t 'fmx.admin.table_pager.labels.of' %>'
+					}
+				}
+			});
+			return opts;
+		},
+		table_grid: function(){
+			var opts = {};
+			$.extend(opts, this.table());
+			$.extend(opts.labels, {
+				sort: '<%= t 'fmx.admin.table_grid.labels.sort' %>',
+				field_select: '<%= t 'fmx.admin.table_grid.labels.field_select' %>',
+      			asc: '<%= t 'fmx.admin.table_grid.labels.asc' %>',
+      			desc: '<%= t 'fmx.admin.table_grid.labels.desc' %>'
+			});
+			return opts;
+		},
+		table_filter: function(){
+			var opts = {};
+			$.extend(opts, {
+				labels: {
+					_default: '<%= t 'fmx.admin.table_filter.labels._default' %>',
+					loading: this.parent.messages.loading,
+					not_found: this.parent.messages.not_found,
+					error: this.parent.messages.error
+				}
+			});
+			return opts;
+		},
+		table_action: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		date_table_filter: function(){
+			var opts = {};
+			$.extend(opts, {
+				labels: {
+					_start: '<%= t 'fmx.admin.date_table_filter.labels._start' %>',
+		      		end: '<%= t 'fmx.admin.date_table_filter.labels.end' %>'
+				}
+			});
+			return opts;
+		},
+		form: function(){
+			var opts = {};
+			$.extend(opts, {
+				labels: {
+					upload_in_progress: '<%= t 'fmx.form.labels.upload_in_progress' %>'
+				}
+			});
+			return opts;
+		},
+		checkbox: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		placeholder: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		login: function(){
+			var opts = {};
+			$.extend(opts, {
+				labels: {
+					invalid_login: '<%= t 'fmx.admin.login.labels.invalid_login' %>'
+				}
+			});
+			return opts;
+		},
+		sprite: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		uploader: function(){
+			var opts = {};
+			$.extend(opts, {
+				labels: {
+					reading: '<%= t 'fmx.admin.uploader.labels.reading' %>',
+					uploading: '<%= t 'fmx.admin.uploader.labels.uploading' %>',
+					ready: '<%= t 'fmx.admin.uploader.labels.ready' %>',
+					error: '<%= t 'fmx.admin.uploader.labels.error' %>'
+				}
+			});
+			return opts;
+		},
+		fullscreen: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		fixed: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		collapse: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		view_stack: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		navigation: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		coordinates_selector: function(){
+			var opts = {};
+			$.extend(opts, {
+				labels: {
+					search: '<%= t 'fmx.admin.coordinates_selector.labels.search' %>',
+  					lat: '<%= t 'fmx.admin.coordinates_selector.labels.lat' %>',
+  					lng: '<%= t 'fmx.admin.coordinates_selector.labels.lng' %>'
+				}
+			});
+			return opts;
+		},
+		date_picker: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
+		},
+		csv_uploader: function(){
+			var opts = {};
+			$.extend(opts, {
+				labels: {
+					fields: {
+						delimiter: '<%= t 'fmx.admin.csv_uploader.labels.fields.delimiter' %>',
+						exclude_count: '<%= t 'fmx.admin.csv_uploader.labels.fields.exclude_count' %>'
+					}
+				}
+			});
+			return opts;
+		}
+	},
+	app: {
+		parent: null,
+		confirm_dialog: function(){
+			var opts = {};
+			$.extend(opts, {
+				title: '<%= t 'app.admin.confirm_dialog.title' %>',
+				message: '<%= t 'app.admin.confirm_dialog.message' %>'
+			});
+			return opts;
+		},
+		actions: {
+			confirm: '<%= t 'app.admin.actions.confirm' %>',
+			cancel: '<%= t 'app.admin.actions.cancel' %>'
+		}
+	}
+});
+lang.init();

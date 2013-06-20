@@ -1,0 +1,8 @@
+@import 'fmx/mixins.css.scss';
+.fmx_overlay_container{
+	color: #FFFFFF;
+    font-size: 12px;
+	padding: 6px 7px;
+	background: none repeat scroll 0 0 #000000;
+	@include border-radius(3px, 3px, 3px, 3px);
+}

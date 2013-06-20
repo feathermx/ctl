@@ -1,0 +1,124 @@
+(function(){
+	$.fmx_notification_globals = {
+		initialized: false,
+		container: null,
+		body: null,
+		opacities: {
+			active: 0.7
+		},
+		intervals: {
+			fade: 500
+		},
+		init: function(){
+			if(!this.initialized){
+				this.initialized = true;
+				this.initBody();
+				this.initContainer();
+			}
+		},
+		initBody: function(){
+			this.body = $('body');
+		},
+		initContainer: function(){
+			this.container = $('<div id="fmx_notification_container"></div>');
+			this.container.appendTo(this.body);
+		}
+	};
+	$.fmx_notification = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			msg: '',
+			interval: null,
+			timeout: 5000,
+			container: null,
+			globals: $.fmx_notification_globals,
+			has_touch: false,
+			active: false,
+			init: function(){
+				this.initGlobals();
+				this.initContainer();
+				this.initMsg();
+				this.show();
+			},
+			initContainer: function(){
+				var _self = this;
+				this.container = $('<div class="fmx_notification"></div>').css({
+					opacity: 0
+				});
+				if(this.has_touch){
+					var container = this.container.get(0);
+					container.addEventListener('touchstart', function(e){
+						e.preventDefault();
+						_self.containerOnClick(e, _self.container);
+					}, false);
+				}
+				else{
+					this.container.click(function(e){
+						e.preventDefault();
+						_self.containerOnClick(e, $(this));
+					});
+				}
+				this.container.appendTo(this.globals.container);
+			},
+			initIcon: function(){
+				if(this.icon_src){
+					this.icon = $('<div class="fmx_notification_icon"></div>').addClass(this.icon_src);
+					this.icon.appendTo(this.container);
+				}
+			},
+			initMsg: function(){
+				var msg = $('<div class="fmx_notification_msg"></div>');
+				msg.html(this.msg);
+				msg.appendTo(this.container);
+			},
+			show: function(){
+				var _self = this;
+				this.container.stop(true, true).animate({
+					opacity: this.globals.opacities.active
+				}, this.globals.intervals.fade, 'linear', function(){
+					_self.showCallback();
+				});
+			},
+			showCallback: function(){
+				this.active = true;
+				if(this.timeout != null){
+					var _self = this;
+					this.interval = setInterval(function(){
+						_self.destroy();
+					}, this.timeout);
+				}
+			},
+			containerOnClick: function(e, element){
+				this.destroy();
+			},
+			destroy: function(){
+				if(this.active){
+					var _self = this;
+					this.active = false;
+					if(this.interval != null){
+						clearInterval(this.interval);
+					}
+					this.container.stop(true, false).animate({
+						opacity: 0
+					}, this.globals.intervals.fade, 'linear', function(){
+						_self.fadeOutCallback();
+					});
+				}
+			},
+			fadeOutCallback: function(){
+				var _self = this;
+				this.container.stop(true, true).slideUp(this.globals.intervals.fade, function(){
+					_self.destroyCallback();
+				});
+			},
+			destroyCallback: function(){
+				this.container.remove();	
+			},
+			initGlobals: function(){
+				this.globals.init();
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	};
+})(jQuery);

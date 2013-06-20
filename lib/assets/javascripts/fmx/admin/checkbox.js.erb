@@ -1,0 +1,72 @@
+(function(){
+	var nil = $();
+	$.fmx_checkbox = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			field_name: '',
+			container: nil,
+			active: false,
+			hidden_field: null,
+			value: 1,
+			has_touch: false,
+			can_disable: true,
+			is_active: true,
+			init: function(){
+				this.initContainer();
+				this.initHiddenField();
+				if(this.active){
+					this.enable();
+				}
+			},
+			initHiddenField: function(){
+				this.hidden_field = $('<input/>', {
+					type: "hidden",
+					name: this.field_name
+				});
+				this.hidden_field.insertAfter(this.container);
+			},
+			initContainer: function(){
+				var _self = this;
+				if(!this.has_touch){
+					this.container.click(function(e){
+						e.preventDefault();
+						_self.containerOnClick(e, $(this));
+					});
+				}
+				else{
+					var container = this.container.get(0);
+					container.addEventListener('touchstart', function(e){
+						_self.containerOnClick(e, _self.container);
+					}, false);
+				}
+			},
+			containerOnClick: function(e, element){
+				if(this.is_active){
+					if(this.active){
+						if(this.can_disable){
+							this.disable();
+							this.change(this);
+						}
+					}
+					else{
+						this.change(this);
+						this.enable();
+					}
+				}
+			},
+			change: function(instance){},
+			enable: function(){
+				this.active = true;
+				this.container.addClass('active');
+				this.hidden_field.val(this.value);
+			},
+			disable: function(){
+				this.active = false;
+				this.container.removeClass('active');
+				this.hidden_field.val("");
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	};
+})(jQuery);

@@ -1,0 +1,11 @@
+<% lang_key = "app.admin.menu.#{el[:key]}" %>
+<% img_src = "admin/icons/menu/#{el[:key]}.png" %>
+<% active = active ? ' active' : '' %>
+<a href="<%= url_for el[:url] %>" class="menu_element<%= active %>">
+	<span class="menu_element_icon">
+		<%= image_tag img_src, width: 16, height: 32 %>
+	</span>
+	<span class="menu_element_label"><%= t lang_key %></span>
+	<%= image_tag 'admin/ui/hover/menu.png', width: 12, height: 40, class: 'menu_element_active_img' %>
+	<span class="clear"></span>
+</a>

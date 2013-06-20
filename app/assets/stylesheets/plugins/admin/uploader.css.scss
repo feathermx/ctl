@@ -1,0 +1,55 @@
+@import 'fmx/mixins.css.scss';
+.fmx_uploader_loading_file{
+	background: none repeat scroll 0 0 #F9F9F9;
+	width: 250px;
+	@include border-radius(3px, 3px, 3px, 3px);
+	border: 1px solid #DDDDDD;
+	@include box-shadow(0, 1px, 0, #FFFFFF, 'inset, 0 1px 3px rgba(0, 0, 0, 0.08)');
+	padding: 10px 20px;
+	margin: 0 0 5px 0;
+	.fmx_uploader_file_name{
+	    color: #444444;
+		@include text-shadow(0, 1px, 0, #FFFFFF);
+	    margin: 0 0 10px 0;
+	    font-size: 12px;
+	}
+	.fmx_uploader_file_preloader{
+	    background: none repeat scroll 0 0 #E5E5E5;
+	    height: 3px;
+	}
+	.fmx_uploader_file_loading_bar{
+	    background: none repeat scroll 0 0 #0099FF;
+	    height: 3px;
+	}
+	.fmx_uploader_file_status{
+	    margin: 10px 0 0 0;
+	    color: #444444;
+		@include text-shadow(0, 1px, 0, #FFFFFF);
+	    font-size: 12px;   
+	}
+	.fmx_uploader_ready_msg{
+		font-size: 12px;
+		margin: 1px 0 0 0;
+		float: left;
+	}
+	.fmx_uploader_icon{
+	    width: 14px;
+	    height: 14px;
+	    margin: 0 7px 0 0;
+		&.success{
+			$url: asset-path('fmx/icons/success.png');
+			background: url('#{$url}') no-repeat scroll 0 0 transparent;
+		}
+		&.remove{
+			$url: asset-path('fmx/icons/delete.png');
+			background: url('#{$url}') no-repeat scroll 0 0 transparent;
+			cursor: pointer;
+			width: 16px;
+			height: 15px;
+			float: right;
+		}
+	}
+}
+.fmx_form .fmx_uploader_container{
+	margin: 6px 0 0 0;
+}

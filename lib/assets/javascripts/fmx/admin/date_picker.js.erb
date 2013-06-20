@@ -1,0 +1,52 @@
+(function(){
+	var nil = $();
+	$.fmx_date_picker = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			container: nil,
+			field: null,
+			date_picker_opts: {},
+			init: function(){
+				this.initField();
+				this.initVal();
+			},
+			initVal: function(){
+				var val = this.container.val();
+				val = parseInt(val);
+				if(!isNaN(val) && isFinite(val)){
+					this.container.val(val);
+					var date = new Date(val);
+					this.field.datepicker('setDate', date);
+				}
+			},
+			initField: function(){
+				var _self = this;
+				this.field = $('<input type="text" />').attr('readonly', true).datepicker(
+					$.extend({
+						onSelect: function(dateText, instance){
+							_self.datePickerOnSelect(dateText, instance);
+						}
+					}, this.date_picker_opts)
+				);
+				var placeholder = this.container.attr('data-placeholder');
+				if(placeholder != null){
+					this.field.attr('placeholder', placeholder);
+				}
+				this.field.insertBefore(this.container);
+			},
+			datePickerOnSelect: function(dateText, instance){
+				var date = new Date(instance.selectedYear, instance.selectedMonth, instance.selectedDay);
+				this.setValue(date.getTime());
+			},
+			setValueFromDate: function(date){
+				this.field.datepicker('setDate', date);
+				this.setValue(date.getTime());
+			},
+			setValue: function(time){
+				this.container.val(time);
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

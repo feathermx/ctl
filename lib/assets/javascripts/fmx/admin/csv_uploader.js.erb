@@ -1,0 +1,98 @@
+(function(){
+	var nil = $();
+	$.fmx_csv_uploader = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			container: nil,
+			options: null,
+			labels: {
+				fields: {
+					delimiter: 'Delimiter',
+	    			exclude_count: 'Exclude rows'
+				}
+			},
+			init: function(){
+				this.initOptions();
+			},
+			initOptions: function(){
+				this.options = {};
+				$.extend(this.options, {
+					parent: this,
+					view: this,
+					container: null,
+					form: null,
+					init: function(){
+						this.initContainer();
+					},
+					form: function(){
+						this.form = {};
+						$.extend(this.form, {
+							parent: this,
+							view: null,
+							container: null,
+							fields: [],
+							init: function(){
+								this.initView();
+								this.initContainer();
+								this.initFieldset();
+							},
+							initFieldset: function(){
+								var fieldset = $('<fieldset></fieldset>');
+								fieldset.appendTo(this.container);
+							},
+							addField: function(opts){
+								var field = {};
+								$.extend(field, {
+									parent: this,
+									view: null,
+									parent_container: null,
+									key: null,
+									validations: [],
+									container: null,
+									init: function(){
+										this.initContainer();
+									},
+									initContainer: function(){
+										this.container = $('<div class="field"></div>');
+										this.initLabel();
+										this.initFieldContainer();
+										this.container.appendTo(this.parent_container);
+									},
+									initFieldContainer: function(){
+										
+									},
+									initLabel: function(){
+										var label = $('<label></label>');
+										//var name = 
+										//label.html()
+										label.appendTo(this.container);
+									},
+									initView: function(){
+										this.view = this.parent.view;
+									}
+								}, opts);
+								field.init();
+								this.fields.push(field);
+							},
+							initContainer: function(){
+								this.container = $('<form class="fmx_form"></form>');
+								this.container.appendTo(this.parent.container);
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							}
+						});
+						this.form.init();
+					},
+					initContainer: function(){
+						this.container = $('<div class="fmx_csv_uploader_options_container"></div>');
+						this.container.appendTo(this.parent.container);
+					}
+				});
+				this.options.init();
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

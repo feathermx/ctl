@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<%= render partial: 'shared/ui/meta' %>
+		<%= render partial: 'admin/shared/ui/stylesheets' %>
+		<%= render partial: 'admin/shared/ui/javascripts' %>
+		<title><%= t "app.admin.title" %></title>
+		<%= yield :head %>
+	</head>
+	<body>
+		<%= render partial: 'shared/ui/main_loader' %>
+		<%= yield %>
+	</body>
+</html>

@@ -1,0 +1,10 @@
+.fmx_sprite_container{
+	overflow: hidden;
+	position: relative;
+}
+
+.fmx_sprite_container img{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
