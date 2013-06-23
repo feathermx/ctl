@@ -29,11 +29,7 @@ class Admin::TracksController < Admin::AdminController
   end
   
   def create
-    #TODO
-    #element = Admin::Track.new(params[:admin_track])
-    #element.km_id = self.km.id
-    #element.save
-    #render json: { errors: element.errors }
+    render json: { errors: Admin::Track.mass_insert(params[:tracks], { km_id: self.km.id }) }
   end
   
   def delete

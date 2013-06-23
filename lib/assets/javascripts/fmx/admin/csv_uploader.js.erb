@@ -1,18 +1,451 @@
 (function(){
 	var nil = $();
+	String.prototype.csv_split = function(sep) {
+		for (var val = this.split(sep = sep || ","), x = val.length - 1, tl; x >= 0; x--) {
+			if (val[x].replace(/"\s+$/, '"').charAt(val[x].length - 1) == '"') {
+				if ((tl = val[x].replace(/^\s+"/, '"')).length > 1 && tl.charAt(0) == '"') {
+					val[x] = val[x].replace(/^\s*"|"\s*$/g, '').replace(/""/g, '"');
+				} 
+				else if (x) {
+	        		val.splice(x - 1, 2, [val[x - 1], val[x]].join(sep));
+				} 
+				else val = val.shift().split(sep).concat(val);
+			} 
+			else val[x].replace(/""/g, '"');
+		}
+		return val;
+	};
 	$.fmx_csv_uploader = function(opts){
 		var _self = {};
 		$.extend(_self, {
 			container: nil,
+			table: null,
 			options: null,
+			not_supported: null,
 			labels: {
+				submit: 'Continue',
+				back: 'Cancel',
+				not_supported: 'Sorry, your browser does not support HTML5 file uploads. Try using Mozilla Firefox or Google Chrome.',
+				file_missing: 'Please select a csv file to continue',
+				invalid_file: 'Invalid csv file',
+				empty_file: 'CSV file is empty',
+				validation: {
+					presence: 'cannot be blank',
+					numericality: 'is not a number'
+				},
 				fields: {
 					delimiter: 'Delimiter',
-	    			exclude_count: 'Exclude rows'
+	    			exclude_count: 'Exclude rows',
+					file: 'CSV File'
 				}
 			},
+			defaults: {
+				delimiter: ',',
+				exclude_count: 0
+			},
+			validations: {
+				presence: 1,
+				numericality: 2
+			},
+			field_types: {
+				text: 0,
+				file: 1
+			},
+			delimiter: {
+				line: "\r"
+			},
+			values: {
+				delimiter: null,
+				exclude_count: null
+			},
+			valid_mimes: ['text/comma-separated-values', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.ms-excel', 'application/vnd.msexcel', 'text/anytext'],
+			active: null,
+			file: null,
+			file_reader: null,
+			field_name: 'csv',
+			type: 'post',
+			url: '',
+			params: {},
 			init: function(){
+				this.initTable();
+				this.initNotSupported();
 				this.initOptions();
+				this.render();
+			},
+			render: function(){
+				if(window.File && window.FileReader && window.FileList && window.Blob){
+					this.initFileReader();
+					this.setView(this.options);
+				}
+				else{
+					this.not_supported.show();
+				}
+			},
+			initFileReader: function(){
+				var _self = this;
+				this.file_reader = new FileReader();
+				this.file_reader.onload = function(e){
+					_self.fileReaderOnLoad(e);
+				}
+			},
+			loadFile: function(){
+				var error_msg = null;
+				if(this.file == null){
+					error_msg = this.labels.file_missing;
+				}
+				else{
+					var mime = this.file.type;
+					var mime_index = $.inArray(mime, this.valid_mimes);
+					if(mime_index == -1){
+						error_msg = this.labels.invalid_file;
+					}
+					else{
+						this.options.loading();
+						this.file_reader.readAsText(this.file);
+					}
+				}
+				if(error_msg != null){
+					$.fmx_notification({
+						msg: error_msg
+					});
+				}
+			},
+			fileReaderOnLoad: function(e){
+				var data = e.target.result;
+				this.options.loaded();
+				var row_count = 0;
+				if(data){
+					this.options.setValues();
+					this.table.empty();
+					var lines = data.split(this.delimiter.line);
+					for(var i=this.values.exclude_count; i<lines.length; ++i){
+						var row = lines[i];
+						if(row){
+							this.table.addRow(i, row);
+							++row_count;
+						}
+					}
+				}
+				if(row_count == 0){
+					var error_msg = this.labels.empty_file;
+					$.fmx_notification({
+						msg: error_msg
+					});
+				}
+				else{
+					this.setView(this.table);
+				}
+			},
+			setView: function(which){
+				if(which != this.active){
+					if(this.active != null) this.active.hide();
+					this.active = which;
+					this.active.show();
+				}
+			},
+			cancel: function(){
+				this.setView(this.options);
+			},
+			initTable: function(){
+				this.table = {};
+				$.extend(this.table, {
+					parent: this,
+					view: this,
+					fields: [],
+					rows: {},
+					form: null,
+					tbody: null,
+					container: null,
+					actions: null,
+					is_loading: false,
+					init: function(){
+						this.initFields();
+						this.initContainer();
+						this.initForm();
+						this.initTable();
+						this.initActions();
+					},
+					doRequest: function(){
+						this.loading();
+						var _self = this;
+						$.ajax({
+							type: this.parent.type,
+							url: this.parent.url,
+							data: this.form.serialize(),
+							success: function(data){
+								_self.success(data);
+							},
+							error: function(){
+								_self.error();
+							}
+						});
+					},
+					success: function(data){
+						this.loaded();
+						//TODO
+					},
+					error: function(){
+						this.loaded();
+						this.parent.error();
+					},
+					initActions: function(){
+						this.actions = {};
+						$.extend(this.actions, {
+							parent: this,
+							view: null,
+							actions: $(),
+							init: function(){
+								this.initView();
+								this.initContainer();
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							},
+							initActions: function(){
+								this.initContinueAction();
+								this.initBackAction();
+							},
+							initContinueAction: function(){
+								var continue_action = this.getAction('submit');
+								var _self = this;
+								continue_action.click(function(e){
+									e.preventDefault();
+									_self.continueActionOnClick(e, $(this));
+								});
+								this.actions = this.actions.add(continue_action);
+								continue_action.appendTo(this.container);
+							},
+							continueActionOnClick: function(e, element){
+								if(!this.parent.is_loading){
+									this.parent.doRequest();
+								}
+							},
+							initBackAction: function(){
+								var back_action = this.getAction('back');
+								var _self = this;
+								back_action.click(function(e){
+									e.preventDefault();
+									_self.backActionOnClick(e, $(this));
+								});
+								this.actions = this.actions.add(back_action);
+								back_action.appendTo(this.container);
+							},
+							backActionOnClick: function(e, element){
+								if(!this.parent.is_loading){
+									this.view.cancel();
+								}
+							},
+							getAction: function(key){
+								var action = $('<a href="#"></a>');
+								var label = this.view.labels[key];
+								action.addClass('fmx_csv_uploader_table_action');
+								action.addClass('button');
+								action.html(label);
+								return action;
+							},
+							initContainer: function(){
+								this.container = $('<div class="fmx_csv_uploader_table_actions"></div>');
+								this.initActions();
+								this.container.append('<div class="clear"></div>');
+								this.container.appendTo(this.parent.container);
+							},
+							loading: function(){
+								this.actions.addClass('disabled');
+							},
+							loaded: function(){
+								this.actions.removeClass('disabled');
+							}
+						});
+						this.actions.init();
+					},
+					initForm: function(){
+						this.form = $('<form class="fmx_csv_uploader_table_form"></form>');
+						this.initParams();
+						this.form.appendTo(this.container);
+					},
+					initParams: function(){
+						var _self = this;
+						var params = this.view.params;
+						$.each(params, function(key, val){
+							_self.addParam(key, val);
+						});
+					},
+					addParam: function(key, val){
+						var input = $('<input />', {
+							type: 'hidden',
+							name: key
+						});
+						input.val(val);
+						input.appendTo(this.form);
+					},
+					initFields: function(){
+						var _self = this;
+						var fields = this.parent.container.find('.fmx_csv_uploader_field');
+						fields.each(function(){
+							_self.addField($(this));
+						});
+					},
+					addField: function(container){
+						var field = {};
+						$.extend(field, {
+							parent: this,
+							view: null,
+							container: container,
+							name: null,
+							field: null,
+							pos: 0,
+							init: function(){
+								this.initView();
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container.remove();
+								this.name = this.container.attr('data-name');
+								this.field = this.container.attr('data-field');
+								var pos = parseInt(this.container.attr('data-pos'));
+								if(!isNaN(pos) && isFinite(pos)){
+									this.pos = pos;
+								}
+							},
+							appendTo: function(tr){
+								var th = $('<th></th>');
+								th.addClass('no_sort');
+								th.html(this.name);
+								th.appendTo(tr);
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							}
+						});
+						field.init();
+						this.fields.push(field);
+					},
+					initContainer: function(){
+						this.container = $('<div class="fmx_csv_uploader_table_container"></div>');
+						this.container.appendTo(this.parent.container);
+					},
+					initTable: function(){
+						var table = $('<table class="fmx_table"></table>');
+						table.addClass('visible');
+						this.initThead(table);
+						this.initTbody(table);
+						table.appendTo(this.form);
+					},
+					initTbody: function(table){
+						this.tbody = $('<tbody></tbody>');
+						this.tbody.appendTo(table);
+					},
+					addRow: function(index, data){
+						var row = {};
+						$.extend(row, {
+							parent: this,
+							index: index,
+							data: data,
+							view: null,
+							input: null,
+							error_container: null,
+							init: function(){
+								this.initView();
+								this.initContainer();
+								this.parseData();
+							},
+							parseData: function(){
+								var delimiter = this.view.values.delimiter;
+								this.data = this.data.csv_split(delimiter);
+								var fields = this.parent.fields;
+								var _self = this;
+								$.each(fields, function(key, field){
+									_self.addField(field);
+								});
+							},
+							addField: function(field){
+								var container = $('<td></td>');
+								this.initInput(field, container);
+								container.appendTo(this.container);
+							},
+							initInput: function(field, container){
+								this.input = $('<input />', {
+									type: 'text',
+									name: this.getFieldName(field)
+								});
+								var val = this.data[field.pos];
+								if(val != null){
+									this.input.val(val);
+								}
+								this.input.appendTo(container);
+							},
+							getFieldName: function(field){
+								return this.view.field_name + '[' + this.index + ']' + '[' + field.field + ']';
+							},
+							initContainer: function(){
+								this.container = $('<tr></tr>');
+								if(this.index % 2 == 0){
+									this.container.addClass('even');
+								}
+								this.container.appendTo(this.parent.tbody);
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							}
+						});
+						row.init();
+						this.rows[index] = row;
+					},
+					empty: function(){
+						this.rows = {};
+						this.tbody.empty();
+					},
+					initThead: function(table){
+						var thead = $('<thead></thead>');
+						var tr = $('<tr></tr>');
+						$.each(this.fields, function(key, field){
+							field.appendTo(tr);
+						});
+						tr.appendTo(thead);
+						thead.appendTo(table);
+					},
+					show: function(){
+						this.container.css('display', 'block');
+					},
+					hide: function(){
+						this.container.css('display', 'none');
+					},
+					loading: function(){
+						this.is_loading = true;
+						this.actions.loading();
+						this.view.loading();
+					},
+					loaded: function(){
+						this.is_loading = false;
+						this.actions.loaded();
+						this.view.loaded();
+					}
+				});
+				this.table.init();
+			},
+			initNotSupported: function(){
+				this.not_supported = {};
+				$.extend(this.not_supported, {
+					parent: this,
+					view: this,
+					container: null,
+					init: function(){
+						this.initContainer();
+					},
+					initContainer: function(){
+						var label = this.view.labels.not_supported;
+						this.container = $('<div class="fmx_csv_uploader_not_supported"></div>');
+						this.container.html(label);
+						this.container.appendTo(this.parent.container);
+					},
+					show: function(){
+						this.container.css('display', 'block');
+					},
+					hide: function(){
+						this.container.css('display', 'none');
+					}
+				});
+				this.not_supported.init();
 			},
 			initOptions: function(){
 				this.options = {};
@@ -21,50 +454,238 @@
 					view: this,
 					container: null,
 					form: null,
+					is_loading: false,
 					init: function(){
 						this.initContainer();
+						this.initForm();
 					},
-					form: function(){
+					setValues: function(){
+						this.form.setValues();
+					},
+					initForm: function(){
 						this.form = {};
 						$.extend(this.form, {
 							parent: this,
 							view: null,
 							container: null,
-							fields: [],
+							fields: {
+								delimiter: null,
+								exclude_count: null
+							},
+							file_field: null,
 							init: function(){
 								this.initView();
 								this.initContainer();
 								this.initFieldset();
 							},
+							setValues: function(){
+								$.extend(this.view.values, {
+									delimiter: this.fields.delimiter.val || this.view.defaults.delimiter,
+									exclude_count: this.fields.exclude_count.val || this.view.defaults.exclude_count
+								});
+							},
 							initFieldset: function(){
 								var fieldset = $('<fieldset></fieldset>');
+								this.initDelimiterField(fieldset);
+								this.initExcludeCountField(fieldset);
+								this.initFileField(fieldset);
+								this.initFormActions(fieldset);
 								fieldset.appendTo(this.container);
 							},
-							addField: function(opts){
+							initFormActions: function(parent_container){
+								var form_actions = {};
+								$.extend(form_actions, {
+									parent_container: parent_container,
+									parent: this,
+									view: null,
+									container: null,
+									init: function(){
+										this.initView();
+										this.initContainer();
+									},
+									initContainer: function(){
+										this.container = $('<div class="form_actions"></div>');
+										this.initSubmitBtn();
+										this.container.append('<div class="clear"></div>');
+										this.container.appendTo(this.parent_container);
+									},
+									initSubmitBtn: function(){
+										var _self = this;
+										var label = this.view.labels.submit;
+										var submit_btn = $('<input />', {
+											type: 'submit',
+											value: label
+										});
+										submit_btn.click(function(e){
+											e.preventDefault();
+											_self.submitBtnOnClick(e, $(this));
+										}).addClass('button');
+										submit_btn.appendTo(this.container);
+									},
+									submitBtnOnClick: function(e, element){
+										var options = this.view.options;
+										if(!options.is_loading){
+											this.parent.submit();
+										}
+									},
+									initView: function(){
+										this.view = this.parent.view;
+									}
+								});
+								form_actions.init();
+							},
+							submit: function(){
+								var fields_valid = true;
+								$.each(this.fields, function(key, field){
+									fields_valid = fields_valid & field.validate();
+								});
+								if(fields_valid){
+									this.view.loadFile();
+								}
+							},
+							initFileField: function(fieldset){
+								var _self = this;
+								this.file_field = this.getField({
+									parent_container: fieldset,
+									key: 'file',
+									type: this.view.field_types.file,
+									fileInputOnChange: function(e, element){
+										_self.fileInputOnChange(e, element);
+									}
+								});
+							},
+							fileInputOnChange: function(e, element){
+								this.view.file = e.target.files[0];
+							},
+							initExcludeCountField: function(fieldset){
+								this.fields.exclude_count = this.getField({
+									parent_container: fieldset,
+									key: 'exclude_count',
+									validations: this.view.validations.presence | this.view.validations.numericality
+								});
+							},
+							initDelimiterField: function(fieldset){
+								this.fields.delimiter = this.getField({
+									parent_container: fieldset,
+									key: 'delimiter',
+									validations: this.view.validations.presence
+								});
+							},
+							getField: function(opts){
 								var field = {};
 								$.extend(field, {
 									parent: this,
 									view: null,
 									parent_container: null,
+									type: null,
 									key: null,
-									validations: [],
+									validations: 0,
 									container: null,
+									field_errors: null,
+									errors: [],
+									input: null,
+									val: null,
 									init: function(){
+										this.initView();
+										this.initType();
 										this.initContainer();
+									},
+									initType: function(){
+										if(this.type == null) this.type = this.view.field_types.text;
 									},
 									initContainer: function(){
 										this.container = $('<div class="field"></div>');
 										this.initLabel();
 										this.initFieldContainer();
+										this.container.append('<div class="clear"></div>');
 										this.container.appendTo(this.parent_container);
 									},
 									initFieldContainer: function(){
-										
+										var field_container = $('<div class="field_container"></div>');
+										this.initInput(field_container);
+										this.initFieldErrors(field_container);
+										field_container.appendTo(this.container);
+									},
+									initFieldErrors: function(container){
+										this.field_errors = $('<div class="field_errors"></div>');
+										this.field_errors.appendTo(container);
+									},
+									validate: function(){
+										this.clearErrors();
+										this.val = this.input.val();
+										if((this.validations & this.view.validations.presence) == this.view.validations.presence){
+											this.validatePresence();
+										}
+										if((this.validations & this.view.validations.numericality) == this.view.validations.numericality){
+											this.validateNumericality();
+										}
+										var is_valid = this.errors.length == 0;
+										if(!is_valid){
+											this.field_errors.html(this.errors.join(', '));
+										}
+										return is_valid;
+									},
+									isEmpty: function(){
+										return this.val == null || this.val.length == 0;
+									},
+									validateNumericality: function(){
+										var is_valid = true;
+										if(!this.isEmpty()){
+											var val = parseInt(this.val);
+											is_valid = !isNaN(val) && isFinite(val);
+											if(!is_valid){
+												this.errors.push(this.view.labels.validation.numericality);
+											}
+										}
+										return is_valid;
+									},
+									validatePresence: function(){
+										var is_valid = true;
+										if(this.isEmpty()){
+											is_valid = false;
+											this.errors.push(this.view.labels.validation.presence);
+										}
+										return is_valid;
+									},
+									clearErrors: function(){
+										this.field_errors.empty();
+										this.errors = [];
+									},
+									initInput: function(container){
+										switch(this.type){
+											case this.view.field_types.text:
+												this.initTextInput();
+											break;
+											case this.view.field_types.file:
+												this.initFileInput();
+											break;
+										}
+										if(this.input != null){
+											this.input.appendTo(container);
+										}
+									},
+									initFileInput: function(){
+										var _self = this;
+										this.input = $('<input />', {
+											type: 'file'
+										});
+										var input = this.input.get(0);
+										input.addEventListener('change', function(e){
+											_self.fileInputOnChange(e, _self.input);
+										}, false);
+									},
+									fileInputOnChange: function(e, element){},
+									initTextInput: function(){
+										var default_val = this.view.defaults[this.key];
+										this.input = $('<input />', {
+											type: 'text',
+											val: default_val
+										});
 									},
 									initLabel: function(){
 										var label = $('<label></label>');
-										//var name = 
-										//label.html()
+										var name = this.view.labels.fields[this.key];
+										label.html(name);
 										label.appendTo(this.container);
 									},
 									initView: function(){
@@ -72,7 +693,7 @@
 									}
 								}, opts);
 								field.init();
-								this.fields.push(field);
+								return field;
 							},
 							initContainer: function(){
 								this.container = $('<form class="fmx_form"></form>');
@@ -87,10 +708,26 @@
 					initContainer: function(){
 						this.container = $('<div class="fmx_csv_uploader_options_container"></div>');
 						this.container.appendTo(this.parent.container);
+					},
+					show: function(){
+						this.container.css('display', 'block');
+					},
+					hide: function(){
+						this.container.css('display', 'none');
+					},
+					loading: function(){
+						this.is_loading = true;
+					},
+					loaded: function(){
+						this.is_loading = false;
 					}
 				});
 				this.options.init();
-			}
+			},
+			loading: function(){},
+			loaded: function(){},
+			error: function(){},
+			success: function(data){}
 		}, opts);
 		_self.init();
 		return _self;

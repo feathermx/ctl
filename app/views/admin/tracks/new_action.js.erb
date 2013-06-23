@@ -6,16 +6,49 @@
 			parent: <%= opts[:js_parent_obj] %>,
 			root: null,
 			container: null,
+			config: null,
 			init: function(){
 				this.initRoot();
+				this.initConfig();
 				this.initCancelBtn();
 				this.initContainer();
 				this.initCsvUploader();
 			},
+			initConfig: function(){
+				this.config = config.views.tracks.csv;
+			},
 			initCsvUploader: function(){
-				this.root.fmx.csv_uploader({
-					container: this.container.find('#track_csv_uploader')
-				});
+				var _self = this;
+				this.root.fmx.csv_uploader(
+					$.extend({
+						params: { km_id: <%= @km.id %> },
+						container: this.container.find('#track_csv_uploader'),
+						loading: function(){
+							_self.csvUploaderLoading();
+						},
+						loaded: function(){
+							_self.csvUploaderLoaded();
+						},
+						success: function(data){
+							_self.csvUploaderSuccess(data);
+						},
+						error: function(){
+							_self.csvUploaderError();
+						}
+					}, this.config.uploader)
+				);
+			},
+			csvUploaderSuccess: function(data){
+				//TODO
+			},
+			csvUploaderError: function(){
+				this.root.error();
+			},
+			csvUploaderLoading: function(){
+				this.root.loading();
+			},
+			csvUploaderLoaded: function(){
+				this.root.loaded();
 			},
 			initContainer: function(){
 				this.container = this.root.dashboard.container.find('#track_new');

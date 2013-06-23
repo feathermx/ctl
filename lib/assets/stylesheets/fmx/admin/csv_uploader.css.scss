@@ -1,0 +1,15 @@
+@import 'fmx/mixins.css.scss';
+.fmx_csv_uploader_not_supported{
+	display: none;
+}
+.fmx_csv_uploader_options_container{
+	display: none;
+}
+.fmx_csv_uploader_table_container{
+	display: none;
+	.fmx_csv_uploader_table_actions{
+		@include link('a.fmx_csv_uploader_table_action') {
+			float: right;
+		}
+	}
+}

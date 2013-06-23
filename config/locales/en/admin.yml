@@ -124,6 +124,8 @@ en:
           fields:
             lat: 'Lat'
             lng: 'Lng'
+            date: 'UTC Date'
+            time: 'UTC Time'
             tracked_at: 'Time'
           new:
             title: 'Upload GPS data'

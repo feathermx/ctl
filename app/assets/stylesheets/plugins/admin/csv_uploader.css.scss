@@ -1,0 +1,22 @@
+@import 'admin/shared.css.scss';
+.fmx_csv_uploader_not_supported{
+	text-align: center;
+	font-size: 12px;
+	margin: 50px 0 0 0;
+	padding: 0 10px;
+}
+.fmx_csv_uploader_table_container{
+	.fmx_csv_uploader_table_form{
+		padding: 0 20px 20px 20px;
+	}
+	.fmx_csv_uploader_table_actions{
+		background: none repeat scroll 0 0 #F3F3F3;
+		height: 35px;
+	    padding: 20px;
+		@include link('a.fmx_csv_uploader_table_action') {
+			float: right;
+			margin: 0 5px 0 0;
+			text-decoration: none;
+		}
+	}
+}

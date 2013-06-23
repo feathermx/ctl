@@ -18,6 +18,16 @@ $.extend(config, {
 			}
 		},
 		tracks: {
+			csv: {
+				uploader: {
+					defaults: {
+						delimiter: ',',
+						exclude_count: 1
+					},
+					url: '<%= url_for controller: :tracks, action: :create %>',
+					field_name: 'tracks'
+				}
+			},
 			map:{
 				zoom: 15
 			},

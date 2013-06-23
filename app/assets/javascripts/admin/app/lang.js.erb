@@ -222,9 +222,20 @@ $.extend(lang, {
 			var opts = {};
 			$.extend(opts, {
 				labels: {
+					submit: '<%= t 'fmx.admin.csv_uploader.labels.submit' %>',
+					back: '<%= t 'fmx.admin.csv_uploader.labels.back' %>',
+					not_supported: '<%= t 'fmx.admin.csv_uploader.labels.not_supported' %>',
+					file_missing: '<%= t 'fmx.admin.csv_uploader.labels.file_missing' %>',
+					invalid_file: '<%= t 'fmx.admin.csv_uploader.labels.invalid_file' %>',
+					empty_file: '<%= t 'fmx.admin.csv_uploader.labels.empty_file' %>',
+					validation: {
+						presence: '<%= t 'fmx.admin.csv_uploader.labels.validations.presence' %>',
+						numericality: '<%= t 'fmx.admin.csv_uploader.labels.validations.numericality' %>'
+					},
 					fields: {
 						delimiter: '<%= t 'fmx.admin.csv_uploader.labels.fields.delimiter' %>',
-						exclude_count: '<%= t 'fmx.admin.csv_uploader.labels.fields.exclude_count' %>'
+						exclude_count: '<%= t 'fmx.admin.csv_uploader.labels.fields.exclude_count' %>',
+						file: '<%= t 'fmx.admin.csv_uploader.labels.fields.file' %>'
 					}
 				}
 			});

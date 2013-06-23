@@ -2,5 +2,10 @@
 <%= javascript_include_tag url_for(action: :new_action, km_id: @km.id) %>
 <div id="track_new" class="backend_section_wrapper">
 	<%= render partial: 'admin/shared/section/header', locals: { opts: opts } %>
-	<div id="track_csv_uploader"></div>
+	<div id="track_csv_uploader">
+		<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.tracks.fields.lat' %>" data-field="lat" data-pos="8"></div>
+		<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.tracks.fields.lng' %>" data-field="lng" data-pos="10"></div>
+		<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.tracks.fields.date' %>" data-field="date" data-pos="3"></div>
+		<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.tracks.fields.time' %>" data-field="time" data-pos="4"></div>
+	</div>
 </div>

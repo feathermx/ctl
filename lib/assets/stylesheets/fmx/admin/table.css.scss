@@ -1,5 +1,8 @@
 .fmx_table{
     display: none;
+	&.visible{
+		display: table;
+	}
     thead{
         th{
             cursor: pointer;

@@ -45,6 +45,16 @@ en:
           lng: 'Lng'
       csv_uploader:
         labels:
+          submit: 'Continue'
+          back: 'Cancel'
+          not_supported: 'Sorry, your browser does not support HTML5 file uploads. Try using Mozilla Firefox or Google Chrome.'
+          file_missing: 'Please select a csv file to continue'
+          invalid_file: 'Invalid csv file'
+          empty_file: 'CSV file is empty'
+          validations:
+            presence: 'cannot be blank'
+            numericality: 'is not a number'
           fields:
             delimiter: 'Delimiter'
             exclude_count: 'Exclude rows'
+            file: 'CSV File'

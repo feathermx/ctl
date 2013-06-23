@@ -16,8 +16,8 @@
    <property key="ca.sqlpower.architect.etl.kettle.repos.password" value="" />
   </data-source>
   <data-source id="DS0">
-   <property key="Connection Type" value="PostgreSQL" />
    <property key="Logical" value="ctl" />
+   <property key="Connection Type" value="PostgreSQL" />
    <property key="JDBC URL" value="jdbc:postgresql://localhost:5432/ctl" />
    <property key="UID" value="ctl" />
    <property key="PWD" value="beans" />
@@ -345,13 +345,13 @@
     <column id="COL93" populated="true" UUID="f1d2ea17-2e1a-40e6-8e76-5d2fa3de3fbb" autoIncrement="false" autoIncrementSequenceName="tracks_lng_seq" defaultValue="" name="lng" nullable="0" physicalName="lng" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="8" userDefinedTypeUUID="4fc90970-b2e5-41dd-911c-cc605d87e7a8" >
      <remarks></remarks>
     </column>
-    <column id="COL94" populated="true" UUID="c09381e0-39f4-4a69-b279-c362905d40b2" autoIncrement="false" autoIncrementSequenceName="tracks_tracked_at_seq" defaultValue="" name="tracked_at" nullable="0" physicalName="tracked_at" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="91" userDefinedTypeUUID="ee349be3-6af2-46e1-b305-975f5354b009" >
+    <column id="COL94" populated="true" UUID="c09381e0-39f4-4a69-b279-c362905d40b2" autoIncrement="false" autoIncrementSequenceName="tracks_tracked_at_seq" defaultValue="" name="tracked_at" nullable="0" physicalName="tracked_at" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
      <remarks></remarks>
     </column>
     <column id="COL95" populated="true" UUID="684ea273-1970-40b0-818d-7a14dbcaef81" autoIncrement="false" autoIncrementSequenceName="tracks_created_at_seq" defaultValue="" name="created_at" nullable="0" physicalName="created_at" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
      <remarks></remarks>
     </column>
-    <column id="COL96" populated="true" UUID="d08309a3-cb1d-475d-936b-8407edd1d3f1" autoIncrement="false" autoIncrementSequenceName="tracks_updated_at_seq" defaultValue="" name="updated_at" nullable="0" physicalName="updated_at" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
+    <column id="COL96" populated="true" UUID="d08309a3-cb1d-475d-936b-8407edd1d3f1" autoIncrement="false" autoIncrementSequenceName="tracks_updated_at_seq" defaultValue="" name="updated_at" nullable="0" physicalName="updated_at" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
      <remarks></remarks>
     </column>
     </folder>
@@ -421,7 +421,7 @@
  <ddl-generator type="ca.sqlpower.architect.ddl.PostgresDDLGenerator" allow-connection="false" target-schema="public"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="false" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
- <play-pen zoom="0.7071067811865478" viewportX="475" viewportY="108" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
+ <play-pen zoom="0.7071067811865478" viewportX="0" viewportY="86" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
   <table-pane table-ref="TAB3" x="390" y="379" bgColor="0xfbdabb" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB18" x="57" y="374" bgColor="0xfbdabb" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB29" x="49" y="89" bgColor="0xfbdabb" fgColor="0x000000" rounded="false" dashed="false"/>
