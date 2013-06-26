@@ -19,17 +19,18 @@ module Researchable
     
     def generate(research_id, opts = {})
       el = self.new
+      puts opts.inspect
       opts.each do |name, value|
         el.send("#{name}=", value)
       end
-      el.research_id
+      el.research_id = research_id
       el
     end
     
     def find_or_generate(research_id, opts={})
       el = self.find_by_research(research_id)
       if el.nil?
-        el = self.generate(research_id, opts={})
+        el = self.generate(research_id, opts)
         el = nil unless el.save
       end
       el

@@ -8,6 +8,9 @@
 .fmx_csv_uploader_table_container{
 	input[type="text"].fmx_csv_uploader_field{
 		display: block;
+		width: 90%;
+		height: 11px;
+		font-size: 9px;
 	}
 	.fmx_csv_uploader_field_errors{
 		color: #B94A48;

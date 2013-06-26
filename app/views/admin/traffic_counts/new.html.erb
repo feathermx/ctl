@@ -1,0 +1,19 @@
+<% opts = section_form_defaults(Admin::TrafficCount.new, @section).merge(@section) %>
+<% content_for :csv_fields do %>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.started_at' %>" data-field="started_at" data-pos="0"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.block_research' %>" data-field="block_research" data-pos="2"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.street_research' %>" data-field="street_research" data-pos="3"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.cars' %>" data-field="cars" data-pos="4"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.taxis' %>" data-field="taxis" data-pos="5"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.pickup_trucks' %>" data-field="pickup_trucks" data-pos="6"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.articulated_trucks' %>" data-field="articulated_trucks" data-pos="7"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.rigid_trucks' %>" data-field="rigid_trucks" data-pos="8"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.vans' %>" data-field="rigid_trucks" data-pos="9"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.buses' %>" data-field="buses" data-pos="10"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.bikes' %>" data-field="bikes" data-pos="11"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.motorbikes' %>" data-field="motorbikes" data-pos="12"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.pedestrians' %>" data-field="pedestrians" data-pos="13"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.ended_at' %>" data-field="ended_at" data-pos="15"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.traffic_counts.fields.notes' %>" data-field="notes" data-pos="16"></div>
+<% end %>
+<%= render partial: 'admin/shared/section/csv_upload', locals: { opts: opts } %>

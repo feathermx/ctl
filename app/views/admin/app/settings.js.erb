@@ -17,15 +17,13 @@ $.extend(config, {
 				success_url: '<%= url_for controller: :home, action: :index %>'
 			}
 		},
-		tracks: {
+		track: {
 			csv: {
 				uploader: {
 					defaults: {
 						delimiter: ',',
 						exclude_count: 1
-					},
-					url: '<%= url_for controller: :tracks, action: :create %>',
-					field_name: 'tracks'
+					}
 				}
 			},
 			map:{
@@ -35,6 +33,16 @@ $.extend(config, {
 				strokeColor: '#1E6FAA',
 				strokeOpacity: 1.0,
 				strokeWeight: 2
+			}
+		},
+		traffic_count: {
+			csv: {
+				uploader: {
+					defaults: {
+						delimiter: ',',
+						exclude_count: 2
+					}
+				}
 			}
 		}
 	},

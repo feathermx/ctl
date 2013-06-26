@@ -1,0 +1,86 @@
+(function(){
+	$(function(){
+		<%= opts[:js_parent_obj_form] %> = {};
+		$.extend(<%= opts[:js_parent_obj_form] %>, {
+			parent: <%= opts[:js_parent_obj] %>,
+			root: null,
+			container: null,
+			config: null,
+			init: function(){
+				this.initRoot();
+				this.initConfig();
+				this.initCancelBtn();
+				this.initContainer();
+				this.initCsvUploader();
+			},
+			initConfig: function(){
+				this.config = config.views.<%= opts[:namespace] %>.csv;
+			},
+			initCsvUploader: function(){
+				var _self = this;
+				this.root.fmx.csv_uploader(
+					$.extend({
+						url: '<%= url_for action: :create %>',
+						params: <%= opts[:params].to_json.html_safe %>,
+						container: this.container.find('#csv_new_uploader'),
+						loading: function(){
+							_self.csvUploaderLoading();
+						},
+						loaded: function(){
+							_self.csvUploaderLoaded();
+						},
+						success: function(data){
+							_self.csvUploaderSuccess(data);
+						},
+						error: function(){
+							_self.csvUploaderError();
+						}
+					}, this.config.uploader)
+				);
+			},
+			csvUploaderSuccess: function(data){
+				this.parent.table.doRequest();
+				this.root.view_stack.popView();
+				this.root.fmx.notification({
+					msg: lang.messages.import_success
+				});
+			},
+			csvUploaderError: function(){
+				this.root.error();
+			},
+			csvUploaderLoading: function(){
+				this.root.loading();
+			},
+			csvUploaderLoaded: function(){
+				this.root.loaded();
+			},
+			initContainer: function(){
+				this.container = this.root.dashboard.container.find('#csv_new');
+			},
+			initCancelBtn: function(){
+				var _self = this;
+				this.cancel_btn = $('#<%= opts[:cancel_btn_id] %>').click(function(e){
+					e.preventDefault();
+					_self.cancelBtnOnClick(e, $(this));
+				});
+				var overlay_msg = this.cancel_btn.attr('data-overlay');
+				if(overlay_msg){
+					this.root.fmx.overlay({
+						trigger: this.cancel_btn,
+						msg: overlay_msg,
+						position: $.fmx_overlay_positions.left
+					});
+				}
+			},
+			cancelBtnOnClick: function(e, element){
+				if(!element.is('.disabled')){
+					this.root.view_stack.popView();
+				}
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			}
+		});
+		<%= opts[:js_parent_obj_form] %>.init();
+	});
+})(jQuery);

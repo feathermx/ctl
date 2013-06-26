@@ -18,4 +18,8 @@ class Admin::Km < Km
     Admin::Track.base.filter_by_km(self.id).filter_by_id(id).first
   end
   
+  def find_traffic_count_by_id(id)
+    Admin::TrafficCount.filter_by_km(self.id).filter_by_id(id).first
+  end
+  
 end

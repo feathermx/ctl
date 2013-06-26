@@ -32,7 +32,7 @@ class Admin::TracksController < Admin::AdminController
   end
   
   def create
-    render json: { errors: Admin::Track.mass_insert(params[:tracks], { km_id: self.km.id }) }
+    render json: { errors: Admin::Track.mass_insert(params[:csv_data], { km_id: self.km.id }) }
   end
   
   def delete
