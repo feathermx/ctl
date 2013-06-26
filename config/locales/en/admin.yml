@@ -140,3 +140,18 @@ en:
           fields:
             block_research: 'Block ID'
             street_research: 'Street ID'
+            started_at: 'Start Time'
+            ended_at: 'End Time'
+            cars: 'Cars'
+            taxis: 'Taxis'
+            pickup_trucks: 'Pickup trucks'
+            articulated_trucks: 'Articulated Trucks'
+            rigid_trucks: 'Rigid Trucks'
+            vans: 'Vans'
+            buses: 'Buses'
+            bikes: 'Bikes'
+            motorbikes: 'Motorbikes'
+            pedestrians: 'Pedestrian'
+            notes: 'Notes'
+          new:
+            title: 'CSV Upload'

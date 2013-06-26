@@ -4,7 +4,10 @@ module BlockStreetable
   
   included do
     
-    attr_protected :street_id, :km_id
+    scope :street_base, ->{ select("streets.research_id as street_research") }
+    scope :block_base, ->{ select("blocks.research_id as block_research") }
+    
+    attr_protected :street_id
     attr_accessor :street_research, :block_research
     
     validates :street_research, numericality: { only_integer: true } , presence: true
@@ -23,6 +26,19 @@ module BlockStreetable
     end
     
   end
+  
+  module ClassMethods
+    
+    def include_street
+      self.street_base.joins("JOIN streets ON streets.id = #{self.table_name}.street_id")
+    end
+    
+    def include_block
+      self.block_base.joins("JOIN blocks ON blocks.id = streets.block_id")
+    end
+    
+  end
+  
   
   
 end
