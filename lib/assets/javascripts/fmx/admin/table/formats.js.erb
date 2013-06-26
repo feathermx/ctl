@@ -31,11 +31,13 @@
 				var day = date.getDate();
 				var hour = date.getHours();
 				var min = date.getMinutes();
+				var secs = date.getSeconds();
 				month = month < 10 ? ("0" + month) : month;
 				day = day < 10 ? ("0" + day) : day;
 				hour = hour < 10 ? ("0" + hour) : hour;
 				min = min < 10 ? ("0" + min) : min;
-				res = month + "/" + day + "/" + date.getFullYear() + " " + hour + ":" + min;
+				secs = secs < 10 ? ("0" + secs) : secs;
+				res = month + "/" + day + "/" + date.getFullYear() + " " + hour + ":" + min + ":" + secs;
 			}
 			return res;
 		}

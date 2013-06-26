@@ -1,7 +1,6 @@
 <% content_for :table_opts do %>
 	,
 	autoload: false,
-	add_pager: false,
 	success: function(data){
 		_self.view.success(data);
 	}
@@ -19,6 +18,7 @@
 		polyline: null,
 		marker: null,
 		coords: [],
+		scroll_top: 0,
 		init: function(){
 			this.initRoot();
 			this.initConfig();
@@ -41,6 +41,14 @@
 		},
 		initContainer: function(){
 			this.container = $('#tracks_table_map');
+			this.container.css({
+				position: 'absolute',
+				left: 0,
+				top: 0
+			});
+			this.root.fmx.fixed({
+				container: this.container
+			});
 		},
 		initGmaps: function(){
 			var _self = this;
@@ -115,7 +123,8 @@
 			this.map = new google.maps.Map(container, 
 				$.extend({
 					center: this.center,
-					mapTypeId: google.maps.MapTypeId.ROADMAP
+					mapTypeId: google.maps.MapTypeId.ROADMAP,
+					scrollwheel: false
 				}, this.config.map)
 			);
 		},
@@ -125,6 +134,7 @@
 				this.resetMarker();
 				this.marker = new google.maps.Marker({});
 				this.marker.setPosition(coord.lat_lng);
+				this.map.setCenter(coord.lat_lng);
 				this.marker.setMap(this.map);
 			}
 		},

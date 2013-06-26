@@ -5,9 +5,11 @@
 .fmx_table_map_container{
 	width: 50%;
 	float: left;
+	position: relative;
+	min-height: 300px;
 	.fmx_table_map_wrapper{
+		width: 100%;
 		border: 1px solid #A9A9A9;
-		padding: 0 20px 20px 20px;
 		height: 300px;
 	}
 }
@@ -18,6 +20,7 @@
 	}
 	.table_wrapper_content{
 		padding: 0 20px 0 0;
+		min-height: 100px;
 	}
 }
 table.fmx_table{
@@ -94,22 +97,32 @@ table.fmx_table{
 }
 /** actions */
 .fmx_table_action{
-  width: 16px;
-  height: 15px;
-  margin: 0 7px;
+	width: 16px;
+	height: 15px;
+	margin: 0 7px;
+	display: block;
+	border: 0 none;
+	outline: none;
+	img{
+		width: 16px;
+		height: 15px;
+		display: block;
+		border: 0 none;
+		outline: none;
+	}
 }
 
 @each $action in "edit", "show", "delete"{
-  .fmx_table_action.#{$action}{
-    $url: asset-path('fmx/icons/#{$action}.png');
-    background: url('#{$url}') no-repeat scroll 0 0 transparent;
-    @if $action == 'show' {
-      background-size: 15px 15px;
-    }
-  }
+	.fmx_table_action.#{$action}{
+		$url: asset-path('fmx/icons/#{$action}.png');
+		background: url('#{$url}') no-repeat scroll 0 0 transparent;
+		@if $action == 'show' {
+			background-size: 15px 15px;
+		}
+	}
 }
 
-@each $action in "cities", "tracks", "location" {
+@each $action in "cities", "tracks", "location", "deliveries", "parking_restrictions", "shops", "street_data", "traffic_counts", "traffic_disruptions" {
   .fmx_table_action.#{$action}{
     $url: asset-path('admin/icons/actions/#{$action}.png');
     background: url('#{$url}') no-repeat scroll 0 0 transparent;

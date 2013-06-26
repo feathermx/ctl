@@ -21,6 +21,7 @@ en:
         create_success: 'Record created successfully'
         update_success: 'Record updated successfully'
         delete_success: 'Record deleted successfully'
+        import_success: 'Records inserted successfully'
       confirm_dialog:
         title: 'Confirm Action'
         message: 'Are you sure?'
@@ -110,6 +111,11 @@ en:
             city_not_found: 'Please select a city before capturing data.'
           actions:
             tracks: 'GPS Tracks'
+            deliveries: 'Deliveries'
+            parking_restrictions: 'Parking Restrictions'
+            street_data: 'Street Data'
+            traffic_counts: 'Traffic Counts'
+            traffic_disruptions: 'Traffic Disruptions'
           fields:
             name: 'Name'
             track_count: 'Track Count'

@@ -7,6 +7,9 @@
 }
 .fmx_csv_uploader_table_container{
 	display: none;
+	.fmx_csv_uploader_table_form{
+		display: none;
+	}
 	.fmx_csv_uploader_table_actions{
 		@include link('a.fmx_csv_uploader_table_action') {
 			float: right;

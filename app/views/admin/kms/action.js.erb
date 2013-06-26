@@ -25,6 +25,11 @@ this.table_formats = table_formats.list;
 	<%= render partial: 'admin/shared/section/actions/add', locals: { opts: @section.merge(perm: add?) } %>
 	<%= render partial: 'admin/shared/section/actions/edit', locals: { opts: @section.merge(perm: edit?) } %>
 	<%= render partial: 'admin/shared/section/actions/show', locals: { opts: @section.merge(show_icon: 'tracks', lang_key: 'app.admin.views.kms.actions.tracks', show_action: { controller: :tracks, action: :index }, perm: edit?) } %>
+	<%= render partial: 'admin/shared/section/actions/show', locals: { opts: @section.merge(show_icon: 'deliveries', lang_key: 'app.admin.views.kms.actions.deliveries', show_action: { controller: :deliveries, action: :index }, perm: edit?) } %>
+	<%= render partial: 'admin/shared/section/actions/show', locals: { opts: @section.merge(show_icon: 'parking_restrictions', lang_key: 'app.admin.views.kms.actions.parking_restrictions', show_action: { controller: :parking_restrictions, action: :index }, perm: edit?) } %>
+	<%= render partial: 'admin/shared/section/actions/show', locals: { opts: @section.merge(show_icon: 'street_data', lang_key: 'app.admin.views.kms.actions.street_data', show_action: { controller: :street_data, action: :index }, perm: edit?) } %>
+	<%= render partial: 'admin/shared/section/actions/show', locals: { opts: @section.merge(show_icon: 'traffic_counts', lang_key: 'app.admin.views.kms.actions.traffic_counts', show_action: { controller: :traffic_counts, action: :index }, perm: edit?) } %>
+	<%= render partial: 'admin/shared/section/actions/show', locals: { opts: @section.merge(show_icon: 'traffic_disruptions', lang_key: 'app.admin.views.kms.actions.traffic_disruptions', show_action: { controller: :traffic_count, action: :index }, perm: edit?) } %>
 	<%= render partial: 'admin/shared/section/actions/delete', locals: { opts: @section.merge(perm: delete?) } %>
 <% end %>
 <%= render partial: 'admin/shared/section/action', locals: { opts: @section } %>

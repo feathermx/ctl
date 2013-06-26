@@ -51,6 +51,9 @@ en:
           file_missing: 'Please select a csv file to continue'
           invalid_file: 'Invalid csv file'
           empty_file: 'CSV file is empty'
+          no_rows_found: 'No rows found'
+          actions:
+            remove: 'Remove row'
           validations:
             presence: 'cannot be blank'
             numericality: 'is not a number'

@@ -39,7 +39,11 @@
 				);
 			},
 			csvUploaderSuccess: function(data){
-				//TODO
+				this.parent.table.doRequest();
+				this.root.view_stack.popView();
+				this.root.fmx.notification({
+					msg: lang.messages.import_success
+				});
 			},
 			csvUploaderError: function(){
 				this.root.error();

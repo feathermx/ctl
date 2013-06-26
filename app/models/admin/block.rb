@@ -1,2 +1,2 @@
-class Admin::Block < ActiveRecord::Base
+class Admin::Block < Block
 end

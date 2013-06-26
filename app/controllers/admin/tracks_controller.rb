@@ -1,5 +1,7 @@
 class Admin::TracksController < Admin::AdminController
   
+  SHOW = 100
+  
   include Admin::Kmable
   
   before_filter :assert_ajax_protected, except: [:action, :new_action]
@@ -16,10 +18,11 @@ class Admin::TracksController < Admin::AdminController
   end
   
   def list
-    contents = self.km.list_elements(Admin::Track.list.apply_limit_order(params))
+    contents = self.km.list_elements(Admin::Track.list.apply_limit_order(params, SHOW))
+    num = self.km.list_elements(Admin::Track.base_count)
     render json: {
-      total: self.km.track_count,
-      show: self.km.track_count,
+      total: num[0][:num],
+      show: SHOW,
       contents: contents
     }
   end

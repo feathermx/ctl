@@ -1,7 +1,7 @@
 (function(){
 	var nil = $();
 	String.prototype.csv_split = function(sep) {
-		for (var val = this.split(sep = sep || ","), x = val.length - 1, tl; x >= 0; x--) {
+		for (var val = this.split(sep = sep || ","), x = val.length - 1, tl; x >= 0; --x) {
 			if (val[x].replace(/"\s+$/, '"').charAt(val[x].length - 1) == '"') {
 				if ((tl = val[x].replace(/^\s+"/, '"')).length > 1 && tl.charAt(0) == '"') {
 					val[x] = val[x].replace(/^\s*"|"\s*$/g, '').replace(/""/g, '"');
@@ -29,6 +29,10 @@
 				file_missing: 'Please select a csv file to continue',
 				invalid_file: 'Invalid csv file',
 				empty_file: 'CSV file is empty',
+				no_rows_found: 'No rows found.',
+				actions: {
+					remove: 'Remove row'
+				},
 				validation: {
 					presence: 'cannot be blank',
 					numericality: 'is not a number'
@@ -38,6 +42,9 @@
 	    			exclude_count: 'Exclude rows',
 					file: 'CSV File'
 				}
+			},
+			icons: {
+				remove: ''
 			},
 			defaults: {
 				delimiter: ',',
@@ -120,11 +127,12 @@
 					var lines = data.split(this.delimiter.line);
 					for(var i=this.values.exclude_count; i<lines.length; ++i){
 						var row = lines[i];
-						if(row){
+						if(row != null && row.length > 0){
 							this.table.addRow(i, row);
 							++row_count;
 						}
 					}
+					this.table.render();
 				}
 				if(row_count == 0){
 					var error_msg = this.labels.empty_file;
@@ -156,11 +164,15 @@
 					form: null,
 					tbody: null,
 					container: null,
+					not_found_container: null,
 					actions: null,
 					is_loading: false,
+					row_count: 0,
+					errors: [],
 					init: function(){
 						this.initFields();
 						this.initContainer();
+						this.initNotFoundContainer();
 						this.initForm();
 						this.initTable();
 						this.initActions();
@@ -180,9 +192,47 @@
 							}
 						});
 					},
+					initNotFoundContainer: function(){
+						var label = this.view.labels.no_rows_found;
+						this.not_found_container = $('<div class="fmx_table_not_found_container"></div>');
+						this.not_found_container.html(label);
+						this.not_found_container.appendTo(this.container);
+					},
+					render: function(){
+						this.not_found_container.css('display', 'none');
+						this.form.css('display', 'none');
+						if(this.row_count == 0){
+							this.not_found_container.css('display', 'block');
+						}
+						else{
+							this.form.css('display', 'block');
+						}
+					},
 					success: function(data){
+						var _self = this;
 						this.loaded();
-						//TODO
+						$.each(data.errors, function(key, errors){
+							_self.addErrors(key, errors);
+						});
+						if(this.errors.length == 0){
+							this.view.success(data);
+						}
+					},
+					resetErrors: function(){
+						$.each(this.errors, function(key, field){
+							field.resetErrors();
+						});
+						this.errors = [];
+					},
+					addErrors: function(key, errors){
+						key = parseInt(key);
+						var row = this.rows[key];
+						if(row != null){
+							row.setErrors(errors);
+						}
+					},
+					addError: function(field){
+						this.errors.push(field);
 					},
 					error: function(){
 						this.loaded();
@@ -343,11 +393,24 @@
 							data: data,
 							view: null,
 							input: null,
-							error_container: null,
+							fields: {},
 							init: function(){
 								this.initView();
 								this.initContainer();
 								this.parseData();
+								this.initActions();
+							},
+							setErrors: function(errors){
+								var _self = this;
+								$.each(errors, function(key, errors){
+									_self.addError(key, errors);
+								});
+							},
+							addError: function(key, errors){
+								var field = this.fields[key];
+								if(field != null){
+									field.setErrors(errors);
+								}
 							},
 							parseData: function(){
 								var delimiter = this.view.values.delimiter;
@@ -358,24 +421,108 @@
 									_self.addField(field);
 								});
 							},
-							addField: function(field){
-								var container = $('<td></td>');
-								this.initInput(field, container);
-								container.appendTo(this.container);
-							},
-							initInput: function(field, container){
-								this.input = $('<input />', {
-									type: 'text',
-									name: this.getFieldName(field)
+							initActions: function(){
+								var actions = {};
+								$.extend(actions, {
+									parent: this,
+									view: null,
+									container: null,
+									init: function(){
+										this.initView();
+										this.initContainer();
+									},
+									initContainer: function(){
+										this.container = $('<td></td>');
+										this.initRemoveAction();
+										this.container.append('<div class="clear"></div>');
+										this.container.appendTo(this.parent.container);
+									},
+									initRemoveAction: function(){
+										var _self = this;
+										var action = this.getAction('remove');
+										action.click(function(e){
+											e.preventDefault();
+											_self.removeActionOnClick(e, $(this));
+										});
+										action.appendTo(this.container);
+									},
+									removeActionOnClick: function(e, element){
+										var table = this.parent.parent;
+										var row = this.parent;
+										table.removeRow(row);
+									},
+									getAction: function(key){
+										var action = $('<a href="#"></a>');
+										action.addClass('fmx_table_action');
+										var icon = $('<img />', {
+											src: this.view.icons[key]
+										});
+										icon.appendTo(action);
+										$.fmx_overlay({
+											trigger: action,
+											msg: this.view.labels.actions[key]
+										});
+										return action;
+									},
+									initView: function(){
+										this.view = this.parent.view;
+									}
 								});
-								var val = this.data[field.pos];
-								if(val != null){
-									this.input.val(val);
-								}
-								this.input.appendTo(container);
+								actions.init();
 							},
-							getFieldName: function(field){
-								return this.view.field_name + '[' + this.index + ']' + '[' + field.field + ']';
+							addField: function(data){
+								var field = {};
+								$.extend(field, {
+									parent: this,
+									view: null,
+									data: data,
+									container: null,
+									input: null,
+									error_container: null,
+									init: function(){
+										this.initView();
+										this.initContainer();
+									},
+									resetErrors: function(){
+										this.error_container.empty();
+									},
+									setErrors: function(errors){
+										var table = this.parent.parent;
+										var error_str = errors.join(", ");
+										this.error_container.html(error_str);
+										table.addError(this);
+									},
+									initContainer: function(){
+										this.container = $('<td></td>');
+										this.initInput();
+										this.initErrorContainer();
+										this.container.appendTo(this.parent.container);
+									},
+									initErrorContainer: function(){
+										this.error_container = $('<div class="fmx_csv_uploader_field_errors"></div>');
+										this.error_container.appendTo(this.container);
+									},
+									initInput: function(){
+										this.input = $('<input />', {
+											type: 'text',
+											name: this.getFieldName(field)
+										});
+										this.input.addClass('fmx_csv_uploader_field');
+										var val = this.parent.data[this.data.pos];
+										if(val != null){
+											this.input.val(val);
+										}
+										this.input.appendTo(this.container);
+									},
+									getFieldName: function(){
+										return this.view.field_name + '[' + this.parent.index + ']' + '[' + this.data.field + ']';
+									},
+									initView: function(){
+										this.view = this.parent.view;
+									}
+								});
+								field.init();
+								this.fields[data.field] = field;
 							},
 							initContainer: function(){
 								this.container = $('<tr></tr>');
@@ -386,10 +533,20 @@
 							},
 							initView: function(){
 								this.view = this.parent.view;
+							},
+							remove: function(){
+								this.container.remove();
 							}
 						});
 						row.init();
+						++this.row_count;
 						this.rows[index] = row;
+					},
+					removeRow: function(row){
+						--this.row_count;
+						row.remove();
+						delete this.rows[row.index];
+						this.render();
 					},
 					empty: function(){
 						this.rows = {};
@@ -401,6 +558,8 @@
 						$.each(this.fields, function(key, field){
 							field.appendTo(tr);
 						});
+						var actions_row = $('<th></th>');
+						actions_row.appendTo(tr);
 						tr.appendTo(thead);
 						thead.appendTo(table);
 					},
@@ -412,6 +571,7 @@
 					},
 					loading: function(){
 						this.is_loading = true;
+						this.resetErrors();
 						this.actions.loading();
 						this.view.loading();
 					},
