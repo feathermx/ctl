@@ -118,7 +118,7 @@ en:
             traffic_disruptions: 'Traffic Disruptions'
           fields:
             name: 'Name'
-            track_count: 'Track Count'
+            track_count: 'Tracks'
             description: 'Description'
             comments: 'Comments'
             center: 'Center'
@@ -135,3 +135,8 @@ en:
             tracked_at: 'Time'
           new:
             title: 'Upload GPS data'
+        traffic_counts:
+          title: '%{km} - Traffic Counts'
+          fields:
+            block_research: 'Block ID'
+            street_research: 'Street ID'

@@ -4,6 +4,8 @@ globals:
   salt: yjlm
   paths:
     upload: 'uploads'
+  csv:
+    date_format: '%m/%d/%Y %H:%M %z'
 development:
   scope: ''
 production:
