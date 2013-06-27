@@ -55,6 +55,10 @@ module ActiveRecord
       #Time.at(self.class.timestamp_val(val))
     end
     
+    def upcase(val)
+      val.upcase unless val.blank?
+    end
+    
     protected
     
     def self.base

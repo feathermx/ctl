@@ -68,6 +68,7 @@ class Admin::TracksController < Admin::AdminController
     @section = {
       namespace: 'track',
       is_subsection: true,
+      js_parent: 'app.dashboard.km',
       params: {
         km_id: self.km.id
       }

@@ -1,0 +1,20 @@
+<% opts = section_form_defaults(Admin::TrafficCount.new, @section).merge(@section) %>
+<% content_for :csv_fields do %>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.block_research' %>" data-field="block_research" data-pos="0"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.street_research' %>" data-field="street_research" data-pos="1"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.way' %>" data-field="way" data-pos="2"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.driving_lanes' %>" data-field="driving_lanes" data-pos="3"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.bike_lanes' %>" data-field="bike_lanes" data-pos="4"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.parking_lanes' %>" data-field="parking_lanes" data-pos="5"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.public_transport_lanes' %>" data-field="public_transport_lanes" data-pos="6"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.extra_crosswalks' %>" data-field="extra_crosswalks" data-pos="7"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.width_of_sidewalks' %>" data-field="width_of_sidewalks" data-pos="8"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.transport_stop' %>" data-field="transport_stop" data-pos="9"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.has_loading_area' %>" data-field="has_loading_area" data-pos="10"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.loading_area_length' %>" data-field="loading_area_length" data-pos="11"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.has_parking_area' %>" data-field="has_parking_area" data-pos="12"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.parking_area_length' %>" data-field="parking_area_length" data-pos="13"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.parking_payment' %>" data-field="parking_payment" data-pos="14"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.street_data.fields.notes' %>" data-field="notes" data-pos="15"></div>
+<% end %>
+<%= render partial: 'admin/shared/section/csv_upload', locals: { opts: opts } %>

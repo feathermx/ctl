@@ -1,0 +1,9 @@
+<% content_for :table_fields do %>
+	<th data-sort="blocks.research_id" data-name="b_research"><%= t 'app.admin.views.shops.fields.block_research' %></th>
+	<th data-sort="streets.research_id" data-name="s_research"><%= t 'app.admin.views.shops.fields.street_research' %></th>
+	<th data-name="shop_id"><%= t 'app.admin.views.shops.fields.shop_id' %></th>
+	<th data-sort="shops.registered_at" data-name="r_at"><%= t 'app.admin.views.shops.fields.registered_at' %></th>
+<% end %>
+<% action_url = @section[:params].merge(action: :action) %>
+<%= javascript_include_tag url_for(action_url) %>
+<%= render partial: 'admin/shared/section/section', locals: { opts: @section.merge(show_add_btn: edit?) } %>

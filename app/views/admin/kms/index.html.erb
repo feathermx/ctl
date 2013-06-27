@@ -5,7 +5,13 @@
 <% else %>
 <% content_for :table_fields do %>
 	<th data-name="name"><%= t 'app.admin.views.kms.fields.name' %></th>
-	<th data-name="track_count"><%= t 'app.admin.views.kms.fields.track_count' %></th>
+	<th data-name="tracks_count"><%= t 'app.admin.views.kms.fields.tracks_count' %></th>
+	<th data-name="traffic_counts_count"><%= t 'app.admin.views.kms.fields.traffic_counts_count' %></th>
+	<th data-name="traffic_disruptions_count"><%= t 'app.admin.views.kms.fields.traffic_disruptions_count' %></th>
+	<th data-name="street_data_count"><%= t 'app.admin.views.kms.fields.street_data_count' %></th>
+	<th data-name="parking_restrictions_count"><%= t 'app.admin.views.kms.fields.parking_restrictions_count' %></th>
+	<th data-name="shops_count"><%= t 'app.admin.views.kms.fields.shops_count' %></th>
+	<th data-name="deliveries_count"><%= t 'app.admin.views.kms.fields.deliveries_count' %></th>
 	<th data-name="c_at" data-sort="captured_at"><%= t 'app.admin.views.kms.fields.captured_at' %></th>
 <% end %>
 <%= render partial: 'admin/shared/plugins/csv_uploader' %>

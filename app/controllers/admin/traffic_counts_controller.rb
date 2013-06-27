@@ -64,6 +64,7 @@ class Admin::TrafficCountsController < Admin::AdminController
   def section
     @section = {
       namespace: 'traffic_count',
+      js_parent: 'app.dashboard.km',
       is_subsection: true,
       params: {
         km_id: self.km.id
