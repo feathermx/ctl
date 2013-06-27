@@ -21,12 +21,13 @@ class Delivery < ActiveRecord::FmxBase
       }
     }
     
-    def keys
+    def self.keys
       @@keys ||= List.keys
     end
+    
   end
   
-  scope :base, ->{ select("deliveries.id, deliveries.km_id, deliveries.shop_id, deliveries.started_at, deliveries.ended_at, deliveries.vehicle_type, deliveries.delivering_company, deliveries.product_delivered, deliveries.refrigerated_vehicle, deliveries.boxes_delivered, deliveries.delivery_type, deliveries.with_equipment, deliveries.number_of_trips, deliveries.notes") }
+  scope :base, ->{ select("deliveries.id, deliveries.km_id, deliveries.street_id, deliveries.shop_id, deliveries.started_at, deliveries.ended_at, deliveries.vehicle_type, deliveries.delivering_company, deliveries.product_delivered, deliveries.refrigerated_vehicle, deliveries.boxes_delivered, deliveries.delivery_type, deliveries.with_equipment, deliveries.number_of_trips, deliveries.notes") }
   scope :base_count, ->{ select("COUNT(deliveries.id) as num") }
   scope :filter_by_id, ->{ where(id: id) }
   
@@ -41,10 +42,10 @@ class Delivery < ActiveRecord::FmxBase
   validates :with_equipment, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }, allow_blank: true
   validates :number_of_trips, numericality: { only_integer: true }, allow_blank: true
   validates :notes, length: { maximum: 300 }
-  validates :valid_shop_id
+  validate :valid_shop_id
   
   def valid_shop_id
-    errors.add(I18n.t('activerecord.errors.messages.not_found')) if self.shop_id.nil?
+    errors.add(:shop_id, I18n.t('activerecord.errors.messages.not_found')) if self.shop_id.nil?
   end
   
   def shop_id=(val)

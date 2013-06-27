@@ -1,15 +1,18 @@
 <% opts = section_form_defaults(Admin::TrafficCount.new, @section).merge(@section) %>
 <% content_for :csv_fields do %>
-	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.shops.fields.registered_at' %>" data-field="registered_at" data-pos="0"></div>
-	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.shops.fields.block_research' %>" data-field="block_research" data-pos="2"></div>
-	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.shops.fields.street_research' %>" data-field="street_research" data-pos="3"></div>
-	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.shops.fields.shop_id' %>" data-field="shop_id" data-pos="4"></div>
-	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.shops.fields.shop_type' %>" data-field="shop_type" data-pos="5"></div>
-	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.shops.fields.name' %>" data-field="name" data-pos="6"></div>
-	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.shops.fields.front_length' %>" data-field="front_length" data-pos="7"></div>
-	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.shops.fields.starting_floor' %>" data-field="starting_floor" data-pos="8"></div>
-	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.shops.fields.total_floors' %>" data-field="total_floors" data-pos="9"></div>
-	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.shops.fields.has_loading_area' %>" data-field="has_loading_area" data-pos="10"></div>
-	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.shops.fields.notes' %>" data-field="notes" data-pos="11"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.started_at' %>" data-field="started_at" data-pos="0"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.ended_at' %>" data-field="ended_at" data-pos="2"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.block_research' %>" data-field="block_research" data-pos="4"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.street_research' %>" data-field="street_research" data-pos="5"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.shop_id' %>" data-field="shop_id" data-pos="6"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.vehicle_type' %>" data-field="vehicle_type" data-pos="7"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.delivering_company' %>" data-field="delivering_company" data-pos="8"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.product_delivered' %>" data-field="product_delivered" data-pos="9"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.refrigerated_vehicle' %>" data-field="refrigerated_vehicle" data-pos="10"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.boxes_delivered' %>" data-field="boxes_delivered" data-pos="11"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.delivery_type' %>" data-field="delivery_type" data-pos="12"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.with_equipment' %>" data-field="with_equipment" data-pos="13"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.number_of_trips' %>" data-field="number_of_trips" data-pos="14"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.deliveries.fields.notes' %>" data-field="notes" data-pos="15"></div>
 <% end %>
 <%= render partial: 'admin/shared/section/csv_upload', locals: { opts: opts } %>
