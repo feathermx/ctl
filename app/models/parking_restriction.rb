@@ -7,6 +7,8 @@ class ParkingRestriction < ActiveRecord::FmxBase
   scope :base_count, ->{ select("COUNT(parking_restrictions.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
   
+  validates :day_of_week, presence: true, numericality: { only_integer: true }
+  
   def starts_at=(val) 
     write_attribute(:starts_at, date_time_val(val))
   end
