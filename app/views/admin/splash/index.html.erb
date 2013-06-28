@@ -7,10 +7,12 @@
 <% end %>
 <div id="login_container">
 	<div id="login_wrapper">
-		<a id="login_logo" href="<%= url_for action: :index %>">
-			<%= image_tag 'admin/logos/login.png', width: 153, height: 59 %>
-		</a>
 		<div id="login_panel">
+			<div id="login_logo_container">
+				<a id="login_logo" href="<%= url_for action: :index %>">
+					<%= image_tag 'admin/logos/login.png', width: 153, height: 59 %>
+				</a>
+			</div>
 			<h1 id="login_legend"><%= t "app.admin.views.login.legend" %></h1>
 			<%= form_for :user, url: { controller: :splash, action: :login }, html: { id: 'login_form' } do |f|  %>
 				<fieldset>

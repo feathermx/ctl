@@ -11,13 +11,13 @@ class Delivery < ActiveRecord::FmxBase
     
     List = {
       Delivery => {
-        name: ''
+        name: I18n.t('app.model.delivery.delivery_type.grocery')
       },
       Pickup => {
-        name: ''
+        name: I18n.t('app.model.delivery.delivery_type.pickup')
       },
       Both =>  {
-        name: ''
+        name: I18n.t('app.model.delivery.delivery_type.both')
       }
     }
     

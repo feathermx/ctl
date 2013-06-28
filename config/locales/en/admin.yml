@@ -1,7 +1,7 @@
 en:
   app:
     admin:
-      title: 'CTL'
+      title: 'MIT CTL'
       legal:
         copyright: '&copy; 2013 MIT'
       perm:
@@ -233,6 +233,18 @@ en:
             delivery_type: 'D. Type'
             with_equipment: 'w/e'
             number_of_trips: 'Trips'
+            notes: 'Notes'
+          new:
+            title: 'CSV Upload'
+        parking_restrictions:
+          title: '%{km} - Parking restrictions'
+          fields:
+            block_research: 'B. ID'
+            street_research: 'S. ID'
+            day_of_week: 'Days'
+            starts_at: 'Start'
+            ends_at: 'End'
+            parking_duration: 'Dur.'
             notes: 'Notes'
           new:
             title: 'CSV Upload'

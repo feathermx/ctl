@@ -9,10 +9,10 @@ class StreetData < ActiveRecord::FmxBase
     
     List =  {
       OneWay => {
-        name: ''
+        name: I18n.t('app.model.street_data.way.one_way')
       },
       TwoWays => {
-        name: ''
+        name: I18n.t('app.model.street_data.way.two_ways')
       }
     }
     
@@ -24,13 +24,17 @@ class StreetData < ActiveRecord::FmxBase
   module TransportStop
     Transit = 'T'
     BusStop = 'B'
+    None = 'N'
     
     List = {
       Transit => {
-        name: ''
+        name: I18n.t('app.model.street_data.transport_stop.transit')
       },
       BusStop => {
-        name: ''
+        name: I18n.t('app.model.street_data.transport_stop.bus_stop')
+      },
+      None => {
+        name: I18n.t('app.model.street_data.transport_stop.none')
       }
     } 
     
@@ -47,13 +51,13 @@ class StreetData < ActiveRecord::FmxBase
     
     List = {
       Meter => {
-        name: ''
+        name: I18n.t('app.model.street_data.parking_payment.meter')
       },
       Permit => {
-        name: ''
+        name: I18n.t('app.model.street_data.parking_payment.permit')
       },
       Free => {
-        name: ''
+        name: I18n.t('app.model.street_data.parking_payment.free')
       }
     }
     
@@ -78,7 +82,7 @@ class StreetData < ActiveRecord::FmxBase
   validates :loading_area_length, numericality: true, allow_blank: true
   validates :has_parking_area, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }, allow_blank: true
   validates :parking_area_length, numericality: true, allow_blank: true
-  validates :parking_payment, length: { is: 1 }, inclusion: { in: ParkingPayment.keys }
+  validates :parking_payment, length: { is: 1 }, inclusion: { in: ParkingPayment.keys }, allow_blank: true
   validates :notes, length: { in: 2..300 }, allow_blank: true
   
   def c_at

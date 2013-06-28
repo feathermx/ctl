@@ -15,34 +15,79 @@ class Shop < ActiveRecord::FmxBase
     Drugstore = 'G'
     School = 'S'
     Other = 'O'
+    Unknown = 'U'
+    
+    KioskGrocery = "K#{Grocery}"
+    KioskConvinience = "K#{Convinience}"
+    KioskGasoline = "K#{Gasoline}"
+    KioskClothing = "K#{Clothing}"
+    KioskAccomodation = "K#{Accomodation}"
+    KioskFood = "K#{Food}"
+    KioskDrugstore = "K#{Drugstore}"
+    KioskSchool = "K#{School}"
+    KioskOther = "K#{Other}"
+    KioskUnknown = "K#{Unknown}"
     
     List = {
       Grocery => {
-        name: ''
+        name: I18n.t('app.model.shop.shop_type.grocery')
       },
       Convinience => {
-        name: ''
+        name: I18n.t('app.model.shop.shop_type.convinience')
       },
       Gasoline => {
-        name: ''
+        name: I18n.t('app.model.shop.shop_type.gasoline')
       },
       Clothing => {
-        name: ''
+        name: I18n.t('app.model.shop.shop_type.clothing')
       },
       Accomodation => {
-        name: ''
+        name: I18n.t('app.model.shop.shop_type.accomodation')
       },
       Food => {
-        name: ''
+        name: I18n.t('app.model.shop.shop_type.food')
       },
       Drugstore => {
-        name: ''
+        name: I18n.t('app.model.shop.shop_type.drugstore')
       },
       School => {
-        name: ''
+        name: I18n.t('app.model.shop.shop_type.school')
       },
       Other => {
-        name: ''
+        name: I18n.t('app.model.shop.shop_type.other')
+      },
+      Unknown => {
+        name: I18n.t('app.model.shop.shop_type.unknown')
+      },
+      KioskGrocery => {
+        name: I18n.t('app.model.shop.shop_type.kiosk_grocery')
+      },
+      KioskConvinience => {
+        name: I18n.t('app.model.shop.shop_type.kiosk_convinience')
+      },
+      KioskGasoline => {
+        name: I18n.t('app.model.shop.shop_type.kiosk_gasoline')
+      },
+      KioskClothing => {
+        name: I18n.t('app.model.shop.shop_type.kiosk_clothing')
+      },
+      KioskAccomodation => {
+        name: I18n.t('app.model.shop.shop_type.kiosk_accomodation')
+      },
+      KioskFood => {
+        name: I18n.t('app.model.shop.shop_type.kiosk_food')
+      },
+      KioskDrugstore => {
+        name: I18n.t('app.model.shop.shop_type.kiosk_drugstore')
+      },
+      KioskSchool => {
+        name: I18n.t('app.model.shop.shop_type.kiosk_school')
+      },
+      KioskOther => {
+        name: I18n.t('app.model.shop.shop_type.kiosk_other')
+      },
+      KioskUnknown => {
+        name: I18n.t('app.model.shop.shop_type.kiosk_unknown')
       }
     }
     
@@ -61,7 +106,7 @@ class Shop < ActiveRecord::FmxBase
   validates :registered_at, presence: true
   validates :shop_type, presence: true, length: { maximum: 10 }, inclusion: { in: ShopType.keys }
   validates :name, presence: true, length: { maximum: 100 }
-  validates :front_length, numericality: true, presence: true
+  validates :front_length, numericality: true, allow_blank: true
   validates :starting_floor, numericality: true, allow_blank: true 
   validates :total_floors, numericality: true, allow_blank: true
   validates :has_loading_area, presence:true, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }

@@ -1,0 +1,11 @@
+<% opts = section_form_defaults(Admin::TrafficCount.new, @section).merge(@section) %>
+<% content_for :csv_fields do %>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.parking_restrictions.fields.block_research' %>" data-field="block_research" data-pos="0"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.parking_restrictions.fields.street_research' %>" data-field="street_research" data-pos="1"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.parking_restrictions.fields.day_of_week' %>" data-field="day_of_week" data-pos="2"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.parking_restrictions.fields.starts_at' %>" data-field="starts_at" data-pos="3"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.parking_restrictions.fields.ends_at' %>" data-field="ends_at" data-pos="4"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.parking_restrictions.fields.parking_duration' %>" data-field="parking_duration" data-pos="5"></div>
+	<div class="fmx_csv_uploader_field" data-name="<%= t 'app.admin.views.parking_restrictions.fields.notes' %>" data-field="notes" data-pos="6"></div>
+<% end %>
+<%= render partial: 'admin/shared/section/csv_upload', locals: { opts: opts } %>

@@ -178,8 +178,8 @@ a.user_menu_element .user_menu_icon{
 @include link('a.menu_element') {
 	text-decoration: none;
 	display: block;
-	border-bottom: 1px solid #2682B9;
-	color: #FFFFFF;
+	border-bottom: 1px solid #594A42;
+	color: #594A42;
 	height: 40px;
 	background: none repeat scroll 0 0 $sidebar-color;
 	cursor: pointer;
@@ -188,11 +188,11 @@ a.user_menu_element .user_menu_icon{
 }
 
 a.menu_element:hover{
-	background: none repeat scroll 0 0 #1B2D46;
+	background: none repeat scroll 0 0 $base-hover;
 }
 
 @include link('a.menu_element.last') {
-	border-bottom: 1px solid #2682B9;
+	border-bottom: 1px solid #594A42;
 }
 
 @include link('a.menu_element.active') {
@@ -233,7 +233,7 @@ a.menu_element .menu_element_icon img{
 	top: 0px;
 }
 
-a.menu_element.active .menu_element_icon img{
+a.menu_element.active .menu_element_icon img, a.menu_element:hover .menu_element_icon img{
 	top: -16px;
 }
 

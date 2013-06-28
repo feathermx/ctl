@@ -1,8 +1,75 @@
 en:
   app:
+    concern:
+      weekable:
+        days:
+          sunday: 'Sunday'
+          monday: 'Monday'
+          tuesday: 'Tuesday'
+          wednesday: 'Wednesday'
+          thursday: 'Thursday'
+          friday: 'Friday'
+          saturday: 'Saturday'
     model:
       user:
         perm:
           users: 'Users'
           countries: 'Countries'
           blocks: 'Blocks'
+      traffic_disruption:
+        affection_type:
+          slowed: 'Slowed'
+          stopped: 'Stopped'
+        disruption_type:
+          pedestrian_sidewalk: 'Pedestrian Sidewalk'
+          bus: 'Bus'
+          parking_violation: 'Parking Violation'
+          emergency_vehicle: 'Emergency Vehicle'
+          crosswalk: 'Crosswalk'
+          vehicle_maneuvers: 'Vehicle Maneuvers'
+        source:
+          freight: 'Freight'
+          utility: 'Utility'
+          waste: 'Waste'
+          taxi: 'Taxi'
+          private_car: 'Private Car'
+          accident: 'Accident'
+      street_data:
+        way:
+          one_way: 'One Way'
+          two_ways: 'Two Ways'
+        transport_stop:
+          transit: 'Transit'
+          bus_stop: 'Bus Stop'
+          none: 'None'
+        parking_payment:
+          meter: 'Meter'
+          permit: 'Permit'
+          free: 'Free'
+      shop:
+        shop_type:
+          grocery: 'Grocery'
+          convinience: 'Convinience'
+          gasoline: 'Gasoline'
+          clothing: 'Clothing'
+          accomodation: 'Accomodation'
+          food: 'Food'
+          drugstore: 'Drugstore'
+          school: 'School'
+          other: 'Other'
+          unknown: 'Unknown'
+          kiosk_grocery: 'Kiosk Grocery'
+          kiosk_convinience: 'Kiosk Convinience'
+          kiosk_gasoline: 'Kiosk Gasoline'
+          kiosk_clothing: 'Kiosk Clothing'
+          kiosk_accomodation: 'Kiosk Accomodation'
+          kiosk_food: 'Kiosk Food'
+          kiosk_drugstore: 'Kiosk Drugstore'
+          kiosk_school: 'Kiosk School'
+          kiosk_other: 'Kiosk Other'
+          kiosk_unknown: 'Kiosk Unknown'
+      delivery:
+        delivery_type:
+          delivery: 'Delivery'
+          pickup: 'Pickup'
+          both: 'Both'

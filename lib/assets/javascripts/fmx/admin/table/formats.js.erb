@@ -3,6 +3,22 @@
 		nil: function(val){
 			return val ? val : '-';
 		},
+		utcTime: function(time){
+			time = parseInt(time);
+			var res = '';
+			if(isNaN(time) || !isFinite(time)){
+				res = '-';
+			}
+			else{
+				var date = new Date(time);
+				var hours = date.getUTCHours();
+				if(hours < 10) hours = ("0" + hours);
+				var mins = date.getUTCMinutes();
+				if(mins < 10) mins = ("0" + mins);
+				res = hours + ':' + mins;
+			}
+			return res;
+		},
 		date: function(time){
 			time = parseInt(time);
 			var res = '';

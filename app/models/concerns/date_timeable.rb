@@ -67,7 +67,8 @@ module DateTimeable
             part = part + 2000 if key == "y"
             tmp[self.date_order[i]] = part
           end
-          res = "#{tmp["y"]}-#{tmp["m"]}-#{tmp["d"]}"
+          year = tmp["y"] || tmp["Y"]
+          res = "#{year}-#{tmp["m"]}-#{tmp["d"]}"
         end  
       end
       res

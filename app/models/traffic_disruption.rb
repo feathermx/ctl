@@ -7,10 +7,10 @@ class TrafficDisruption < ActiveRecord::FmxBase
     
     List = {
       Slowed => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.affection_type.slowed')
       },
       Stopped => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.affection_type.stopped')
       }
     }
     
@@ -31,22 +31,22 @@ class TrafficDisruption < ActiveRecord::FmxBase
     
     List = {
       PedestrianSidewalk => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.disruption_type.pedestrian_sidewalk')
       },
       Bus => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.disruption_type.bus')
       },
       ParkingViolation => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.disruption_type.parking_violation')
       },
       EmergencyVehicle => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.disruption_type.emergency_vehicle')
       },
       Crosswalk => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.disruption_type.crosswalk')
       },
       VehicleManeuvers => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.disruption_type.vehicle_maneuvers')
       }
     }
     
@@ -67,22 +67,22 @@ class TrafficDisruption < ActiveRecord::FmxBase
     
     List = {
       Freight => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.source.freight')
       },
       Utility => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.source.utility')
       },
       Waste => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.source.waste')
       },
       Taxi => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.source.taxi')
       },
       PrivateCar => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.source.private_car')
       },
       Accident => {
-        name: ''
+        name: I18n.t('app.model.traffic_disruption.source.accident')
       }
     }
     
@@ -106,7 +106,7 @@ class TrafficDisruption < ActiveRecord::FmxBase
   validates :vehicle_type, presence: true, length: { maximum: 30 }
   validates :more_than_five_secs, presence: true, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }
   validates :disruption_type, length: { is: 1 }, inclusion: { in: DisruptionType.keys }, allow_blank: true
-  validates :blocked_lanes, numericality: { only_integer: true }, allow_blank: true
+  validates :blocked_lanes, numericality: true, allow_blank: true
   validates :vehicles_affected, numericality: { only_integer: true }, allow_blank: true
   validates :slowed_or_stop, length: { is: 1 }, inclusion: { in: AffectionType.keys }, allow_blank: true
   validates :notes, length: { in: 2..300 }, allow_blank: true

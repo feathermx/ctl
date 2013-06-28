@@ -6,6 +6,7 @@ globals:
     upload: 'uploads'
   csv:
     date_format: '%m/%d/%Y %H:%M %z'
+    time_format: '%H:%M %z'
 development:
   scope: ''
 production:

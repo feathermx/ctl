@@ -28,7 +28,7 @@ class User < ActiveRecord::FmxBase
   scope :base_count, ->{ select("COUNT(users.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :with_city, ->{ select("cities.name as city_name").joins("LEFT JOIN cities ON cities.id = users.city_id") }
-  scope :with_country, ->{ select.joins("countries.name as country_name").joins("LEFT JOIN countries ON countries.id = cities.country_id") }
+  scope :with_country, ->{ select("countries.name as country_name").joins("LEFT JOIN countries ON countries.id = cities.country_id") }
   
   validates :city_id, numericality: { only_integer: true }, allow_nil: true
   validates :name, :last_names, :mail, presence: true

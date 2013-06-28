@@ -6,13 +6,53 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-u = User.new name: 'Joel', last_names: 'Cano', mail: 'canito0890@gmail.com'
+# admin users
+u = User.new name: 'Gustavo', last_names: 'Beauregard', mail: 'gbn@mit.edu'
 u.list_perms = u.add_perms = u.edit_perms = u.delete_perms = User.all_perms
 u.set_password "123456", "123456"
 u.save
 
+u = User.new name: 'Ana', last_names: 'Mendez', mail: 'amendezr@mit.edu'
+u.list_perms = u.add_perms = u.edit_perms = u.delete_perms = User.all_perms
+u.set_password "123456", "123456"
+u.save
 
-#Country.create(name: 'Afghanistan')
+# user functions
+def save_user(user)
+  user_perms = { list_perms: 15, add_perms: 8, edit_perms: 8, delete_perms: 8 }
+  user_password = "mituser"
+  user.set_password user_password, user_password
+  user_perms.each do |name, val|
+    user.send("#{name}=", val)
+  end
+  user.save
+end
+
+# users
+u = User.new(name: 'Angela', last_names: 'Wang', mail: 'yinjwang@mit.edu')
+save_user(u)
+u = User.new(name: 'Alexander', last_names: 'Oliva', mail: 'alex93@mit.edu')
+save_user(u)
+u = User.new(name: 'Paola', last_names: 'Ruiz', mail: 'pruiz@mit.edu')
+save_user(u)
+u = User.new(name: 'Yachi', last_names: 'Chang', mail: 'changycj@mit.edu')
+save_user(u)
+u = User.new(name: 'Jamal', last_names: 'Elkhader', mail: 'elkhader@mit.edu')
+save_user(u)
+u = User.new(name: 'Erin', last_names: 'Kenney', mail: 'ekenney@mit.edu')
+save_user(u)
+u = User.new(name: 'Kirsten', last_names: 'Augdahl', mail: 'kaugdahl@mit.edu')
+save_user(u)
+u = User.new(name: 'Margo', last_names: 'Dawes', mail: 'mdawes@mit.edu')
+save_user(u)
+u = User.new(name: 'Aishwarya', last_names: 'Narayan', mail: 'aishn@mit.edu')
+save_user(u)
+u = User.new(name: 'Lesley', last_names: 'Wang', mail: 'leswang@mit.edu')
+save_user(u)
+
+
+
+# countries
 Country.create(name: 'Afghanistan')
 Country.create(name: 'Albania')
 Country.create(name: 'Algeria')
@@ -218,8 +258,31 @@ Country.create(name: 'Yemen')
 Country.create(name: 'Zambia')
 Country.create(name: 'Zimbabwe')
 
+# city functions
+def save_city(city, country_name)
+  country = Country.where(name: country_name).first
+  if country.nil?
+    puts "country not found: #{country}"
+  else
+    city.country_id = country.id
+    city.save
+  end
+end
 
-#Language.create(name: 'test')
+# cities
+c = City.new(name: 'Mexico City', lat: 19.432608, lng: -99.133208)
+save_city(c, 'Mexico')
+c = City.new(name: 'Madrid', lat: 40.416775, lng: -3.70379)
+save_city(c, 'Spain')
+c = City.new(name: 'Sao Paulo', lat: -23.548943, lng: -46.638818)
+save_city(c, 'Brazil')
+c = City.new(name: 'Beijing', lat: 39.904030041601466, lng: 116.40752591192722)
+save_city(c, 'China')
+c = City.new(name: 'Kuala Lumpur', lat: 3.139003, lng: 101.686855)
+save_city(c, 'Malaysia')
+
+
+# languages
 Language.create(name: 'Arabic')
 Language.create(name: 'Awadhi')
 Language.create(name: 'Azerbaijani')

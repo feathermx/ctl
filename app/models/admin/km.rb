@@ -38,5 +38,9 @@ class Admin::Km < Km
     Admin::Delivery.filter_by_km(self.id).filter_by_id(id).first
   end
   
+  def find_parking_restriction_by_id(id)
+    Admin::ParkingRestriction.filter_by_km(self.id).filter_by_id(id).first
+  end
+  
   
 end

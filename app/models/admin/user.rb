@@ -1,6 +1,6 @@
 class Admin::User < User
   
-  scope :list, ->{ select("users.id, users.city_id, users.name, users.last_names, users.mail").with_city }
+  scope :list, ->{ select("users.id, users.city_id, users.name, users.last_names, users.mail").with_city.with_country }
   scope :exclude, ->(id){ where.not(id: id) }
   
   def as_json(opts)
