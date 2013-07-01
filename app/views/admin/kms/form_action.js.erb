@@ -8,13 +8,7 @@
 		init: function(){
 			this.initRoot();
 			this.initElement();
-			this.initCapturedAtDatePicker();
 			this.initCoordinatesSelector();
-		},
-		initCapturedAtDatePicker: function(){
-			this.root.fmx.date_picker({
-				container: this.parent.form.container.find('#admin_km_captured_at')
-			});
 		},
 		initCoordinatesSelector: function(){
 			var opts = {};

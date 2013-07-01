@@ -12,11 +12,9 @@
 	<th data-name="parking_restrictions_count"><%= t 'app.admin.views.kms.fields.parking_restrictions_count' %></th>
 	<th data-name="shops_count"><%= t 'app.admin.views.kms.fields.shops_count' %></th>
 	<th data-name="deliveries_count"><%= t 'app.admin.views.kms.fields.deliveries_count' %></th>
-	<th data-name="c_at" data-sort="captured_at"><%= t 'app.admin.views.kms.fields.captured_at' %></th>
 <% end %>
 <%= render partial: 'admin/shared/plugins/csv_uploader' %>
 <%= render partial: 'admin/shared/plugins/coordinates_selector' %>
-<%= render partial: 'admin/shared/plugins/date_picker' %>
 <%= javascript_include_tag url_for(action: :action) %>
 <%= render partial: 'admin/shared/section/section', locals: { opts: @section.merge(show_add_btn: add?) } %>
 <% end %>

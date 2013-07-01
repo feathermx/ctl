@@ -18,13 +18,6 @@
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.kms.fields.captured_at')  %></label>
-			<div class="field_container">
-				<%= hidden_field_tag "admin_km[captured_at]", @element.c_at %>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="field">
 			<label><%= t('app.admin.views.kms.fields.description')  %></label>
 			<div class="field_container">
 				<%= f.text_area :description %>

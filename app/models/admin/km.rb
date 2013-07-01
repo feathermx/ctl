@@ -1,13 +1,9 @@
 class Admin::Km < Km
   
-  scope :list, ->{ select("kms.id, kms.tracks_count, kms.traffic_counts_count, kms.traffic_disruptions_count, kms.street_data_count, kms.parking_restrictions_count, kms.shops_count, kms.deliveries_count, kms.name, kms.captured_at") }
+  scope :list, ->{ select("kms.id, kms.tracks_count, kms.traffic_counts_count, kms.traffic_disruptions_count, kms.street_data_count, kms.parking_restrictions_count, kms.shops_count, kms.deliveries_count, kms.name") }
   
   def as_json(opts = {})
-    super(opts.merge(methods: [:c_at]))
-  end
-  
-  def captured_at=(val)
-    write_attribute(:captured_at, time_val(val))
+    super(opts)
   end
   
   def list_elements(base)
