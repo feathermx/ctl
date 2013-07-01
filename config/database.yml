@@ -54,8 +54,8 @@ test:
 production:
   adapter: postgresql
   encoding: utf8
-  database: ctl
+  database: km2
   pool: 5
-  username: ctl
+  username: km2
   password: '664a43c0d886302db4a2c2cc181524f3f2f7fbb0'
   host: 127.0.0.1
