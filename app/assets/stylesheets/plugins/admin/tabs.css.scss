@@ -1,4 +1,4 @@
-@import 'fmx/mixins.css.scss';
+@import "admin/shared.css.scss";
 .backend_tabs_container{
 	.backend_tabs_triggers{
 		float: left;
@@ -79,11 +79,11 @@
 		}
 		@include link('a.backend_tabs_trigger.active') { 
 			cursor: auto;
-			background: none repeat scroll 0 0 #249CFB;
-			border-left: 2px solid #1C8FEB;
+			background: none repeat scroll 0 0 $base;
+			border-left: 2px solid $base;
 			color: #FFFFFF;
 			.backend_tabs_trigger_icon_container{
-				background: none repeat scroll 0 0 #1C8FEB;
+				background: none repeat scroll 0 0 $base-hover;
 			}
 		}
 		a.backend_tabs_trigger.active{

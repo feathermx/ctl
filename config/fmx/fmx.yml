@@ -10,4 +10,4 @@ globals:
 development:
   scope: ''
 production:
-  scope: ''
+  scope: '/km2'

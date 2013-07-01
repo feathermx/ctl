@@ -87,12 +87,8 @@
 				lat_lng: null,
 				init: function(){
 					this.initRoot();
-					this.initData();
 					this.initLatLng();
 					this.add();
-				},
-				initData: function(){
-					this.data = this.data['<%= @section[:namespace] %>'];
 				},
 				initLatLng: function(){
 					this.lat_lng = new google.maps.LatLng(this.data.lat, this.data.lng);
