@@ -29,6 +29,7 @@ en:
         profile: 'Profile'
         password: 'Update Password'
         logout: 'Logout'
+        help: 'Help'
       actions:
         show: 'Show'
         confirm: 'Confirm'
@@ -48,6 +49,8 @@ en:
           fields:
             mail: 'E-mail'
             password: 'Password'
+        help:
+          title: 'Help'
         profile:
           title: 'User Profile'
           tabs:
