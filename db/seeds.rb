@@ -56,7 +56,6 @@ uc.identity = Admin::UploadConfig::Identity::CountryImage
 uc.save
 
 
-
 # countries
 Country.create(name: 'Afghanistan')
 Country.create(name: 'Albania')
@@ -283,6 +282,10 @@ c = City.new(name: 'Beijing', lat: 39.904030041601466, lng: 116.40752591192722)
 save_city(c, 'China')
 c = City.new(name: 'Kuala Lumpur', lat: 3.139003, lng: 101.686855)
 save_city(c, 'Malaysia')
+c = City.new(name: 'Santiago', lat: -33.4691199, lng: -70.641997)
+save_city(c, 'Chile')
+c = City.new(name: 'Rio de Janeiro', lat: -22.9035393, lng: -43.20958689999998)
+save_city(c, 'Brazil')
 
 
 # languages
