@@ -1,7 +1,7 @@
 class SplashController < ApplicationController
   
   def index
-    render text: 'CTL'
+    redirect_to controller: 'admin/splash', action: 'index'
   end
   
 end
