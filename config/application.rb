@@ -20,7 +20,6 @@ module Ctl
     # config.i18n.default_locale = :de
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :en
-    #config.active_record.default_timezone = :local
     config.assets.paths << Rails.root.join("lib", "assets")
   end
 end
