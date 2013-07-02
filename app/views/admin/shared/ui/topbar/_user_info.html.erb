@@ -6,17 +6,17 @@
 			<span class="user_menu_label"><%= t "app.admin.user_menu.profile" %></span>
 			<span class="clear"></span>
 		</a>
+		<a class="user_menu_element fmx_navigation_trigger" href="<%= url_for controller: :help, action: :index %>">
+			<%= image_tag 'admin/icons/user_menu/help.png', width: 12, height: 12, class: 'user_menu_icon' %>
+			<span class="user_menu_label"><%= t "app.admin.user_menu.help" %></span>
+			<span class="clear"></span>
+		</a>
 		<span class="user_menu_separator"></span>
 		<a class="user_menu_element" href="<%= url_for controller: :splash, action: :logout %>">
 			<%= image_tag 'admin/icons/user_menu/logout.png', width: 12, height: 12, class: 'user_menu_icon' %>
 			<span class="user_menu_label"><%= t "app.admin.user_menu.logout" %></span>
 			<span class="clear"></span>
 		</a>
-		<a class="user_menu_element fmx_navigation_trigger" href="<%= url_for controller: :help, action: :index %>">
-			<%= image_tag 'admin/icons/user_menu/logout.png', width: 12, height: 12, class: 'user_menu_icon' %>
-			<span class="user_menu_label"><%= t "app.admin.user_menu.help" %></span>
-			<span class="clear"></span>
-		</a>		
 	</div>
 	<span id="user_info_trigger_label"><%= @session.name %> <%= @session.last_names %></span>
 	<%= image_tag 'admin/ui/dropdown/user_info.png', width: 12, height: 7, id: 'user_info_trigger_icon' %>
