@@ -68,6 +68,9 @@ en:
           kiosk_school: 'Kiosk School'
           kiosk_other: 'Kiosk Other'
           kiosk_unknown: 'Kiosk Unknown'
+        loading_area_type:
+          off_street: 'Off Street'
+          on_street: 'On Street'
       delivery:
         delivery_type:
           delivery: 'Delivery'

@@ -97,7 +97,27 @@ class Shop < ActiveRecord::FmxBase
     
   end
   
-  scope :base, ->{ select("shops.id, shops.km_id, shops.street_id, shops.shop_id, shops.registered_at, shops.shop_type, shops.name, shops.front_length, shops.starting_floor, shops.total_floors, shops.has_loading_area, shops.notes") }
+  module LoadingAreaType
+    
+    OffStreet = 0
+    OnStreet = 1
+    
+    List = {
+      OffStreet => {
+        name: I18n.t('app.model.shop.loading_area_type.off_street')
+      },
+      OnStreet => {
+        name: I18n.t('app.model.shop.loading_area_type.on_street')
+      }
+    }
+    
+    def self.keys
+      @@keys ||= List.keys
+    end
+    
+  end
+  
+  scope :base, ->{ select("shops.id, shops.km_id, shops.street_id, shops.shop_id, shops.registered_at, shops.shop_type, shops.name, shops.front_length, shops.starting_floor, shops.total_floors, shops.has_loading_area, shops.loading_area_type, shops.notes") }
   scope :base_count, ->{ select("COUNT(shops.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_shop_id, ->(shop_id){ where(shop_id: shop_id) }
@@ -109,7 +129,8 @@ class Shop < ActiveRecord::FmxBase
   validates :front_length, numericality: true, allow_blank: true
   validates :starting_floor, numericality: true, allow_blank: true 
   validates :total_floors, numericality: true, allow_blank: true
-  validates :has_loading_area, presence:true, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }
+  validates :has_loading_area, presence: true, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }
+  validates :loading_area_type, presence: true, numericality: { only_integer: true }, inclusion: { in: LoadingAreaType.keys }
   validates :notes, length: { maximum: 300 }, allow_blank: true
   
   def self.find_by_shop_id(shop_id)

@@ -1,0 +1,1 @@
+ALTER TABLE shops ADD COLUMN loading_area_type INTEGER NOT NULL;

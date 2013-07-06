@@ -66,7 +66,6 @@ CREATE TABLE public.kms (
                 comments TEXT,
                 lat DOUBLE PRECISION NOT NULL,
                 lng DOUBLE PRECISION NOT NULL,
-                captured_at DATE NOT NULL,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
                 CONSTRAINT kms_pk PRIMARY KEY (id)
@@ -216,6 +215,7 @@ CREATE TABLE public.shops (
                 starting_floor INTEGER,
                 total_floors INTEGER DEFAULT 1,
                 has_loading_area INTEGER NOT NULL,
+                loading_area_type INTEGER NOT NULL,
                 notes TEXT,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,

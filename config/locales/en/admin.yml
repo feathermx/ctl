@@ -217,6 +217,7 @@ en:
             starting_floor: 'S. fl.'
             total_floors: 'T. fl.'
             has_loading_area: 'L. Area?'
+            loading_area_type: 'L. Type'
             notes: 'Notes'
           new:
             title: 'CSV Upload'
