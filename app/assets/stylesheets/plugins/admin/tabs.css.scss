@@ -79,11 +79,11 @@
 		}
 		@include link('a.backend_tabs_trigger.active') { 
 			cursor: auto;
-			background: none repeat scroll 0 0 $base;
-			border-left: 2px solid $base;
+			background: none repeat scroll 0 0 $from-base;
+			border-left: 2px solid $from-base;
 			color: #FFFFFF;
 			.backend_tabs_trigger_icon_container{
-				background: none repeat scroll 0 0 $base-hover;
+				background: none repeat scroll 0 0 #389BE4;
 			}
 		}
 		a.backend_tabs_trigger.active{

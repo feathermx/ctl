@@ -5,35 +5,53 @@ h2 {
   font-size: 24px;
   font-weight: 300;
   margin-left: 20px;
-  color: $base;
+  color: $from-base;
 }
 
 /** top bar */
 #topbar{
-	background: none repeat scroll 0 0 $topbar-color;
+	@include background-gradient($from-base, $to-base);
 	position: absolute;
 	left: 0px;
 	top: 0px;
 	height: 40px;
 	display: none;
 	z-index: 4001;
-	@include link('a#topbar_logo') {
+	#topbar_logo_container{
 		position: absolute;
 		display: block;
 		left: 20px;
-		top: 8px;
+		top: 0px;
+		width: 68px;
+		height: 70px;
+	}
+	img#topbar_logo_background{
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		width: 68px;
+		height: 70px;
+		display: block;
+	}
+	@include link('a#topbar_logo') {
+		position: absolute;
+		display: block;
 		text-decoration: none;
 		border: 0 none;
 		outline: none;
-		width: 84px;
-		height: 25px;
+		width: 44px;
+		height: 26px;
+		left: 50%;
+		top: 50%;
+		margin-top: -20px;
+		margin-left: -22px;
 	}
 	a#topbar_logo img{
 		border: 0 none;
 		outline: none;
 		display: block;
-		width: 84px;
-		height: 25px;
+		width: 44px;
+		height: 26px;
 	}
 }
 /** user container */
@@ -56,7 +74,7 @@ h2 {
 #user_info_trigger.active:hover,
 #user_info_trigger.active:active,
 #user_info_trigger.active:visited {
-	background: none repeat scroll 0 0 $base-hover;
+	background: none repeat scroll 0 0 $to-base;
 }
 
 #user_info_trigger_label{
@@ -158,6 +176,7 @@ a.user_menu_element .user_menu_icon{
 	padding: 0 0 8000px 0;
 	margin: 0 0 -8000px 0;
 	z-index: 4000;
+	border-right: 1px solid #DBDBDB;
 }
 
 #wrapper{
@@ -172,14 +191,14 @@ a.user_menu_element .user_menu_icon{
 
 /** menu */
 #menu{
-	margin: 30px 0 0 0;
+	margin: 40px 0 0 0;
 }
 
 @include link('a.menu_element') {
 	text-decoration: none;
 	display: block;
-	border-bottom: 1px solid #594A42;
-	color: #594A42;
+	border-bottom: 1px solid #E9E9E9;
+	color: #555555;
 	height: 40px;
 	background: none repeat scroll 0 0 $sidebar-color;
 	cursor: pointer;
@@ -188,16 +207,17 @@ a.user_menu_element .user_menu_icon{
 }
 
 a.menu_element:hover{
-	background: none repeat scroll 0 0 $base-hover;
+	background: none repeat scroll 0 0 #389BE4;
+	color: #FFFFFF;
 }
 
 @include link('a.menu_element.last') {
-	border-bottom: 1px solid #594A42;
+	border-bottom: 1px solid $sidebar-color;
 }
 
 @include link('a.menu_element.active') {
-	background: none repeat scroll 0 0 $base;
-	border-bottom: 1px solid $base;
+	background: none repeat scroll 0 0 $from-base;
+	border-bottom: 1px solid $from-base;
 	color: #FFFFFF;
 }
 
@@ -208,6 +228,7 @@ a.menu_element img.menu_element_active_img{
 	border: 0 none;
 	outline: none;
 	display: none;
+	margin-right: -1px;
 }
 
 a.menu_element.active img.menu_element_active_img{

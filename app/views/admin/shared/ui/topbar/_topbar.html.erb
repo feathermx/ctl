@@ -1,7 +1,10 @@
 <div class="static_element" id="topbar">
-	<a href="<%= url_for controller: :home, action: :index %>" id="topbar_logo">
-		<%= image_tag 'admin/logos/dashboard.png', width: 84, height: 25 %>
-	</a>
+	<div id="topbar_logo_container">
+		<%= image_tag 'admin/ui/badges/header.png', width: 68, height: 70, id: 'topbar_logo_background' %>
+		<a href="<%= url_for controller: :home, action: :index %>" id="topbar_logo">
+			<%= image_tag 'admin/logos/dashboard.png', width: 44, height: 26 %>
+		</a>
+	</div>
 	<%= render partial: 'admin/shared/ui/topbar/user_info' %>
 	<div class="clear"></div>
 </div>

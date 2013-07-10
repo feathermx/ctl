@@ -5,8 +5,8 @@ $field-width: 465px;
 }
 .fmx_coordinates_selector_container{
 	.fmx_coordinates_selector_top_bar{
-		background: none repeat scroll 0 0 $base;
-		border: 1px solid $base;
+		@include background-gradient($from-base, $to-base);
+		border: 1px solid $from-base;
 	    height: 40px;
 	}
 	.fmx_coordinates_selector_search_container{
@@ -28,9 +28,9 @@ $field-width: 465px;
 	.fmx_coordinates_selector_map_container{
 		width: $field-width - 2;
 		height: 300px;
-		border-left: 1px solid $base;
-		border-right: 1px solid $base;
-		border-bottom: 1px solid $base;
+		border-left: 1px solid $from-base;
+		border-right: 1px solid $from-base;
+		border-bottom: 1px solid $from-base;
 	}
 	.fmx_coordinates_selector_coordinates_container{
 		margin: 8px 0 0 8px;

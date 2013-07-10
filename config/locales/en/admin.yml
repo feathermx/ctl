@@ -1,9 +1,9 @@
 en:
   app:
     admin:
-      title: 'MIT CTL'
+      title: 'km2 | admin'
       legal:
-        copyright: '&copy; 2013 MIT'
+        copyright: '&copy; 2013 MIT CTL'
       perm:
         users: 'Users'
         languages: 'Languages'
