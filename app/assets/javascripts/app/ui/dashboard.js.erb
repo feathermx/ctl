@@ -1,0 +1,83 @@
+(function(){
+	$(function(){
+		$.extend(app, {
+			view_loader: null,
+			wrapper: null,
+			static_height: 0,
+			view: $(),
+			init: function(){
+				this.initStaticElements();
+				this.initWrapper();
+				this.initWindow();
+				this.windowOnResize();
+				this.initViewLoader();
+				this.loadView('home');
+			},
+			initWindow: function(){
+				var _self = this;
+				if(this.has_touch){
+					window.addEventListener('orientationchange', function(e){
+						_self.windowOnResize();
+					}, false);
+				}
+				else{
+					this._window.resize(function(){
+						_self.windowOnResize();
+					});
+				}
+			},
+			windowOnResize: function(){
+				var height = this.fullscreen.dimen.height - this.static_height;
+				var dimen = {};
+				$.extend(dimen, {
+					'min-height': height
+				});
+				this.wrapper.css(dimen);
+				this.view.css(dimen);
+			},
+			initStaticElements: function(){
+				var _self = this;
+				var elements = this.container.find('.static_element');
+				elements.each(function(){
+					_self.addStaticElement($(this));
+				});
+			},
+			addStaticElement: function(container){
+				this.static_height = container.height();
+			},
+			initWrapper: function(){
+				this.wrapper = this.container.find('#wrapper');
+			},
+			initViewLoader: function(){
+				var _self = this;
+				this.view_loader = this.root.fmx.view_loader({
+					container: this.wrapper,
+					loading: function(){
+						_self.loading();
+					},
+					loaded: function(){
+						_self.viewLoaderLoaded();
+					},
+					error: function(){
+						_self.error();
+					}
+				});
+			},
+			viewLoaderLoaded: function(){
+				this.loaded();
+				this.view = this.wrapper.find('.view');
+				this.windowOnResize();
+			},
+			loadView: function(key, opts){
+				if(opts == null) opts = {};
+				var path = config.server.paths[key];
+				var url = config.server.endpoint + path;
+				$.extend(opts, {
+					url: url
+				});
+				this.view_loader.load(opts);
+			}
+		});
+		app.init();
+	});
+})(jQuery);

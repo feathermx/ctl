@@ -10,6 +10,11 @@
 			</div>
 			<div class="clear"></div>
 		</div>
+		<div class="field">
+			<label><%= t('app.admin.views.countries.fields.image')  %>(<%= Admin::Country::Image::Width %>x<%= Admin::Country::Image::Height %>)</label>
+			<div id="country_image_uploader" class="field_container"></div>
+			<div class="clear"></div>
+		</div>
 		<div class="form_actions">
 			<%= submit_tag t('app.admin.actions.submit'), class: 'button' %>
 			<div class="clear"></div>

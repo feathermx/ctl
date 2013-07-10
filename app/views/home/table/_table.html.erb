@@ -1,0 +1,44 @@
+<table id="home_table" class="fmx_table">
+	<thead>
+		<tr>
+			<th></th>
+			<%= render partial: 'home/table/th', locals: { key: 'population' } %>
+			<%= render partial: 'home/table/th', locals: { key: 'area' } %>
+			<%= render partial: 'home/table/th', locals: { key: 'density' } %>
+			<%= render partial: 'home/table/th', locals: { key: 'bigmac' } %>
+			<th class="home_table_actions"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="home_table_country">
+				<%= image_tag 'tmp/china.png', class: 'home_table_country_icon' %>
+				<span class="home_table_country_name">Beijing</span>
+				<span class="clear"></span>
+			</td>
+			<td>20.3</td>
+			<td>1603.3</td>
+			<td>231.3</td>
+			<td>3221.3</td>
+			<td>
+				<a href="#" class="button table_action">Go!</a>
+				<div class="clear"></div>
+			</td>
+		</tr>
+		<tr class="odd">
+			<td class="home_table_country">
+				<%= image_tag 'tmp/mexico.png', class: 'home_table_country_icon' %>
+				<span class="home_table_country_name">Mexico City</span>
+				<span class="clear"></span>
+			</td>
+			<td>20.3</td>
+			<td>1603.3</td>
+			<td>231.3</td>
+			<td>3221.3</td>
+			<td>
+				<a href="#" class="button table_action">Go!</a>
+				<div class="clear"></div>
+			</td>
+		</tr>
+	</tbody>
+</table>

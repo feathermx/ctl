@@ -50,6 +50,11 @@ save_user(u)
 u = User.new(name: 'Lesley', last_names: 'Wang', mail: 'leswang@mit.edu')
 save_user(u)
 
+# upload configs
+uc = UploadConfig.new max_size: 307200, allowed_extensions: 'jpg,png'
+uc.identity = Admin::UploadConfig::Identity::CountryImage
+uc.save
+
 
 
 # countries

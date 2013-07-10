@@ -1,0 +1,45 @@
+@import 'app/shared.css.scss';
+#header{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 40px;
+	@include background-gradient($from-base, $to-base);
+	z-index: 6001;
+	#header_logo_container{
+		display: block;
+		width: 68px;
+		height: 70px;
+		position: absolute;
+		left: 45px;
+		top: 0px;
+	}
+	#header_logo_background{
+		display: block;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		width: 68px;
+		height: 70px;
+	}
+	@include link('a#header_logo') {
+		display: block;
+		width: 44px;
+		height: 26px;
+		border: 0 none;
+		outline: none;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		margin-top: -20px;
+		margin-left: -22px;
+	}
+	a#header_logo img{
+		display: block;
+		width: 44px;
+		height: 26px;
+		border: 0 none;
+		outline: none;
+	}
+}

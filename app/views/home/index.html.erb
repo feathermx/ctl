@@ -1,0 +1,20 @@
+<div id="home">
+	<div class="panel view">
+		<div class="panel_wrapper">
+			<div class="panel_header">
+				<div class="panel_title_wrapper">
+					<h1 class="panel_title"><%= t 'app.views.home.title' %></h1>
+					<div class="panel_title_actions">
+						<a class="panel_action button" href="#"><%= t 'app.views.home.actions.about' %></a>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<p class="panel_subtitle"><%= t 'app.views.home.subtitle' %></p>
+			</div>
+			<div class="panel_content">
+				<%= render partial: 'home/table/table' %>
+			</div>
+		</div>
+	</div>
+</div>

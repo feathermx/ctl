@@ -1,0 +1,68 @@
+@import 'app/shared.css.scss';
+#home{
+	padding: 0 50px;
+	height: 100%;
+	table#home_table{
+		width: 100%;
+		border-left: 1px solid #E9E9E9;
+		border-top: 1px solid #E9E9E9;
+		border-right: 1px solid #E9E9E9;
+		.home_table_col{
+			display: block;
+			img.home_table_col_icon{
+				display: block;
+				margin: 0 auto;
+			}
+			.home_table_col_name{
+				width: 100%;
+				margin: 2px 0 0 0;
+				color: #919191;
+				font-size: 12px;
+			}
+		}
+		th, td{
+			border-bottom: 1px solid #E9E9E9;
+			padding: 10px 7px;
+			vertical-align: middle;
+		}
+		tr{
+			td{
+				background: none repeat scroll 0 0 #FFFFFF;
+				font-size: 15px;
+				text-align: center;
+				color: #555555;
+				&.home_table_country{
+					.home_table_country_icon{
+						display: block;
+						float: left;
+						margin: 0 5px 0 0;
+					}
+					.home_table_country_name{
+						float: left;
+						display: block;
+						font-weight: $bold;
+						margin: 1px 0 0 0;
+					}
+				}
+			}
+			&.odd{
+				td{
+					background: none repeat scroll 0 0 #F9F9F9;	
+				}
+			}
+		}
+		th{
+			width: 18%;
+			background: none repeat scroll 0 0 #F7F8F9;
+			&.home_table_actions{
+				width: auto;
+			}
+		}
+		@include link('a.table_action') {
+			display: block;
+			border: 0 none;
+			outline: none;
+			float: left;
+		}
+	}
+}

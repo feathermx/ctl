@@ -1,1 +1,26 @@
+<% content_for :form_view do %>
+this.view = {};
+$.extend(this.view, {
+	parent: this,
+	root: null,
+	namespace: 'admin_country',
+	token: <%= @session.auth_token.to_json.html_safe %>,
+	init: function(){
+		this.initRoot();
+		this.initImageUploader();
+	},
+	initImageUploader: function(){
+		this.root.fmx.uploader({
+			form: this.parent.form,
+			field_namespace: this.namespace,
+			field_name: 'image_upload',
+			container: this.parent.form.container.find('#country_image_uploader')
+		}, this.token, <%= uc :CountryImage %>);
+	},
+	initRoot: function(){
+		this.root = this.parent.root;
+	}
+});
+this.view.init();
+<% end %>
 <%= render partial: 'admin/shared/section/form_action', locals: { opts: @section } %>

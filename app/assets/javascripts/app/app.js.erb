@@ -1,0 +1,124 @@
+var app = {};
+$.extend(app, {
+	root: null,
+	_window: null,
+	has_touch: false,
+	loading_count: 0,
+	container: null,
+	fullscreen: null,
+	init: function(){
+		this.initRoot();
+		this.initFmx();
+		this.initHasTouch();
+		this.initMainLoader();
+		this.initWindow();
+		this.initContainer();
+	},
+	initWindow: function(){
+		this._window = $(window);
+	},
+	initContainer: function(){
+		this.container = $('#container');
+		this.container.css('overflow-x', 'hidden');
+		this.initFullScreen();
+	},
+	initFullScreen: function(){
+		this.fullscreen = this.root.fmx.fullscreen({
+			container: this.container
+		});
+	},
+	initMainLoader: function(){
+		this.main_loader = {};
+		$.extend(this.main_loader, {
+			parent: this,
+			root: null,
+			container: null,
+			init: function(){
+				this.initRoot();
+				this.initContainer();
+				this.initSprite();
+			},
+			initContainer: function(){
+				this.container = $('#main_loader').css('opacity', 0.75);
+			},
+			initSprite: function(){
+				this.root.fmx.sprite({
+					container: this.container.find('#main_loader_sprite'),
+					fps: 12,
+					dimensions: {
+						width: 20,
+						height: 20
+					}
+				});
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			},
+			show: function(){
+				this.container.css('display', 'block');
+			},
+			hide: function(){
+				this.container.css('display', 'none');
+			}
+		});
+		this.main_loader.init();
+	},
+	loading: function(){
+		if(this.loading_count == 0){
+			this.main_loader.show();
+		}
+		++this.loading_count;
+    },
+    loaded: function(){
+		--this.loading_count;
+		if(this.loading_count == 0){
+			this.main_loader.hide();
+		}
+    },
+    error: function(){
+		this.root.fmx.notification({
+			icon_src: 'error',
+			msg: lang.messages.error
+		});
+    },
+	initRoot: function(){
+		this.root = this;
+	},
+	initHasTouch: function(){
+		this.has_touch = 'ontouchstart' in document.documentElement;
+	},
+	getTouchOpts: function(){
+		return { has_touch: this.has_touch, _window: this._window };
+	},
+	initFmx: function(){
+		this.fmx.root = this;
+	},
+	fmx: {
+		root: null,
+		notification: function(opts){
+			return $.fmx_notification(
+				$.extend(opts, config.fmx.notification(), this.root.getTouchOpts())
+			);
+		},
+		sprite: function(opts){
+			return $.fmx_sprite(
+				$.extend(opts, config.fmx.sprite())
+			);
+		},
+		fullscreen: function(opts){
+			return $.fmx_fullscreen(
+				$.extend(opts, config.fmx.fullscreen(), this.root.getTouchOpts())
+			);
+		},
+		view_loader: function(opts){
+			return $.fmx_view_loader(
+				$.extend(opts, config.fmx.view_loader())
+			);
+		}
+	}
+});
+(function(){
+	$(function(){
+		app.init();
+	});
+})(jQuery);

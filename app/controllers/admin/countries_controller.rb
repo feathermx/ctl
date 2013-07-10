@@ -29,6 +29,10 @@ class Admin::CountriesController < Admin::AdminController
     render_error and return
   end
   
+  def form_action
+    self.upload_opts
+  end
+  
   def new
     @element = Admin::Country.new
     render :form

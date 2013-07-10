@@ -1,7 +1,10 @@
 <% content_for :table_fields do %>
+	<th class="no_sort" data-name="image_path"></th>
 	<th data-name="name"><%= t 'app.admin.views.countries.fields.name' %></th>
 	<th data-name="city_count"><%= t 'app.admin.views.countries.fields.city_count' %></th>
 <% end %>
+<%= javascript_include_tag 'jquery.swfobject.1-1-1.min' %>
+<%= render partial: 'admin/shared/plugins/uploader' %>
 <%= render partial: 'admin/shared/plugins/coordinates_selector' %>
 <%= javascript_include_tag url_for(action: :action) %>
 <%= render partial: 'admin/shared/section/section', locals: { opts: @section.merge(show_add_btn: add?) } %>

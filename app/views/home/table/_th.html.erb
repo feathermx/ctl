@@ -1,0 +1,8 @@
+<% lang_key = "app.views.home.fields.#{key}" %>
+<% img_src = "app/icons/home/#{key}.png" %>
+<th class="home_table_data">
+	<div class="home_table_col">
+		<%= image_tag img_src, width: 31, height: 28, class: 'home_table_col_icon' %>
+		<h1 class="home_table_col_name"><%= t lang_key %></h1>
+	</div>
+</th>

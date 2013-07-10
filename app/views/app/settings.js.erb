@@ -1,0 +1,44 @@
+var config = {};
+$.extend(config, {
+	init: function(){
+		this.fmx.parent = this;
+	},
+	server: {
+		endpoint: '',
+		paths: {
+			home: '<%= url_for controller: :home, action: :index %>'
+		}
+	},
+	fmx: {
+		parent: null,
+		notification: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.notification());
+			return opts;
+		},
+		sprite: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.sprite());
+			return opts;
+		},
+		fullscreen: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.fullscreen());
+			return opts;
+		},
+		view_loader: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.view_loader());
+			return opts;
+		}
+	}
+});
+config.init();

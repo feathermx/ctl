@@ -1,7 +1,7 @@
-class SplashController < ApplicationController
+class SplashController < FrontController
   
   def index
-    redirect_to controller: 'admin/splash', action: 'index'
+    render layout: 'application'
   end
   
 end

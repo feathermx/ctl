@@ -15,9 +15,7 @@ en:
         countries: 'Countries'
         kms: 'km2'
       messages:
-        loading: 'Loading'
         not_found: 'No records found.'
-        error: 'There was an error. Please try again later.'
         create_success: 'Record created successfully'
         update_success: 'Record updated successfully'
         delete_success: 'Record deleted successfully'
@@ -94,6 +92,7 @@ en:
           fields:
             name: 'Name'
             city_count: 'City Count'
+            image: 'Image'
           actions:
             cities: 'Cities'
         cities:

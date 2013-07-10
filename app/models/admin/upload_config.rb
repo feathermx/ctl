@@ -1,6 +1,7 @@
 class Admin::UploadConfig < UploadConfig
   
   module Identity
+    CountryImage = 'country_image'
     
     def self.find(key)
       el = nil

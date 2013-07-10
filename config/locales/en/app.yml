@@ -1,0 +1,17 @@
+en:
+  app:
+    title: 'km2'
+    messages:
+      loading: 'Loading'
+      error: 'There was an error. Please try again later.'
+    views:
+      home:
+        title: 'Welcome to km2!'
+        subtitle: "We've collected data from all around the world. Please select a city to continue."
+        actions:
+          about: 'About'
+        fields:
+          population: 'Population'
+          area: 'Area'
+          density: 'Density'
+          bigmac: 'Big Mac Index'

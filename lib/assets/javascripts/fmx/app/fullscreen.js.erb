@@ -1,0 +1,56 @@
+(function(){
+	var nil = $();
+	$.fmx_fullscreen = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			container: nil,
+			dimen: null,
+			has_touch: false,
+			_window: null,
+			limit: null,
+			dimen: null,
+			init: function(){
+				this.initLimit();
+				this.initWindow();
+				this.windowOnResize();
+			},
+			initLimit: function(){
+				this.limit = {};
+				$.extend(this.limit, {
+					width: parseInt(this.container.css('min-width')),
+					height: parseInt(this.container.css('min-height'))
+				});
+			},
+			initWindow: function(){
+				var _self = this;
+				if(this.has_touch){
+					window.addEventListener('orientationchange', function(){
+						_self.windowOnResize();
+					}, false);
+				}
+				else{
+					this._window.resize(function(){
+						_self.windowOnResize();
+					});
+				}
+			},
+			windowOnResize: function(){
+				this.dimen = {};
+				$.extend(this.dimen, {
+					width: this._window.width(),
+					height: this._window.height()
+				});
+				if(this.dimen.width < this.limit.width) this.dimen.width = this.limit.width;
+				if(this.dimen.height < this.limit.height) this.dimen.height = this.limit.height;
+				var dimen = {};
+				$.extend(dimen, {
+					'min-width': this.dimen.width,
+					'min-height': this.dimen.height
+				});
+				this.container.css(dimen);
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	};
+})(jQuery);

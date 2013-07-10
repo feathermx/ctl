@@ -1,0 +1,67 @@
+@import 'app/shared.css.scss';
+body{
+	background: none repeat scroll 0 0 #F5F5F5;
+	font-family: $font-family;
+}
+#container{
+	display: block;
+	position: relative;
+	min-width: 960px;
+	min-height: 600px;
+}
+@include link('.button') {
+	@include background-gradient($from-base, $to-base);
+	@include border-radius(3px, 3px, 3px, 3px);
+	@include text-shadow(0, -1px, 0, rgba(0, 0, 0, 0.25));
+	color: #FFFFFF;
+	font-size: 18px;
+	padding: 11px 19px;
+	text-decoration: none;
+	border: 1px solid #065FBD;
+	outline: none;
+}
+.button:hover{
+	@include background-gradient($from-base, $to-hover);
+}
+#wrapper{
+	width: 100%;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 6000;
+	margin: 40px 0 0 0;
+	.panel{
+		background: none repeat scroll 0 0 #FFFFFF;
+		height: 100%;
+		border-left: 1px solid #DBDBDB;
+		border-right: 1px solid #DBDBDB;
+		.panel_wrapper{
+			padding: 30px 50px;
+		}
+		.panel_header{
+			margin: 0 0 40px 0;
+			.panel_title_wrapper{
+				margin: 0 0 15px 0;
+			}
+			h1.panel_title{
+				font-size: 50px;
+				font-weight: $semi-bold;
+				color: #444444;
+				float: left;
+				width: 550px;
+			}
+			.panel_title_actions{
+				float: right;
+				margin: 6px 0 0 0;
+			}
+			@include link('a.panel_action') {
+				display: block;
+				float: left;
+			}
+			p.panel_subtitle{
+				font-size: 18px;
+				color: #555555;
+			}
+		}
+	}
+}

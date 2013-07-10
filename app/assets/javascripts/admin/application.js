@@ -1,4 +1,4 @@
-//= require jquery-1.10.0.min
+//= require jquery-1.10.2.min
 //= require fmx/sprite
 //= require fmx/notification
 //= require fmx/dialog/dialog
