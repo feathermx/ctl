@@ -13,6 +13,13 @@
 			<div class="clear"></div>
 		</div>
 		<div class="field">
+			<label><%= t('app.admin.views.cities.fields.city_time_zone') %></label>
+			<div class="field_container">
+				<%= f.select :city_time_zone, Admin::City.timezones_select, prompt: true %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
 			<label><%= t('app.admin.views.cities.fields.location')  %></label>
 			<div class="field_container" id="cities_coordinates_selector"></div>
 			<div class="clear"></div>

@@ -1,6 +1,6 @@
 class City < ActiveRecord::FmxBase
   
-  scope :base, ->{ select("cities.id, cities.country_id, cities.language_id, cities.name, cities.population, cities.population_density, cities.area, cities.us_exchange_rate, cities.gdp, cities.big_mac_index, cities.lat, cities.lng") }
+  scope :base, ->{ select("cities.id, cities.country_id, cities.language_id, cities.name, cities.city_time_zone, cities.population, cities.population_density, cities.area, cities.us_exchange_rate, cities.gdp, cities.big_mac_index, cities.lat, cities.lng") }
   scope :base_count, ->{ select("COUNT(cities.id) as num") }
   scope :with_country, ->{ select("countries.id as country_id, countries.name as country_name").joins("JOIN countries ON countries.id = cities.country_id") }
   scope :filter_by_country, ->(country_id){ where(country_id: country_id) }
@@ -9,7 +9,7 @@ class City < ActiveRecord::FmxBase
   
   attr_protected :country_id
   
-  validates :country_id, :name, :lat, :lng, presence: true
+  validates :country_id, :name, :city_time_zone, :lat, :lng, presence: true
   validates :name, length: { in: 2..100 }
   validates :population, numericality: { only_integer: true }, allow_nil: true
   validates :population_density, numericality: true, allow_nil: true
@@ -22,6 +22,10 @@ class City < ActiveRecord::FmxBase
   
   after_create :add_country_count
   before_destroy :substract_country_count
+  
+  def time_zone
+    @time_zone ||= ActiveSupport::TimeZone.new self.city_time_zone
+  end
   
   def language_id=(val)
     write_attribute(:language_id, val) unless val.blank?

@@ -1,5 +1,6 @@
 <% content_for :table_fields do %>
 	<th data-name="name"><%= t 'app.admin.views.cities.fields.name' %></th>
+	<th data-name="city_time_zone"><%= t 'app.admin.views.cities.fields.city_time_zone' %></th>
 <% end %>
 <% action_url = @section[:params].merge(action: :action) %>
 <%= javascript_include_tag url_for(action_url) %>

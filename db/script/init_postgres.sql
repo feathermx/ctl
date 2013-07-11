@@ -35,6 +35,7 @@ CREATE TABLE public.cities (
                 country_id BIGINT NOT NULL,
                 language_id BIGINT,
                 name VARCHAR(100) NOT NULL,
+                city_time_zone VARCHAR(150),
                 population INTEGER,
                 population_density DOUBLE PRECISION,
                 area DOUBLE PRECISION,
