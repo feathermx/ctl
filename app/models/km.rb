@@ -26,6 +26,20 @@ class Km < ActiveRecord::FmxBase
   
   before_save :set_active_state
   
+  def city
+    @city ||= City.find_by_id(self.city_id)
+  end
+  
+  def time_zone
+    @time_zone ||= self.city.time_zone
+  end
+  
+  def utc_offset
+    @time_zone_offset ||= ->{
+      self.time_zone.utc_offset unless self.time_zone.nil?
+    }.call
+  end
+  
   def tracks
     @tracks ||= Track.base.filter_by_km(self.id)
   end
@@ -95,7 +109,7 @@ class Km < ActiveRecord::FmxBase
   
   def set_traffic_count_totals
     self.destroy_traffic_count_totals
-    el = TrafficCountTotal.generate(self.id)
+    el = TrafficCountTotal.generate(self)
     el.save
   end
   

@@ -46,22 +46,23 @@ class TrafficCountTotal < ActiveRecord::FmxBase
     @@traffic_count_fields ||= %w{cars taxis pickup_trucks articulated_trucks rigid_trucks vans buses bikes motorbikes pedestrians}
   end
   
-  def self.generate(km_id)
+  def self.generate(km)
     el = self.new
-    el.km_id = km_id
+    el.km_id = km.id
     self.traffic_count_fields.each do |field|
-      el.set_field(field)
+      el.set_field(field, km)
     end
     el
   end
   
-  def set_field(name)
+  def set_field(name, km)
     DayTime::List.each do |key, val|
+      timezone = km.time_zone
       field_setter = "#{val[:namespace]}_#{name}="
       starts = "TIME '#{val[:starts_at]}'"
       ends = "TIME '#{val[:ends_at]}'"
-      base = TrafficCount.select("COUNT(traffic_counts.#{name}) as num")
-      self.send(field_setter, TrafficCount.peak_between(starts, ends, self.km_id, base))
+      base = TrafficCount.select("SUM(traffic_counts.#{name}) as num")
+      self.send(field_setter, TrafficCount.peak_between(starts, ends, self.km_id, base, timezone))
     end
   end
   

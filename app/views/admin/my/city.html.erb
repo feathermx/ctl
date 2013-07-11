@@ -15,6 +15,13 @@
 				<div class="clear"></div>
 			</div>
 			<div class="field">
+				<label><%= t('app.admin.views.cities.fields.city_time_zone') %></label>
+				<div class="field_container">
+					<%= f.select :city_time_zone, Admin::City.timezones_select, prompt: true %>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="field">
 				<label><%= t('app.admin.views.cities.fields.language_id')  %></label>
 				<div class="field_container">
 					<%= f.select :language_id, Admin::Language.select_list, prompt: true %>

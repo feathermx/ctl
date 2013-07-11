@@ -243,7 +243,7 @@ CREATE TABLE public.street_data (
                 parking_lanes INTEGER NOT NULL,
                 public_transport_lanes INTEGER DEFAULT 0 NOT NULL,
                 extra_crosswalks INTEGER DEFAULT 0 NOT NULL,
-                width_of_sidewalks INTEGER NOT NULL,
+                width_of_sidewalks DOUBLE PRECISION NOT NULL,
                 transport_stop VARCHAR(10),
                 has_loading_area INTEGER DEFAULT 0 NOT NULL,
                 loading_area_length DOUBLE PRECISION,

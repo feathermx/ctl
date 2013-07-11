@@ -21,10 +21,11 @@ module Peakable
       self.peak_between(starts, ends, km_id, base)
     end
     
-    def peak_between(starts, ends, km_id, base=nil)
-      field = self.table_peak_field
+    def peak_between(starts, ends, km_id, base=nil, timezone=nil)
+      field = self.table_peak_field(timezone)
       base = self.base_count if base.nil?
-      base.filter_by_km(km_id).where("(#{field}, #{field}) OVERLAPS (#{starts}, #{ends})").order(nil).first[:num].to_i
+      #base.filter_by_km(km_id).where("(#{field}, #{field}) OVERLAPS (#{starts}, #{ends})").order(nil).first[:num].to_i
+      base.filter_by_km(km_id).where("#{field} >= #{starts} AND #{field} <= #{ends}").order(nil).first[:num].to_i
     end
     
     protected
@@ -34,8 +35,13 @@ module Peakable
       data[:val] unless data.nil?
     end
     
-    def table_peak_field
-      "#{self.table_name}.#{self.peak_field}::time"
+    def table_peak_field(timezone = nil)
+      base = "(#{self.table_name}.#{self.peak_field}::time"
+      #base << " AT TIME ZONE '#{timezone}'" unless timezone.nil?
+      #base << " + INTERVAL '#{timezone.utc_offset} seconds'" unless timezone.nil?
+      base << " + INTERVAL '#{timezone.now.utc_offset} seconds'" unless timezone.nil?
+      base << ")"
+      base
     end
     
     def peak_field

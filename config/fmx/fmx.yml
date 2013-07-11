@@ -8,6 +8,7 @@ globals:
     date_format: '%m/%d/%Y %H:%M %z'
     date_full_format: '%m/%d/%Y %H:%M:%S %z'
     time_format: '%H:%M %z'
+    time_full_format: '%H:%M:%S %z'
 development:
   scope: ''
 production:

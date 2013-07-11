@@ -78,7 +78,7 @@ class StreetData < ActiveRecord::FmxBase
   validates :parking_lanes, numericality: { only_integer: true }, allow_blank: true
   validates :public_transport_lanes, numericality: { only_integer: true }, allow_blank: true
   validates :extra_crosswalks, numericality: { only_integer: true }, allow_blank: true
-  validates :width_of_sidewalks, presence: true, numericality: { only_integer: true }
+  validates :width_of_sidewalks, presence: true, numericality: true
   validates :transport_stop, length: { maximum: 10 }, allow_blank: true, inclusion: { in: TransportStop.keys }
   validates :has_loading_area, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }, allow_blank: true
   validates :loading_area_length, numericality: true, allow_blank: true
