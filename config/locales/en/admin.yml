@@ -130,7 +130,8 @@ en:
             deliveries_count: 'Deliveries'
             description: 'Description'
             comments: 'Comments'
-            center: 'Center'
+            location: 'km2 Center'
+            street_location: 'Street Center'
             captured_at: 'Capture date'
         tracks:
           title: '%{km} - GPS Tracks'

@@ -68,7 +68,9 @@ class StreetData < ActiveRecord::FmxBase
   
   scope :base, ->{ select("street_data.id, street_data.km_id, street_data.street_id, street_data.way, street_data.driving_lanes, street_data.bike_lanes, street_data.parking_lanes, street_data.public_transport_lanes, street_data.extra_crosswalks, street_data.width_of_sidewalks, street_data.transport_stop, street_data.has_loading_area, street_data.loading_area_length, street_data.has_parking_area, street_data.parking_area_length, street_data.parking_payment, street_data.notes") }
   scope :base_count, ->{ select("COUNT(street_data.id) as num") }
+  scope :meter_base, ->{ select("SUM(street_data.parking_area_length) as public_meter_length, SUM(street_data.loading_area_length) as dedicated_meter_length").order(nil) }
   scope :filter_by_id, ->(id){ where(id: id) }
+  scope :filter_by_street, ->(street_id){ where(street_id: street_id) }
   
   validates :way, presence: true, numericality: { only_integer: true }, inclusion: { in: Way.keys }
   validates :driving_lanes, numericality: { only_integer: true }, allow_blank: true

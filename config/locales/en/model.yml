@@ -34,6 +34,10 @@ en:
           taxi: 'Taxi'
           private_car: 'Private Car'
           accident: 'Accident'
+        length_type:
+          small: '0-5'
+          med: '5-30'
+          big: '30+'
       street_data:
         way:
           one_way: 'One Way'
@@ -76,3 +80,8 @@ en:
           delivery: 'Delivery'
           pickup: 'Pickup'
           both: 'Both'
+      traffic_count_total:
+        day_time:
+          morning: 'Morning'
+          evening: 'Evening'
+          noon: 'Noon'

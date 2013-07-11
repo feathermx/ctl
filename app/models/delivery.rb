@@ -3,6 +3,8 @@ class Delivery < ActiveRecord::FmxBase
   include BlockStreetable
   include DateParsable
   include Kmable
+  include Peakable
+  include Localizable
   
   module DeliveryType
     Delivery = 'D'
@@ -27,9 +29,11 @@ class Delivery < ActiveRecord::FmxBase
     
   end
   
-  scope :base, ->{ select("deliveries.id, deliveries.km_id, deliveries.street_id, deliveries.shop_id, deliveries.started_at, deliveries.ended_at, deliveries.vehicle_type, deliveries.delivering_company, deliveries.product_delivered, deliveries.refrigerated_vehicle, deliveries.boxes_delivered, deliveries.delivery_type, deliveries.with_equipment, deliveries.number_of_trips, deliveries.notes") }
+  scope :base, ->{ select("deliveries.id, deliveries.km_id, deliveries.street_id, deliveries.shop_id, deliveries.started_at, deliveries.ended_at, deliveries.vehicle_type, deliveries.delivering_company, deliveries.product_delivered, deliveries.refrigerated_vehicle, deliveries.boxes_delivered, deliveries.delivery_type, deliveries.with_equipment, deliveries.number_of_trips, deliveries.notes, deliveries.lat, deliveries.lng") }
   scope :base_count, ->{ select("COUNT(deliveries.id) as num") }
-  scope :filter_by_id, ->{ where(id: id) }
+  scope :min_base, ->{ select('MIN(deliveries.started_at) as min_time').order(nil) }
+  scope :max_base, ->{ select('MAX(deliveries.ended_at) as max_time').order(nil) }
+  scope :filter_by_id, ->(id){ where(id: id) }
   
   validates :started_at, presence: true
   validates :ended_at, presence: true
@@ -75,6 +79,16 @@ class Delivery < ActiveRecord::FmxBase
   
   def delivery_type=(val)
     write_attribute(:delivery_type, upcase(val))
+  end
+  
+  protected
+  
+  def self.peak_field
+    "started_at"
+  end
+  
+  def location_field
+    @location_field ||= "started_at"
   end
   
   

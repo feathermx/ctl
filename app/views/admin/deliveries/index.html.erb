@@ -2,7 +2,7 @@
 	<th data-sort="blocks.research_id" data-name="b_research"><%= t 'app.admin.views.deliveries.fields.block_research' %></th>
 	<th data-sort="streets.research_id" data-name="s_research"><%= t 'app.admin.views.deliveries.fields.street_research' %></th>
 	<th data-sort="deliveries.started_at" data-name="s_at"><%= t 'app.admin.views.deliveries.fields.started_at' %></th>
-	<th data-sort="deliveries.ended_at" data-name="s_at"><%= t 'app.admin.views.deliveries.fields.ended_at' %></th>
+	<th data-sort="deliveries.ended_at" data-name="e_at"><%= t 'app.admin.views.deliveries.fields.ended_at' %></th>
 <% end %>
 <% action_url = @section[:params].merge(action: :action) %>
 <%= javascript_include_tag url_for(action_url) %>

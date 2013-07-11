@@ -18,6 +18,7 @@ CREATE TABLE public.countries (
                 id BIGINT NOT NULL DEFAULT nextval('public.countries_id_seq'),
                 city_count INTEGER DEFAULT 0 NOT NULL,
                 name VARCHAR(100) NOT NULL,
+                extension VARCHAR(10),
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
                 CONSTRAINT countries_pk PRIMARY KEY (id)
@@ -30,6 +31,7 @@ CREATE SEQUENCE public.cities_id_seq;
 
 CREATE TABLE public.cities (
                 id BIGINT NOT NULL DEFAULT nextval('public.cities_id_seq'),
+                active_count INTEGER DEFAULT 0,
                 country_id BIGINT NOT NULL,
                 language_id BIGINT,
                 name VARCHAR(100) NOT NULL,
@@ -53,6 +55,7 @@ CREATE SEQUENCE public.kms_id_seq;
 
 CREATE TABLE public.kms (
                 id BIGINT NOT NULL DEFAULT nextval('public.kms_id_seq'),
+                is_active INTEGER DEFAULT 0,
                 tracks_count INTEGER DEFAULT 0 NOT NULL,
                 traffic_counts_count INTEGER DEFAULT 0 NOT NULL,
                 traffic_disruptions_count INTEGER DEFAULT 0 NOT NULL,
@@ -60,12 +63,28 @@ CREATE TABLE public.kms (
                 parking_restrictions_count INTEGER DEFAULT 0 NOT NULL,
                 shops_count INTEGER DEFAULT 0 NOT NULL,
                 deliveries_count INTEGER DEFAULT 0 NOT NULL,
+                public_meter_length INTEGER DEFAULT 0,
+                dedicated_meter_length INTEGER DEFAULT 0,
+                peak_deliveries INTEGER DEFAULT 0,
+                peak_delivery_hour TIME,
+                peak_disruptions INTEGER DEFAULT 0,
+                peak_disruption_hour TIME,
+                peak_traffic INTEGER DEFAULT 0,
+                peak_traffic_hour TIME,
+                min_disruption_time TIME,
+                max_disruption_time TIME,
+                min_delivery_time TIME,
+                max_delivery_time TIME,
+                chart_start_time TIME,
+                chart_end_time TIME,
                 city_id BIGINT NOT NULL,
                 name VARCHAR(100) NOT NULL,
                 description TEXT,
                 comments TEXT,
                 lat DOUBLE PRECISION NOT NULL,
                 lng DOUBLE PRECISION NOT NULL,
+                street_lat DOUBLE PRECISION,
+                street_lng DOUBLE PRECISION,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
                 CONSTRAINT kms_pk PRIMARY KEY (id)
@@ -73,6 +92,65 @@ CREATE TABLE public.kms (
 
 
 ALTER SEQUENCE public.kms_id_seq OWNED BY public.kms.id;
+
+CREATE SEQUENCE public.traffic_count_totals_id_seq;
+
+CREATE TABLE public.traffic_count_totals (
+                id BIGINT NOT NULL DEFAULT nextval('public.traffic_count_totals_id_seq'),
+                km_id BIGINT NOT NULL,
+                morning_cars INTEGER NOT NULL,
+                evening_cars INTEGER NOT NULL,
+                noon_cars INTEGER NOT NULL,
+                morning_taxis INTEGER NOT NULL,
+                evening_taxis INTEGER NOT NULL,
+                noon_taxis INTEGER NOT NULL,
+                morning_pickup_trucks INTEGER NOT NULL,
+                evening_pickup_trucks INTEGER NOT NULL,
+                noon_pickup_trucks INTEGER NOT NULL,
+                morning_articulated_trucks INTEGER NOT NULL,
+                evening_articulated_trucks INTEGER NOT NULL,
+                noon_articulated_trucks INTEGER NOT NULL,
+                morning_rigid_trucks INTEGER NOT NULL,
+                evening_rigid_trucks INTEGER NOT NULL,
+                noon_rigid_trucks INTEGER NOT NULL,
+                morning_vans INTEGER NOT NULL,
+                evening_vans INTEGER NOT NULL,
+                noon_vans INTEGER NOT NULL,
+                morning_buses INTEGER NOT NULL,
+                evening_buses INTEGER NOT NULL,
+                noon_buses INTEGER NOT NULL,
+                morning_bikes INTEGER NOT NULL,
+                evening_bikes INTEGER NOT NULL,
+                noon_bikes INTEGER NOT NULL,
+                morning_motorbikes INTEGER NOT NULL,
+                evening_motorbikes INTEGER NOT NULL,
+                noon_motorbikes INTEGER NOT NULL,
+                morning_pedestrians INTEGER NOT NULL,
+                evening_pedestrians INTEGER NOT NULL,
+                noon_pedestrians INTEGER NOT NULL,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL,
+                CONSTRAINT traffic_count_totals_pk PRIMARY KEY (id)
+);
+
+
+ALTER SEQUENCE public.traffic_count_totals_id_seq OWNED BY public.traffic_count_totals.id;
+
+CREATE SEQUENCE public.deliveries_disruptions_id_seq;
+
+CREATE TABLE public.deliveries_disruptions (
+                id BIGINT NOT NULL DEFAULT nextval('public.deliveries_disruptions_id_seq'),
+                km_id BIGINT NOT NULL,
+                hour TIME NOT NULL,
+                disruption_count INTEGER DEFAULT 0,
+                delivery_count INTEGER DEFAULT 0,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL,
+                CONSTRAINT deliveries_disruptions_pk PRIMARY KEY (id)
+);
+
+
+ALTER SEQUENCE public.deliveries_disruptions_id_seq OWNED BY public.deliveries_disruptions.id;
 
 CREATE SEQUENCE public.blocks_id_seq;
 
@@ -95,6 +173,9 @@ CREATE TABLE public.streets (
                 km_id BIGINT NOT NULL,
                 block_id BIGINT NOT NULL,
                 research_id BIGINT NOT NULL,
+                public_meter_length INTEGER,
+                dedicated_meter_length INTEGER,
+                track_count INTEGER DEFAULT 0,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
                 CONSTRAINT streets_pk PRIMARY KEY (id)
@@ -111,6 +192,7 @@ CREATE TABLE public.traffic_disruptions (
                 street_id BIGINT NOT NULL,
                 source VARCHAR(1) NOT NULL,
                 vehicle_type VARCHAR(30) NOT NULL,
+                length_type INTEGER,
                 started_at TIMESTAMP NOT NULL,
                 ended_at TIMESTAMP NOT NULL,
                 more_than_five_secs INTEGER DEFAULT 0 NOT NULL,
@@ -119,6 +201,8 @@ CREATE TABLE public.traffic_disruptions (
                 vehicles_affected INTEGER,
                 slowed_or_stop VARCHAR(1),
                 notes TEXT,
+                lat DOUBLE PRECISION,
+                lng DOUBLE PRECISION,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
                 CONSTRAINT traffic_disruptions_pk PRIMARY KEY (id)
@@ -192,6 +276,7 @@ CREATE TABLE public.traffic_counts (
                 bikes INTEGER DEFAULT 0 NOT NULL,
                 motorbikes INTEGER DEFAULT 0 NOT NULL,
                 pedestrians INTEGER DEFAULT 0 NOT NULL,
+                traffic_total INTEGER DEFAULT 0,
                 notes TEXT,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
@@ -217,6 +302,8 @@ CREATE TABLE public.shops (
                 has_loading_area INTEGER NOT NULL,
                 loading_area_type INTEGER NOT NULL,
                 notes TEXT,
+                lat DOUBLE PRECISION,
+                lng DOUBLE PRECISION,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
                 CONSTRAINT shops_pk PRIMARY KEY (id)
@@ -243,6 +330,8 @@ CREATE TABLE public.deliveries (
                 with_equipment INTEGER DEFAULT 0 NOT NULL,
                 number_of_trips INTEGER DEFAULT 1,
                 notes TEXT,
+                lat DOUBLE PRECISION,
+                lng DOUBLE PRECISION,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
                 CONSTRAINT deliveries_pk PRIMARY KEY (id)
@@ -256,6 +345,7 @@ CREATE SEQUENCE public.tracks_id_seq;
 CREATE TABLE public.tracks (
                 id BIGINT NOT NULL DEFAULT nextval('public.tracks_id_seq'),
                 km_id BIGINT NOT NULL,
+                street_id BIGINT,
                 lat DOUBLE PRECISION NOT NULL,
                 lng DOUBLE PRECISION NOT NULL,
                 tracked_at TIMESTAMP NOT NULL,
@@ -429,6 +519,20 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 NOT DEFERRABLE;
 
+ALTER TABLE public.deliveries_disruptions ADD CONSTRAINT kms_deliveries_disruptions_fk
+FOREIGN KEY (km_id)
+REFERENCES public.kms (id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
+ALTER TABLE public.traffic_count_totals ADD CONSTRAINT kms_traffic_count_totals_fk
+FOREIGN KEY (km_id)
+REFERENCES public.kms (id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
 ALTER TABLE public.streets ADD CONSTRAINT blocks_streets_fk
 FOREIGN KEY (block_id)
 REFERENCES public.blocks (id)
@@ -476,6 +580,13 @@ FOREIGN KEY (street_id)
 REFERENCES public.streets (id)
 ON DELETE CASCADE
 ON UPDATE CASCADE
+NOT DEFERRABLE;
+
+ALTER TABLE public.tracks ADD CONSTRAINT streets_tracks_fk
+FOREIGN KEY (street_id)
+REFERENCES public.streets (id)
+ON DELETE SET NULL
+ON UPDATE SET NULL
 NOT DEFERRABLE;
 
 ALTER TABLE public.deliveries ADD CONSTRAINT shops_deliveries_fk

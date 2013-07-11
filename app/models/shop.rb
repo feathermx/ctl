@@ -3,6 +3,7 @@ class Shop < ActiveRecord::FmxBase
   include BlockStreetable
   include DateParsable
   include Kmable
+  include Localizable
   
   module ShopType
     
@@ -117,10 +118,13 @@ class Shop < ActiveRecord::FmxBase
     
   end
   
-  scope :base, ->{ select("shops.id, shops.km_id, shops.street_id, shops.shop_id, shops.registered_at, shops.shop_type, shops.name, shops.front_length, shops.starting_floor, shops.total_floors, shops.has_loading_area, shops.loading_area_type, shops.notes") }
+  scope :base, ->{ select("shops.id, shops.km_id, shops.street_id, shops.shop_id, shops.registered_at, shops.shop_type, shops.name, shops.front_length, shops.starting_floor, shops.total_floors, shops.has_loading_area, shops.loading_area_type, shops.notes, shops.lat, shops.lng") }
   scope :base_count, ->{ select("COUNT(shops.id) as num") }
+  scope :track_base, ->{ select("shops.street_id") }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_shop_id, ->(shop_id){ where(shop_id: shop_id) }
+  scope :filter_after, ->(time){ where('shops.registered_at >= ?', time).order('shops.registered_at ASC') }
+  scope :filter_before, ->(time){ where('shops.registered_at <= ?', time).order('shops.registered_at ASC') }
   
   validates :shop_id, length: { maximum: 100 }, presence: true, uniqueness: true
   validates :registered_at, presence: true
@@ -132,6 +136,10 @@ class Shop < ActiveRecord::FmxBase
   validates :has_loading_area, presence: true, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }
   validates :loading_area_type, presence: true, numericality: { only_integer: true }, inclusion: { in: LoadingAreaType.keys }
   validates :notes, length: { maximum: 300 }, allow_blank: true
+  
+  def self.find_for_track(km_id)
+    self.track_base.filter_by_km(km_id)
+  end
   
   def self.find_by_shop_id(shop_id)
     self.base.filter_by_shop_id(shop_id).first
@@ -149,6 +157,12 @@ class Shop < ActiveRecord::FmxBase
   
   def shop_type=(val)
     write_attribute(:shop_type, upcase(val))
+  end
+  
+  protected
+  
+  def location_field
+    @location_field ||= "registered_at"
   end
   
 end

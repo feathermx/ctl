@@ -92,13 +92,44 @@ class TrafficDisruption < ActiveRecord::FmxBase
       
   end
   
+  module LengthType
+    
+    Small = 0
+    Med = 1
+    Big = 2
+    
+    List = {
+      Small => {
+        name: I18n.t('app.model.traffic_disruption.length_type.small'),
+        range: (0..5)
+      },
+      Med => {
+        name: I18n.t('app.model.traffic_disruption.length_type.med'),
+        range: (6..30)
+      },
+      Big => {
+        name: I18n.t('app.model.traffic_disruption.length_type.big'),
+        start: 30
+      }
+    }
+    
+    def self.keys
+      @@keys ||= List.keys
+    end
+    
+  end
+  
   include BlockStreetable
   include DateParsable
   include Kmable
+  include Peakable
+  include Localizable
   
-  scope :base, ->{ select("traffic_disruptions.id, traffic_disruptions.km_id, traffic_disruptions.street_id, traffic_disruptions.source, traffic_disruptions.vehicle_type, traffic_disruptions.started_at, traffic_disruptions.ended_at, traffic_disruptions.more_than_five_secs, traffic_disruptions.disruption_type, traffic_disruptions.blocked_lanes, traffic_disruptions.vehicles_affected, traffic_disruptions.slowed_or_stop, traffic_disruptions.notes") }
+  scope :base, ->{ select("traffic_disruptions.id, traffic_disruptions.km_id, traffic_disruptions.street_id, traffic_disruptions.source, traffic_disruptions.vehicle_type, traffic_disruptions.started_at, traffic_disruptions.ended_at, traffic_disruptions.more_than_five_secs, traffic_disruptions.disruption_type, traffic_disruptions.blocked_lanes, traffic_disruptions.vehicles_affected, traffic_disruptions.slowed_or_stop, traffic_disruptions.notes, traffic_disruptions.length_type, traffic_disruptions.lat, traffic_disruptions.lng") }
   scope :base_count, ->{ select("COUNT(traffic_disruptions.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
+  
+  attr_protected :length_type
   
   validates :started_at, presence: true
   validates :ended_at, presence: true
@@ -110,6 +141,9 @@ class TrafficDisruption < ActiveRecord::FmxBase
   validates :vehicles_affected, numericality: { only_integer: true }, allow_blank: true
   validates :slowed_or_stop, length: { is: 1 }, inclusion: { in: AffectionType.keys }, allow_blank: true
   validates :notes, length: { in: 2..300 }, allow_blank: true
+  validates :length_type, numericality: { only_integer: true }, inclusion: { in: LengthType.keys }, allow_nil: true
+  
+  before_save :set_length_type
   
   def s_at
     @s_at ||= ->{
@@ -142,5 +176,41 @@ class TrafficDisruption < ActiveRecord::FmxBase
   def slowed_or_stop=(val)
     write_attribute(:slowed_or_stop, upcase(val))
   end
+  
+  def time_diff
+    @time_diff ||= (self.ended_at.to_i - self.started_at.to_i)
+  end
+  
+  protected
+  
+  def date_parsable_format
+    @date_parsable_format ||= Settings.get('csv.date_full_format')
+  end
+  
+  def self.peak_field
+    "started_at"
+  end
+  
+  def location_field
+    @location_field ||= "started_at"
+  end
+  
+  def set_length_type
+    if self.length_type.nil?
+      val = nil
+      LengthType::List.each do |key, el|
+        range = el[:range]
+        unless range.nil?
+          val = key if range.include?(self.time_diff)
+        else
+          start = el[:start]
+          val = key if self.time_diff > start
+        end
+        break unless val.nil?
+      end
+      self.length_type = val
+    end
+  end
+  
   
 end
