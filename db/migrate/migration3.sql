@@ -123,7 +123,7 @@ ALTER TABLE traffic_counts
 ;
 
 ALTER TABLE traffic_disruptions
-	ADD COLUMN length_type INTEGER
+	ADD COLUMN length_type INTEGER,
 	ADD COLUMN lat DOUBLE PRECISION,
     ADD COLUMN lng DOUBLE PRECISION
 ;
