@@ -61,6 +61,10 @@ Ctl::Application.routes.draw do
     get ':controller(/:action(/:id))', controller: /admin\/[^\/]+/
     post ':controller(/:action(/:id))', controller: /admin\/[^\/]+/
     
+    # wildcard api routes
+    get ':controller(/:action(/:id))', controller: /api\/[^\/]+/
+    post ':controller(/:action(/:id))', controller: /api\/[^\/]+/
+    
     root to: 'splash#index'
     
   end

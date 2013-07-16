@@ -16,8 +16,8 @@ class DeliveriesDisruption < ActiveRecord::FmxBase
     el = self.new
     el.km_id = km.id
     el.hour = "#{hour}:00:00 +00:00"
-    el.disruption_count = TrafficDisruption.peak_for_hour(hour, km.id)
-    el.delivery_count = Delivery.peak_for_hour(hour, km_id)
+    el.disruption_count = TrafficDisruption.duration_for_hour(hour, km.id)
+    el.delivery_count = Delivery.duration_for_hour(hour, km.id)
     el
   end
   

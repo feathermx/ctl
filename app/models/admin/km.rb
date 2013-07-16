@@ -1,6 +1,7 @@
 class Admin::Km < Km
   
   scope :list, ->{ select("kms.id, kms.tracks_count, kms.traffic_counts_count, kms.traffic_disruptions_count, kms.street_data_count, kms.parking_restrictions_count, kms.shops_count, kms.deliveries_count, kms.name") }
+  scope :stats_list, ->{ select('kms.id, kms.name, kms.is_active') }
   
   def as_json(opts = {})
     super(opts)

@@ -14,6 +14,21 @@ $.extend(app, {
 		this.initWindow();
 		this.initContainer();
 	},
+	click: function(container, callback){
+		if(this.has_touch){
+			var container_dom = container.get(0);
+			container_dom.addEventListener('touchstart', function(e){
+				e.preventDefault();
+				callback(e, container);
+			}, false);
+		}
+		else{
+			container.click(function(e){
+				e.preventDefault();
+				callback(e, container);
+			});
+		}
+	},
 	initWindow: function(){
 		this._window = $(window);
 	},
@@ -113,6 +128,16 @@ $.extend(app, {
 		view_loader: function(opts){
 			return $.fmx_view_loader(
 				$.extend(opts, config.fmx.view_loader())
+			);
+		},
+		api_client: function(opts){
+			return $.fmx_api_client(
+				$.extend(opts, config.fmx.api_client())
+			);
+		},
+		dropdown: function(opts){
+			return $.fmx_dropdown(
+				$.extend(opts, config.fmx.dropdown(), this.root.getTouchOpts())
 			);
 		}
 	}

@@ -5,13 +5,94 @@
 			wrapper: null,
 			static_height: 0,
 			view: $(),
+			api_client: null,
+			google_maps_loader: null,
+			selections: {
+				country: null,
+				city: null,
+				km: null
+			},
 			init: function(){
+				this.initApiClient();
 				this.initStaticElements();
 				this.initWrapper();
 				this.initWindow();
 				this.windowOnResize();
 				this.initViewLoader();
+				this.initGoogleMapsLoader();
 				this.loadView('home');
+			},
+			initGoogleMapsLoader: function(){
+				this.google_maps_loader = {};
+				$.extend(this.google_maps_loader, {
+					callbacks: [],
+					added: false,
+					head: null,
+					loaded: false,
+					init: function(){
+						this.initHead();
+					},
+					initHead: function(){
+						this.head = $('head');
+					},
+					load: function(callback){
+						if(!this.loaded){
+							if(!this.added){
+								this.add();
+							}
+							this.callbacks.push(callback);
+						}
+						else{
+							callback();
+						}
+					},
+					add: function(){
+						var url = '';
+						url += 'http://maps.google.com/maps/api/js?';
+						url += 'sensor=true&';
+						url += 'callback=googleMapsOnLoad&';
+						url += 'libraries=places&';
+						url += 'region=US&';
+						url += 'language=en';
+						var script = $('<script></script>').attr({
+							type: 'text/javascript',
+							src: url
+						});
+						script.appendTo(this.head);
+						this.added = true;
+					},
+					onLoad: function(){
+						this.loaded = true;
+						$.each(this.callbacks, function(key, callback){
+							callback();
+						});
+						this.callbacks = [];
+					}
+				});
+				this.google_maps_loader.init();
+			},
+			getImagePath: function(src){
+				return config.api.image_path + '/' + src;
+			},
+			loadKm: function(data){
+				$.extend(this.selections, data);
+				this.loadView('km');
+			},
+			initApiClient: function(){
+				var _self = this;
+				this.api_client = this.root.fmx.api_client(
+					$.extend({
+						loading: function(){
+							_self.loading();
+						},
+						loaded: function(){
+							_self.loaded();
+						},
+						error: function(){
+							_self.error();
+						}
+					}, config.api)
+				);
 			},
 			initWindow: function(){
 				var _self = this;
@@ -81,3 +162,7 @@
 		app.init();
 	});
 })(jQuery);
+
+function googleMapsOnLoad(){
+	app.google_maps_loader.onLoad();
+}

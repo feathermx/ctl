@@ -1,0 +1,71 @@
+(function(){
+	$(function(){
+		app.km.map = {};
+		$.extend(app.km.map, {
+			parent: app.km,
+			view: null,
+			root: null,
+			config: null,
+			map: null,
+			init: function(){
+				this.initView();
+				this.initRoot();
+				this.initConfig();
+				this.initContainer();
+				this.initGoogleMaps();
+			},
+			initConfig: function(){
+				this.config = this.view.config.map;
+			},
+			initContainer: function(){
+				this.container = $('<div id="km_map"></div>');
+				this.container.appendTo(this.view.container);
+			},
+			initView: function(){
+				this.view = this.parent;
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			},
+			initGoogleMaps: function(){
+				var _self = this;
+				this.root.google_maps_loader.load(function(){
+					_self.googleMapsOnLoad();
+				});
+			},
+			googleMapsOnLoad: function(){
+				this.initMap();
+				this.view.ready();
+			},
+			initMap: function(){
+				var styles = this.parent.map_styles;
+				styles.initList();
+				var center = new google.maps.LatLng(this.config.map.lat, this.config.map.lng);
+				var container = this.container.get(0);
+				this.map = new google.maps.Map(container, 
+					$.extend({
+						center: center,
+						mapTypeControlOptions: {
+							mapTypeIds: styles.key_list
+						}
+					}, this.config.map.opts)
+				);
+				styles.setMap(this.map);
+				var list = styles.list;
+				var style = null;
+				$.each(list, function(key, el){
+					style = el;
+					return false;
+				});
+				if(style != null) this.setStyle(style);
+			},
+			setStyle: function(which){
+				if(which != this.style){
+					this.style = which;
+					this.map.setMapTypeId(this.style.gm_key);
+				}
+			}
+		});
+		app.km.map.init();
+	});
+})(jQuery);

@@ -1,0 +1,247 @@
+(function(){
+	$(function(){
+		app.km.header = {};
+		$.extend(app.km.header, {
+			parent: app.km,
+			root: null,
+			view: null,
+			container: null,
+			left_container: null,
+			config: null,
+			lang: null,
+			init: function(){
+				this.initRoot();
+				this.initView();
+				this.initConfig();
+				this.initLang();
+				this.initContainer();
+				this.initLeftContainer();
+				this.initRightContainer();
+			},
+			initLang: function(){
+				this.lang = this.parent.lang.header;
+			},
+			initConfig: function(){
+				this.config = this.parent.config.header;
+			},
+			initLeftContainer: function(){
+				this.left_container = {};
+				$.extend(this.left_container, {
+					parent: this,
+					root: null,
+					view: null,
+					init: function(){
+						this.initRoot();
+						this.initView();
+						this.initContainer();
+					},
+					initContainer: function(){
+						this.container = $('<div id="header_left_container"></div>');
+						this.initFilters();
+						this.container.appendTo(this.parent.container);
+					},
+					initFilters: function(){
+						this.filters = {};
+						$.extend(this.filters, {
+							parent: this,
+							root: null,
+							view: null,
+							container: null,
+							lang: null,
+							filters: {
+								country: null,
+								city: null,
+								km2: null
+							},
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initLang();
+								this.initContainer();
+							},
+							initLang: function(){
+								var view = this.parent.parent;
+								this.lang = view.lang.filters;
+							},
+							initContainer: function(){
+								this.container = $('<div class="header_filters"></div>');
+								this.initCountryDropdown();
+								this.initCityDropdown();
+								this.initKm2Dropdown();
+								this.container.append('<div class="clear"></div>');
+								this.container.appendTo(this.parent.container);
+							},
+							getDropdown: function(key, opts){
+								var view = this.parent.parent;
+								var label = this.lang.labels[key];
+								var icon = view.config.icons[key];
+								return this.root.fmx.dropdown(
+									$.extend(opts, {
+										api_client: this.root.api_client,
+										icon: icon,
+										label: label,
+										parent_container: this.container,
+										getKey: function(key, el){
+											return el.id;				
+										}
+									})
+								);
+							},
+							initKm2Dropdown: function(){
+								var _self = this;
+								this.filters.km2 = this.getDropdown('km2', {
+									key: 'list_kms',
+									selected_key: this.root.selections.km,
+									data: {
+										city_id: this.root.selections.city
+									},
+									change: function(which){
+										_self.km2DropdownOnChange(which);
+									}
+								});
+							},
+							initCityDropdown: function(){
+								var _self = this;
+								this.filters.city = this.getDropdown('city', {
+									key: 'list_cities',
+									selected_key: this.root.selections.city,
+									data: {
+										country_id: this.root.selections.country
+									},
+									change: function(which){
+										_self.cityDropdownOnChange(which);
+									}
+								});
+							},
+							initCountryDropdown: function(){
+								var _self = this;
+								this.filters.country = this.getDropdown('country', {
+									key: 'list_countries',
+									selected_key: this.root.selections.country,
+									change: function(which){
+										_self.countryDropdownOnChange(which);
+									}
+								});
+							},
+							km2DropdownOnChange: function(which){
+								
+							},
+							cityDropdownOnChange: function(which){
+								this.filters.km2.clear();
+								$.extend(this.filters.km2.data, {
+									city_id: which.data.id
+								});
+							},
+							countryDropdownOnChange: function(which){
+								this.filters.city.clear();
+								this.filters.km2.clear(false);
+								$.extend(this.filters.city.data, {
+									country_id: which.data.id
+								});
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							}
+						});
+						this.filters.init();
+					},
+					initRoot: function(){
+						this.root = this.parent.root;
+					},
+					initView: function(){
+						this.view = this.parent.view;
+					}
+				});
+				this.left_container.init();
+			},
+			initRightContainer: function(){
+				this.right_container = {};
+				$.extend(this.right_container, {
+					parent: this,
+					root: null,
+					view: null,
+					init: function(){
+						this.initRoot();
+						this.initView();
+						this.initContainer();
+					},
+					initContainer: function(){
+						this.container = $('<div id="header_right_container"></div>');
+						this.initFilters();
+						this.container.appendTo(this.parent.container);
+					},
+					initFilters: function(){
+						this.filters = {};
+						$.extend(this.filters, {
+							parent: this,
+							root: null,
+							view: null,
+							style_dropdown: null,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initLang();
+								this.initContainer();
+							},
+							initLang: function(){
+								var view = this.parent.parent;
+								this.lang = view.lang.filters;
+							},
+							initContainer: function(){
+								this.container = $('<div class="header_filters"></div>');
+								this.initStyleDropdown();
+								this.container.append('<div class="clear"></div>');
+								this.container.appendTo(this.parent.container);
+							},
+							initStyleDropdown: function(){
+								var _self = this;
+								var view = this.parent.parent;
+								var label = this.lang.labels.style;
+								var icon = view.config.icons.style;
+								this.style_dropdown = this.root.fmx.dropdown({
+									icon: icon,
+									label: label,
+									parent_container: this.container,
+									change: function(which){
+										_self.styleDropdownOnChange(which);
+									}
+								});
+							},
+							styleDropdownOnChange: function(which){
+								var map = this.view.map;
+								map.setStyle(which.data);
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							}
+						});
+						this.filters.init();
+					},
+					initRoot: function(){
+						this.root = this.parent.root;
+					},
+					initView: function(){
+						this.view = this.parent.view;
+					}
+				});
+				this.right_container.init();
+			},
+			initContainer: function(){
+				this.container = this.root.container.find('#header');
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			},
+			initView: function(){
+				this.view = this.parent;
+			}
+		});
+		app.km.header.init();
+	});
+})(jQuery);

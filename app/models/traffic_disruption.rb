@@ -1,5 +1,12 @@
 class TrafficDisruption < ActiveRecord::FmxBase
   
+  include BlockStreetable
+  include DateParsable
+  include Kmable
+  include Peakable
+  include Localizable
+  include Durable
+  
   module AffectionType
     
     Slowed = 'S'
@@ -118,12 +125,6 @@ class TrafficDisruption < ActiveRecord::FmxBase
     end
     
   end
-  
-  include BlockStreetable
-  include DateParsable
-  include Kmable
-  include Peakable
-  include Localizable
   
   scope :base, ->{ select("traffic_disruptions.id, traffic_disruptions.km_id, traffic_disruptions.street_id, traffic_disruptions.source, traffic_disruptions.vehicle_type, traffic_disruptions.started_at, traffic_disruptions.ended_at, traffic_disruptions.more_than_five_secs, traffic_disruptions.disruption_type, traffic_disruptions.blocked_lanes, traffic_disruptions.vehicles_affected, traffic_disruptions.slowed_or_stop, traffic_disruptions.notes, traffic_disruptions.length_type, traffic_disruptions.lat, traffic_disruptions.lng") }
   scope :base_count, ->{ select("COUNT(traffic_disruptions.id) as num") }

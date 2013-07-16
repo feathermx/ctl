@@ -1,0 +1,399 @@
+(function(){
+	var nil = $();
+	$.fmx_dropdown_globals = {};
+	$.extend($.fmx_dropdown_globals, {
+		has_touch: false,
+		_window: null,
+		initialized: false,
+		active: null,
+		init: function(opts){
+			if(!this.initialized){
+				this.initialized = true;
+				$.extend(this, opts);
+				this.initWindow();
+			}
+		},
+		initWindow: function(){
+			var _self = this;
+			if(this.has_touch){
+				window.addEventListener('touchstart', function(e){
+					_self.windowOnClick(e);
+				}, false);
+			}
+			else{
+				this._window.click(function(e){
+					_self.windowOnClick(e);
+				});
+			}
+		},
+		windowOnClick: function(e){
+			this.setActive(null);
+		},
+		setActive: function(which){
+			if(which != this.active && which != null){
+				if(this.active != null) this.active.disable();
+				this.active = which;
+				this.active.enable();
+			}
+			else{
+				if(this.active != null) this.active.disable();
+				this.active = null;
+			}
+		}
+	});
+	$.fmx_dropdown = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			has_touch: false,
+			parent_container: nil,
+			api_client: null,
+			container: null,
+			wrapper: null,
+			labels: {
+				not_found: 'No elements found.',
+				error: 'There was an error. Try again later.'
+			},
+			icons: {
+				tigger: '',
+				active: ''
+			},
+			max_length: 23,
+			icon: '',
+			label: '',
+			position: null,
+			globals: $.fmx_dropdown_globals,
+			is_loaded: false,
+			key: '',
+			data: {},
+			selected_key: null,
+			init: function(){
+				this.initGlobals();
+				this.initParentContainer();
+				this.initContainer();
+				this.initWrapper();
+			},
+			initGlobals: function(){
+				this.globals.init({
+					_window: this._window,
+					has_touch: this.has_touch
+				});
+			},
+			initParentContainer: function(){
+				this.parent_container.addClass('fmx_dropdown_parent');
+			},
+			getPosition: function(){
+				if(this.position == null){
+					this.position = this.container.position();
+				}
+				return this.position;
+			},
+			setElements: function(elements){
+				this.wrapper.setElements(elements);
+			},
+			setActiveByKey: function(key, do_callback){
+				var element = this.wrapper.elements[key];
+				this.setActive(element, do_callback);
+			},
+			setActive: function(which, do_callback){
+				this.wrapper.setActive(which, do_callback);
+			},
+			load: function(){
+				if(this.api_client != null && !this.is_loaded){
+					var _self = this;
+					this.is_loaded = true;
+					this.api_client.load({
+						key: this.key,
+						data: this.data,
+						success: function(data){
+							_self.success(data);
+						},
+						error: function(){
+							_self.error();
+						}
+					});
+				}
+			},
+			error: function(){
+				this.wrapper.error();
+			},
+			getKey: function(key, el){
+				return key;
+			},
+			success: function(data){
+				this.wrapper.clear();
+				if(data && data.contents){
+					var wrapper = this.wrapper;
+					var _self = this;
+					$.each(data.contents, function(key, el){
+						key = _self.getKey(key, el);
+						wrapper.addElement(key, el);
+					});
+					if(this.selected_key != null){
+						this.setActiveByKey(this.selected_key, false);
+						this.selected_key = null;
+					}
+				}
+				this.wrapper.render();
+			},
+			clear: function(reset){
+				reset = (reset == null) ? true : reset;
+				if(reset) this.is_loaded = false;
+				this.wrapper.clear();
+			},	
+			change: function(which){},
+			initWrapper: function(){
+				this.wrapper = {};
+				$.extend(this.wrapper, {
+					parent: this,
+					root: this,
+					container: null,
+					wrapper: null,
+					has_position: false,
+					elements: {},
+					element_count: 0,
+					not_found_container: null,
+					error_container: null,
+					content: null,
+					nice_scroll: null,
+					active: null,
+					init: function(){
+						this.initContainer();
+						this.initWrapper();
+					},
+					setActive: function(which, do_callback){
+						do_callback = do_callback == null ? true : do_callback;
+						if(which != this.active && which != null){
+							if(this.active != null) this.active.disable();
+							this.active = which;
+							this.active.enable();
+						}
+						else{
+							if(this.active != null) this.active.disable();
+							this.active = null;
+						}
+						if(do_callback){
+							this.root.change(this.active);
+							this.root.globals.setActive(null);
+						}
+					},
+					initWrapper: function(){
+						this.wrapper = $('<div class="fmx_dropdown_wrapper_inner"></div>');
+						this.initNotFoundContainer();
+						this.initErrorContainer();
+						this.initContent();
+						this.wrapper.appendTo(this.container);
+					},
+					initNiceScroll: function(){
+						if(this.nice_scroll == null){
+							this.wrapper.niceScroll({
+								scrollspeed: 5
+							});
+							this.nice_scroll = this.wrapper.getNiceScroll();
+						}
+						else{
+							this.nice_scroll.resize();
+						}
+					},
+					initContent: function(){
+						this.content = $('<div class="fmx_dropdown_wrapper_content"></div>');
+						this.content.appendTo(this.wrapper);
+					},
+					initErrorContainer: function(){
+						var label = this.root.labels.error;
+						this.error_container = $('<div class="fmx_dropdown_wrapper_error"></div>');
+						this.error_container.addClass('fmx_dropdown_wrapper_label');
+						this.error_container.html(label);
+						this.error_container.appendTo(this.wrapper);
+					},
+					initNotFoundContainer: function(){
+						var label = this.root.labels.not_found;
+						this.not_found_container = $('<div class="fmx_dropdown_wrapper_not_found"></div>');
+						this.not_found_container.addClass('fmx_dropdown_wrapper_label');
+						this.not_found_container.html(label);
+						this.not_found_container.appendTo(this.wrapper);
+					},
+					initContainer: function(){
+						this.container = $('<div class="fmx_dropdown_wrapper"></div>');
+						this.initActive();
+					},
+					initActive: function(){
+						var icon = $('<img />', {
+							src: this.root.icons.active
+						}).addClass('fmx_dropdown_wrapper_active');
+						icon.appendTo(this.container);
+					},
+					setPosition: function(){
+						if(!this.has_position){
+							this.has_position = true;
+							var position = this.parent.getPosition();
+							this.container.css({
+								left: position.left
+							});
+							this.container.appendTo(this.parent.container);
+						}
+					},
+					setElements: function(elements){
+						var _self = this;
+						this.clear();
+						$.each(elements, function(key, el){
+							_self.addElement(key, el);
+						});
+						this.render();
+					},
+					clear: function(){
+						$.each(this.elements, function(key, el){
+							el.remove();
+						});
+					},
+					render: function(){
+						this.error_container.css('display', 'none');
+						if(this.element_count == 0){
+							this.not_found_container.css('display', 'block');
+						}
+						else{
+							this.not_found_container.css('display', 'none');
+						}
+					},
+					error: function(){
+						this.error_container.css('display', 'block');
+					},
+					addElement: function(key, data){
+						var element = {};
+						$.extend(element, {
+							parent: this,
+							root: null,
+							key: key,
+							data: data,
+							init: function(){
+								this.initRoot();
+								this.initContainer();
+							},
+							initContainer: function(){
+								var index = this.parent.element_count;
+								this.container = $('<div class="fmx_dropdown_element"></div>');
+								if(index % 2 == 0){
+									this.container.addClass('even');
+								}
+								this.setListeners();
+								this.initName();
+								this.container.appendTo(this.parent.content);
+							},
+							setListeners: function(){
+								var _self = this;
+								if(this.root.has_touch){
+									var container = this.container.get(0);
+									container.addEventListener('touchstart', function(e){
+										e.stopPropagation();
+										e.preventDefault();
+										_self.containerOnClick(e, _self.container);
+									}, false);
+								}
+								else{
+									this.container.click(function(e){
+										e.stopPropagation();
+										e.preventDefault();
+										_self.containerOnClick(e, $(this));
+									});
+								}
+							},
+							containerOnClick: function(e, element){
+								this.parent.setActive(this);
+							},
+							enable: function(){
+								this.container.addClass('active');
+							},
+							disable: function(){
+								this.container.removeClass('active');
+							},
+							initName: function(){
+								var name = '-';
+								if(this.data.name) name = this.data.name;
+								if(name.length > this.root.max_length){
+									name = name.substring(0, this.root.max_length - 3) + '...';
+								}
+								this.container.html(name);
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							remove: function(){
+								this.container.remove();
+								delete this.parent.elements[this.key];
+								--this.parent.element_count;
+							}
+						});
+						element.init();
+						++this.element_count;
+						this.elements[key] = element;
+					},
+					show: function(){
+						this.setPosition();
+						this.container.css('display', 'block');
+						this.initNiceScroll();
+					},
+					hide: function(){
+						this.container.css('display', 'none');
+					}
+				});
+				this.wrapper.init();
+			},
+			initContainer: function(){
+				this.container = $('<div class="fmx_dropdown"></div>');
+				this.setListeners();
+				this.initIcon();
+				this.initLabel();
+				this.initTrigger();
+				this.container.appendTo(this.parent_container);
+			},
+			setListeners: function(){
+				var _self = this;
+				if(this.has_touch){
+					var container = this.container.get(0);
+					container.addEventListener('touchstart', function(e){
+						e.stopPropagation();
+						e.preventDefault();
+						_self.containerOnClick(e, _self.container);
+					}, false);
+				}
+				else{
+					this.container.click(function(e){
+						e.stopPropagation();
+						e.preventDefault();
+						_self.containerOnClick(e, $(this));
+					});
+				}
+			},
+			containerOnClick: function(e, element){
+				this.globals.setActive(this);
+			},
+			enable: function(){
+				this.load();
+				this.wrapper.show();
+				this.container.addClass('active');
+			},
+			disable: function(){
+				this.wrapper.hide();
+				this.container.removeClass('active');
+			},
+			initTrigger: function(){
+				var trigger = $('<img />', {
+					src: this.icons.trigger
+				}).addClass('fmx_dropdown_trigger');
+				trigger.appendTo(this.container);
+			},
+			initLabel: function(){
+				var label = $('<div class="fmx_dropdown_label"></div>');
+				label.html(this.label);
+				label.appendTo(this.container);
+			},
+			initIcon: function(){
+				var icon = $('<img />', {
+					src: this.icon
+				}).addClass('fmx_dropdown_icon');
+				icon.appendTo(this.container);
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	};
+})(jQuery);

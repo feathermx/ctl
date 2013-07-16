@@ -1,0 +1,91 @@
+@import 'app/shared.css.scss';
+@include link('.fmx_dropdown') {
+	float: left;
+	height: 20px;
+	padding: 5px 7px;
+	@include border-radius(3px, 3px, 3px, 3px);
+	background: none repeat scroll 0 0 #1B5A94;
+	margin: 0 9px 0 0;
+	cursor: pointer;
+}
+.fmx_dropdown{
+	&:hover, .active{
+		background: none repeat scroll 0 0 #124A75;
+	}
+	.fmx_dropdown_icon{
+		width: 14px;
+		height: 14px;
+		margin: 3px 0 0 0;
+	}
+	.fmx_dropdown_label{
+		color: #FFFFFF;
+		font-size: 11px;
+		margin: 4px 0 0 5px;
+	}
+	.fmx_dropdown_trigger{
+		width: 7px;
+		height: 4px;
+		margin: 9px 0 0 6px;
+	}
+}
+.fmx_dropdown_wrapper{
+	top: 35px;
+	background: none repeat scroll 0 0 #FFFFFF;
+	@include border-radius(3px, 3px, 3px, 3px);
+	@include box-shadow(1px, 1px, 2px, #BBBBBB);
+	width: 150px;
+	min-height: 100px;
+	.fmx_dropdown_wrapper_inner{
+		width: 100%;
+		height: 100%;
+		left: 0px;
+		top: 0px;
+		@include border-radius(3px, 3px, 3px, 3px);
+	}
+	.fmx_dropdown_wrapper_active{
+		width: 12px;
+		height: 5px;
+		left: 15px;
+		top: -5px;
+	}
+	.fmx_dropdown_wrapper_label{
+		position: absolute;
+		top: 35px;
+		left: 50%;
+		width: 120px;
+		margin-left: -60px;
+		text-align: center;
+		font-size: 11px;
+		line-height: 1.3em;
+	}
+	.fmx_dropdown_wrapper_not_found{
+		color: #888888;
+	}
+	.fmx_dropdown_wrapper_error{
+		color: #B20000;
+	}
+	@include link('.fmx_dropdown_element') {
+		padding: 7px 6px;
+		color: #000000;
+		font-size: 11px;
+		border-bottom: 1px solid #DDDDDD;
+		background: none repeat scroll 0 0 #FFFFFF;
+		cursor: pointer;
+	}
+	.fmx_dropdown_element{
+		&.even{
+			background: none repeat scroll 0 0 #F9F9F9;
+		}
+		&:hover{
+			background: none repeat scroll 0 0 #1787D1;
+			border-bottom: 1px solid #1787D1;
+			color: #FFFFFF;
+		}
+	}
+	@include link('.fmx_dropdown_element.active') {
+		background: none repeat scroll 0 0 #72ADD3;
+		color: #FFFFFF;
+		border-bottom: 1px solid #DDDDDD;
+		cursor: auto;
+	}
+}

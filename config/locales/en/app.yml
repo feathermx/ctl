@@ -8,10 +8,26 @@ en:
       home:
         title: 'Welcome to km2!'
         subtitle: "We've collected data from all around the world. Please select a city to continue."
+        labels:
+          not_found: 'No cities found.'
         actions:
-          about: 'About'
+          go: 'Go!'
+          learn_more: 'Learn more'
         fields:
           population: 'Population'
           area: 'Area'
           density: 'Density'
           bigmac: 'Big Mac Index'
+      km:
+        header:
+          filters:
+            labels:
+              country: 'Country'
+              city: 'City'
+              km2: 'km2'
+              style: 'Map Style'
+        map:
+          styles:
+            _default: 'Default'
+            dark: 'Dark'
+            classic: 'Classic'

@@ -7,6 +7,27 @@
 	height: 40px;
 	@include background-gradient($from-base, $to-base);
 	z-index: 6001;
+	#header_left_container{
+		display: block;
+		position: absolute;
+		left: 135px;
+		top: 0px;
+		height: 100%;
+	}
+	.header_filters{
+		margin: 4px 0 0 0;
+	}
+	#header_right_container{
+		display: block;
+		position: absolute;
+		/** TODO */
+		right: 75px;
+		top: 0px;
+		@include link('.fmx_dropdown') {
+			float: right;
+			margin: 0 0 0 9px;
+		}
+	}
 	#header_logo_container{
 		display: block;
 		width: 68px;

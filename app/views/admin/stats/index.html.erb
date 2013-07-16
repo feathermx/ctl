@@ -1,0 +1,6 @@
+<% content_for :table_fields do %>
+	<th data-name="is_active"><%= t 'app.admin.views.stats.fields.is_active' %></th>
+	<th data-name="name"><%= t 'app.admin.views.stats.fields.name' %></th>
+<% end %>
+<%= javascript_include_tag url_for(action: :action) %>
+<%= render partial: 'admin/shared/section/section', locals: { opts: @section.merge(show_add_btn: add?) } %>

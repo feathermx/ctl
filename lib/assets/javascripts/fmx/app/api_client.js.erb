@@ -1,0 +1,94 @@
+(function(){
+	$.fmx_api_client = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			endpoint: '',
+			paths: {},
+			type: 'post',
+			init: function(){},
+			loading: function(){},
+			loaded: function(){},
+			error: function(){},
+			load: function(opts){
+				var loader = {};
+				$.extend(loader, {
+					parent: this,
+					root: this,
+					opts: opts,
+					callbacks: null,
+					req: null,
+					aborted: false,
+					init: function(){
+						this.initCallbacks();
+						this.load();
+					},
+					initCallbacks: function(){
+						this.callbacks = {};
+						$.extend(this.callbacks, {
+							success: function(data){},
+							error: function(){},
+							loading: function(){},
+							loaded: function(){}
+						}, this.opts);
+						delete this.opts.success;
+						delete this.opts.error;
+					},
+					abort: function(){
+						if(this.req != null){
+							this.aborted = true;
+							this.req.abort();
+						}
+					},
+					load: function(){
+						var _self = this;
+						var opts = {};
+						$.extend(opts, {
+							type: this.root.type,
+							url: this.getUrl()
+						}, this.opts);
+						this.loading();
+						this.req = $.ajax(
+							$.extend({
+								success: function(data){
+									_self.success(data);
+								},
+								error: function(){
+									_self.error();
+								}
+							}, opts)
+						);
+					},
+					loading: function(){
+						this.abort();
+						this.callbacks.loading();
+						this.root.loading();
+					},
+					loaded: function(){
+						this.req = null;
+						this.callbacks.loaded();
+						this.root.loaded();
+					},
+					success: function(data){
+						this.loaded();
+						this.callbacks.success(data);
+					},
+					error: function(){
+						this.loaded();
+						if(!this.aborted){
+							this.callbacks.error();
+							this.root.error();
+						}
+					},
+					getUrl: function(){
+						var url = this.root.endpoint = this.root.paths[this.opts.key];
+						return url;
+					}
+				});
+				loader.init();
+				return loader;
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);

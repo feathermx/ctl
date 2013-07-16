@@ -5,6 +5,7 @@ class Delivery < ActiveRecord::FmxBase
   include Kmable
   include Peakable
   include Localizable
+  include Durable
   
   module DeliveryType
     Delivery = 'D'

@@ -1,0 +1,164 @@
+(function(){
+	$(function(){
+		app.home = {};
+		$.extend(app.home, {
+			parent: app,
+			root: null,
+			lang: null,
+			container: null,
+			init: function(){
+				this.initRoot();
+				this.initLang();
+				this.initContainer();
+				this.initTable();
+			},
+			initLang: function(){
+				this.lang = lang.views.home;
+			},
+			initTable: function(){
+				var table = {};
+				$.extend(table, {
+					parent: this,
+					view: this,
+					root: null,
+					row_count: 0,
+					tbody: null,
+					init: function(){
+						this.initRoot();
+						this.initContainer();
+						this.initNotFoundContainer();
+						this.load();
+					},
+					initNotFoundContainer: function(){
+						var label = this.view.lang.labels.not_found;
+						this.not_found_container = $('<div id="home_table_not_found"></div>');
+						this.not_found_container.html(label);
+						this.not_found_container.insertBefore(this.container);
+					},
+					initContainer: function(){
+						this.container = this.parent.container.find('#home_table');
+						this.initTbody();
+					},
+					initTbody: function(){
+						this.tbody = this.container.find('tbody');
+					},
+					initRoot: function(){
+						this.root = this.parent.root;
+					},
+					load: function(){
+						var _self = this;
+						this.root.api_client.load({
+							key: 'list_splash_cities',
+							success: function(data){
+								_self.success(data);
+							}
+						});
+					},
+					success: function(data){
+						if(data && data.contents && data.contents.length > 0){
+							var _self = this;
+							$.each(data.contents, function(key, el){
+								_self.addRow(el);
+							});
+						}
+						this.render();
+					},
+					addRow: function(data){
+						var row = {};
+						$.extend(row, {
+							parent: this,
+							view: null,
+							root: null,
+							container: null,
+							data: data,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container = $('<tr></tr>');
+								this.initNameCol();
+								this.addCol(this.data.population);
+								this.addCol(this.data.area);
+								this.addCol(this.data.population_density);
+								this.addCol(this.data.big_mac_index);
+								this.initActionsCol();
+								this.container.appendTo(this.parent.tbody);
+							},
+							initActionsCol: function(){
+								var container = $('<td></td>');
+								this.initGoAction(container);
+								container.append('<div class="clear"></div>');
+								container.appendTo(this.container);
+							},
+							initGoAction: function(container){
+								var _self = this;
+								var label = this.view.lang.actions.go;
+								var action = $('<a href="#" class="button table_action"></a>');
+								action.html(label);
+								this.root.click(action, function(e, element){
+									_self.goActionOnClick(e, element);
+								});
+								action.appendTo(container);
+							},
+							goActionOnClick: function(e, element){
+								var data = {};
+								$.extend(data, {
+									country: this.data.country_id,
+									city: this.data.id,
+									km: this.data.last_active_km_id
+								});
+								this.root.loadKm(data);
+							},
+							addCol: function(val){
+								var label = (val == null) ? '-' : val;
+								var container = $('<td></td>');
+								container.html(label);
+								container.appendTo(this.container);
+							},
+							initNameCol: function(){
+								var container = $('<td></td>').addClass('home_table_country');
+								var label = $('<span class="home_table_country_name"></span>');
+								label.html(this.data.name);
+								var icon = $('<img />', {
+									src: this.root.getImagePath(this.data.image_path)
+								}).addClass('home_table_country_icon');
+								icon.appendTo(container);
+								label.appendTo(container);
+								container.append('<span class="clear"></span>');
+								container.appendTo(this.container);
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							}
+						});
+						row.init();
+						++this.row_count;
+					},
+					render: function(){
+						this.not_found_container.css('display', 'none');
+						this.container.css('display', 'none');
+						if(this.row_count == 0){
+							this.not_found_container.css('display', 'block');
+						}
+						else{
+							this.container.css('display', 'table');
+						}
+					}
+				});
+				table.init();
+			},
+			initContainer: function(){
+				this.container = this.root.wrapper.find('#home');
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			}
+		});
+		app.home.init();
+	});
+})(jQuery);

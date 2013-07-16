@@ -1,0 +1,44 @@
+(function(){
+	$(function(){
+		app.km = {};
+		$.extend(app.km, {
+			parent: app,
+			root: null,
+			container: null,
+			config: null,
+			lang: null,
+			req: null,
+			km: {},
+			init: function(){
+				this.initRoot();
+				this.initConfig();
+				this.initLang();
+				this.initContainer();
+			},
+			initLang: function(){
+				this.lang = lang.views.km;
+			},
+			initConfig: function(){
+				this.config = config.views.km;
+			},
+			initContainer: function(){
+				this.container = this.root.wrapper.find('#km');
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			},
+			ready: function(){
+				this.loadKm(this.root.selections.km);
+			},
+			abort: function(){
+				if(this.req != null) this.req.abort(); 
+			},
+			loadKm: function(which){
+				this.abort();
+				$.extend(this.km, { id: which });
+				//this.root.api
+			}
+		});
+		app.km.init();
+	});
+})(jQuery);

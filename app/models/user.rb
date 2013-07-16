@@ -8,6 +8,7 @@ class User < ActiveRecord::FmxBase
     Languages = 2
     Countries = 4
     Kms = 8
+    Stats = 16
     List = {
       Users => {
         key: 'users'
@@ -20,6 +21,9 @@ class User < ActiveRecord::FmxBase
       },
       Kms => {
         key: 'kms'
+      },
+      Stats => {
+        key: 'stats'
       }
     }
   end

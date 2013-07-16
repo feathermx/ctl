@@ -6,6 +6,11 @@ en:
     form:
       labels:
         upload_in_progress: 'File upload in progress. Please wait.'
+    app:
+      dropdown:
+        labels:
+          not_found: 'No elements found'
+          error: 'There was an error. Please try again later.'
     admin:
       table:
         labels:

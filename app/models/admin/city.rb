@@ -1,6 +1,6 @@
 class Admin::City < City
   
-  scope :list, ->{ select("cities.id, cities.name, cities.city_time_zone") }
+  scope :list, ->{ select("cities.id, cities.name, cities.active_count, cities.city_time_zone") }
   
   def self.timezones_select
     @@timezones_select ||= ->{

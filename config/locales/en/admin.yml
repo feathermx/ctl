@@ -9,11 +9,13 @@ en:
         languages: 'Languages'
         countries: 'Countries'
         kms: 'km2'
+        stats: 'Stats'
       menu:
         users: 'Users'
         languages: 'Languages'
         countries: 'Countries'
         kms: 'km2'
+        stats: 'Stats'
       messages:
         not_found: 'No records found.'
         create_success: 'Record created successfully'
@@ -100,6 +102,7 @@ en:
           fields:
             language_id: 'Language'
             name: 'Name'
+            active_count: 'Active Count'
             city_time_zone: 'Time Zone'
             location: 'Location'
             population: 'Population'
@@ -134,6 +137,11 @@ en:
             location: 'km2 Center'
             street_location: 'Street Center'
             captured_at: 'Capture date'
+        stats:
+          title: 'Stats'
+          fields:
+            name: 'Name'
+            is_active: 'Active?'
         tracks:
           title: '%{km} - GPS Tracks'
           actions:
@@ -141,6 +149,8 @@ en:
           fields:
             lat: 'Lat'
             lng: 'Lng'
+            lat_dir: 'N/S'
+            lng_dir: 'E/W'
             date: 'UTC Date'
             time: 'UTC Time'
             tracked_at: 'Time'

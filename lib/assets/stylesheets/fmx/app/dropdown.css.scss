@@ -1,0 +1,44 @@
+@import 'fmx/mixins.css.scss';
+.fmx_dropdown_parent{
+	position: relative;
+}
+@include link('.fmx_dropdown') {
+	border: 0 none;
+	outline: none;
+	display: block;
+}
+.fmx_dropdown{
+	.fmx_dropdown_icon{
+		float: left;
+		display: block;
+		border: 0 none;
+		outline: none;
+	}
+	.fmx_dropdown_label{
+		float: left;
+		display: block;
+	}
+	.fmx_dropdown_trigger{
+		float: left;
+		display: block;
+		border: 0 none;
+		outline: none;
+	}
+}
+.fmx_dropdown_wrapper{
+	display: none;
+	position: absolute;
+	.fmx_dropdown_wrapper_inner{
+		position: absolute;
+	}
+	.fmx_dropdown_wrapper_active{
+		display: block;
+		border: 0 none;
+		outline: none;
+		position: absolute;
+	}
+	.fmx_dropdown_wrapper_label{
+		position: absolute;
+		display: none;
+	}
+}

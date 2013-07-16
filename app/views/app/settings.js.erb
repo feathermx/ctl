@@ -3,10 +3,44 @@ $.extend(config, {
 	init: function(){
 		this.fmx.parent = this;
 	},
+	api: {
+		endpoint: '',
+		image_path: '/images',
+		paths: {
+			list_splash_cities: '<%= url_for controller: 'api/cities', action: :list %>',
+			list_countries: '<%= url_for controller: 'api/countries', action: :list %>',
+			list_cities: '<%= url_for controller: 'api/countries', action: :list_cities %>',
+			list_kms: '<%= url_for controller: 'api/cities', action: :list_kms %>'
+		}
+	},
 	server: {
 		endpoint: '',
 		paths: {
-			home: '<%= url_for controller: :home, action: :index %>'
+			home: '<%= url_for controller: :home, action: :index %>',
+			km: '<%= url_for controller: :kms, action: :index %>'
+		}
+	},
+	views: {
+		km: {
+			map: {
+				map: {
+					lat: 42.35704390000001,
+					lng: -71.09286029999998,
+					opts: {
+						zoom: 15,
+						scrollwheel: false,
+						mapTypeControl: false
+					}
+				}
+			},
+			header: {
+				icons: {
+					country: '<%= image_url 'app/icons/dropdown/country.png' %>',
+					city: '<%= image_url 'app/icons/dropdown/city.png' %>',
+					km2: '<%= image_url 'app/icons/dropdown/km2.png' %>',
+					style: '<%= image_url 'app/icons/dropdown/style.png' %>'
+				}
+			}
 		}
 	},
 	fmx: {
@@ -37,6 +71,23 @@ $.extend(config, {
 			$.extend(opts, {
 				
 			}, lang.fmx.view_loader());
+			return opts;
+		},
+		api_client: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.api_client());
+			return opts;
+		},
+		dropdown: function(){
+			var opts = {};
+			$.extend(opts, {
+				icons: {
+					trigger: '<%= image_url 'app/ui/arrows/dropdown/trigger.png' %>',
+					active: '<%= image_url 'app/ui/arrows/dropdown/active.png' %>'
+				}
+			}, lang.fmx.dropdown());
 			return opts;
 		}
 	}

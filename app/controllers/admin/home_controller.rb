@@ -39,6 +39,11 @@ class Admin::HomeController < Admin::AdminController
         key: 'kms',
         perm: User::Perm::Kms,
         url: { controller: :kms, action: :index }
+      },
+      {
+        key: 'stats',
+        perm: User::Perm::Stats,
+        url: { controller: :stats, action: :index }
       }
     ]
   end
