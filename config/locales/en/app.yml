@@ -31,3 +31,21 @@ en:
             _default: 'Default'
             dark: 'Dark'
             classic: 'Classic'
+        elements:
+          shops:
+            title: 'Shop Inventory'
+            units: 'stores per km2'
+          loading:
+            title: 'Loading/Unloading areas'
+            units: 'public mts'
+            second_units: 'dedicated mts'
+            separator: 'Street Info'
+          deliveries:
+            title: 'Deliveries'
+            units: 'per hour'
+          traffic_counts:
+            title: 'Traffic count'
+            units: 'average'
+          traffic_disruptions:
+            title: 'Disruption'
+            units: 'per hour'

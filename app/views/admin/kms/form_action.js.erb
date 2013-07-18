@@ -29,13 +29,13 @@
 		initStreetCoordinatesSelector: function(){
 			var opts = {};
 			$.extend(opts, {
+				lat_field_name: 'street_lat',
+				lng_field_name: 'street_lng',
 				field_name: this.namespace,
 				container: this.parent.form.container.find('#kms_street_coordinates_selector')
 			});
 			if(!this.new_record){
 				$.extend(opts, {
-					lat_field_name: 'street_lat',
-					lng_field_name: 'street_lng',
 					lat: this.element.street_lat,
 					lng: this.element.street_lng
 				});

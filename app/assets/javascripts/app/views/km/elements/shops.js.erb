@@ -1,0 +1,27 @@
+(function(){
+	$(function(){
+		var el = app.km.elements.shops = {};
+		$.extend(el, {
+			parent: app.km.elements,
+			data_key: 'shops_count',
+			init: function(){
+				var base = this.parent.getElement('shops');
+				$.extend(base, this);
+				$.extend(this, base);
+				this.initPanel();
+			},
+			initPanel: function(){
+				$.extend(this.panel, {
+					init: function(){
+						this.initContainer();
+					},
+					initContainer: function(){
+						this.container.addClass('full');
+					}
+				});
+				this.panel.init();
+			}
+		});
+		el.init();
+	});
+})(jQuery);

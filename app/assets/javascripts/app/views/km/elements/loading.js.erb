@@ -1,0 +1,96 @@
+(function(){
+	$(function(){
+		var el = app.km.elements.loading = {};
+		$.extend(el, {
+			parent: app.km.elements,
+			data_key: 'public_meter_length',
+			second_data_key: 'dedicated_meter_length',
+			init: function(){
+				var base = this.parent.getElement('loading');
+				$.extend(base, this);
+				$.extend(this, base);
+				this.initPanel();
+			},
+			initPanel: function(){
+				$.extend(this.panel, {
+					second_stat: null,
+					init: function(){
+						this.initContainer();
+						this.initSecondStat();
+						this.initSecondUnit();
+					},
+					update: function(){
+						this.updateStat();
+						this.updateSecondStat();
+					},
+					updateSecondStat: function(){
+						var data = this.view.km[this.element.second_data_key];
+						if(data == null) data = '-';
+						this.second_stat.html(data);
+					},
+					initSecondUnit: function(){
+						var label = this.element.lang.second_units;
+						var unit = $('<div class="km_panel_element_unit"></div>');
+						unit.addClass('second');
+						unit.html(label);
+						unit.appendTo(this.container);
+					},
+					initSecondStat: function(){
+						this.second_stat = $('<div class="km_panel_element_stat"></div>');
+						this.second_stat.addClass('second');
+						this.second_stat.html(100);
+						this.second_stat.appendTo(this.container);
+					},
+					initContainer: function(){
+						this.container.addClass('full');
+						this.in
+					},
+					appendTo: function(panel){
+						this.panel = panel;
+						this.container.appendTo(this.panel.container);
+						this.initSeparator();
+					},
+					initSeparator: function(){
+						var separator = {};
+						$.extend(separator, {
+							parent: this,
+							root: null,
+							view: null,
+							element: null,
+							container: null,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initElement();
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container = $('<div class="km_panel_separator"></div>');
+								this.initTitle();
+								this.container.insertAfter(this.parent.container);
+							},
+							initTitle: function(){
+								var label = this.element.lang.separator;
+								var title = $('<h1 class="km_panel_separator_title"></h1>');
+								title.html(label);
+								title.appendTo(this.container);
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							},
+							initElement: function(){
+								this.element = this.parent.element;
+							}
+						});
+						separator.init();
+					}
+				});
+				this.panel.init();
+			}
+		});
+		el.init();
+	});
+})(jQuery);

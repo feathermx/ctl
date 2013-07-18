@@ -10,7 +10,8 @@ $.extend(config, {
 			list_splash_cities: '<%= url_for controller: 'api/cities', action: :list %>',
 			list_countries: '<%= url_for controller: 'api/countries', action: :list %>',
 			list_cities: '<%= url_for controller: 'api/countries', action: :list_cities %>',
-			list_kms: '<%= url_for controller: 'api/cities', action: :list_kms %>'
+			list_kms: '<%= url_for controller: 'api/cities', action: :list_kms %>',
+			show_km: '<%= url_for controller: 'api/kms', action: :show %>'
 		}
 	},
 	server: {
@@ -39,6 +40,39 @@ $.extend(config, {
 					city: '<%= image_url 'app/icons/dropdown/city.png' %>',
 					km2: '<%= image_url 'app/icons/dropdown/km2.png' %>',
 					style: '<%= image_url 'app/icons/dropdown/style.png' %>'
+				}
+			},
+			panel: {
+				col_capacity: 3,
+				header: {
+					max_length: {
+						title: 28
+					},
+					icons: {
+						collapse: '<%= image_url 'app/icons/km/panel/header/collapse.png' %>',
+						expand: '<%= image_url 'app/icons/km/panel/header/expand.png' %>',
+						close: '<%= image_url 'app/icons/km/panel/header/close.png' %>'
+					}
+				},
+				actions: {
+					map: '<%= image_url 'app/icons/km/panel/actions/map.png' %>',
+					chart: '<%= image_url 'app/icons/km/panel/actions/chart.png' %>'
+				},
+				icons: {
+					main: {
+						shops: '<%= image_url 'app/icons/km/panel/logo/main/shops.png' %>',
+						loading: '<%= image_url 'app/icons/km/panel/logo/main/loading.png' %>',
+						deliveries: '<%= image_url 'app/icons/km/panel/logo/main/deliveries.png' %>',
+						traffic_counts: '<%= image_url 'app/icons/km/panel/logo/main/traffic_counts.png' %>',
+						traffic_disruptions: '<%= image_url 'app/icons/km/panel/logo/main/traffic_disruptions.png' %>'
+					},
+					small: {
+						shops: '<%= image_url 'app/icons/km/panel/logo/small/shops.png' %>',
+						loading: '<%= image_url 'app/icons/km/panel/logo/small/loading.png' %>',
+						deliveries: '<%= image_url 'app/icons/km/panel/logo/small/deliveries.png' %>',
+						traffic_counts: '<%= image_url 'app/icons/km/panel/logo/small/traffic_counts.png' %>',
+						traffic_disruptions: '<%= image_url 'app/icons/km/panel/logo/small/traffic_disruptions.png' %>'
+					}
 				}
 			}
 		}

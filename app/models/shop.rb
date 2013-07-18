@@ -123,6 +123,7 @@ class Shop < ActiveRecord::FmxBase
   scope :track_base, ->{ select("shops.street_id") }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_shop_id, ->(shop_id){ where(shop_id: shop_id) }
+  scope :filter_by_type, ->(shop_type){ where(shop_type: shop_type) }
   scope :filter_after, ->(time){ where('shops.registered_at >= ?', time).order('shops.registered_at ASC') }
   scope :filter_before, ->(time){ where('shops.registered_at <= ?', time).order('shops.registered_at ASC') }
   
@@ -136,6 +137,10 @@ class Shop < ActiveRecord::FmxBase
   validates :has_loading_area, presence: true, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }
   validates :loading_area_type, presence: true, numericality: { only_integer: true }, inclusion: { in: LoadingAreaType.keys }
   validates :notes, length: { maximum: 300 }, allow_blank: true
+  
+  def self.total_for_type(type, km_id)
+    self.base_count.filter_by_type(type).filter_by_km(km_id).order(nil).first[:num].to_i
+  end
   
   def self.find_for_track(km_id)
     self.track_base.filter_by_km(km_id)

@@ -1,4 +1,12 @@
 //= require app/views/km/km
+//= require app/views/km/elements/elements
+//= require app/views/km/elements/shops
+//= require app/views/km/elements/loading
+//= require app/views/km/elements/deliveries
+//= require app/views/km/elements/traffic_counts
+//= require app/views/km/elements/traffic_disruptions
+//= require app/views/km/header
 //= require app/views/km/map/styles
 //= require app/views/km/map/map
-//= require app/views/km/header
+//= require app/views/km/panel
+//= require app/views/km/chart

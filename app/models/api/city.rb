@@ -2,7 +2,7 @@ class Api::City < City
   
   module Json
     List = {
-      methods: [:image_path, :last_km_id]
+      methods: [:image_path, :last_active_km_id]
     }
     Filter = {}
   end

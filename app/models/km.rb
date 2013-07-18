@@ -3,6 +3,7 @@ class Km < ActiveRecord::FmxBase
   scope :base, ->{ select("kms.id, kms.is_active, kms.tracks_count, kms.traffic_counts_count, kms.traffic_disruptions_count, kms.street_data_count, kms.parking_restrictions_count, kms.shops_count, kms.public_meter_length, kms.dedicated_meter_length, kms.peak_deliveries, kms.peak_delivery_hour, kms.peak_disruptions, kms.peak_disruption_hour, kms.peak_traffic, kms.peak_traffic_hour, kms.min_disruption_time, kms.max_disruption_time, kms.min_delivery_time, kms.max_delivery_time, kms.chart_start_time, kms.chart_end_time, kms.deliveries_count, kms.city_id, kms.name, kms.description, kms.comments, kms.lat, kms.lng, kms.street_lat, kms.street_lng") }
   scope :base_count, ->{ select("COUNT(kms.id) as num") }
   scope :base_id, ->{ select("kms.id") }
+  scope :with_city, ->{ select('cities.name as city_name').joins('JOIN cities ON cities.id = kms.city_id') }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_city, ->(city_id){ where(city_id: city_id) }
   scope :filter_active, ->{ where(is_active: 1) }
@@ -12,6 +13,7 @@ class Km < ActiveRecord::FmxBase
   attr_accessor :active_changed
   attr_protected :is_active, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_delivery_hour, :peak_disruptions, :peak_disruption_hour, :peak_traffic, :peak_traffic_hour, :min_disruption_time, :max_disruption_time, :min_delivery_time, :max_delivery_time, :chart_start_time, :chart_end_time, :city_id, :track_count, :traffic_count_count, :traffic_disruption_count, :street_data_count, :parking_restriction_count, :shop_count, :delivery_count
   
+  validates :street_lat, :street_lng, presence: true
   validates :is_active, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }
   validates :city_id, :name, :lat, :lng, presence: true
   validates :city_id, numericality: { only_integer: true }
@@ -25,11 +27,15 @@ class Km < ActiveRecord::FmxBase
   validates :comments, length: { in: 2..300 }, allow_blank: true
   validates :lat, numericality: true
   validates :lng, numericality: true
-  validates :street_lat, numericality: true, allow_blank: true
-  validates :street_lng, numericality: true, allow_blank: true
+  validates :street_lat, numericality: true
+  validates :street_lng, numericality: true
   
   before_save :set_active_state
   before_destroy :remove_active_count
+  
+  def full_name
+    @full_name ||= "#{self.name}, #{self[:city_name]}"
+  end
   
   def city
     @city ||= City.find_by_id(self.city_id)
@@ -73,6 +79,10 @@ class Km < ActiveRecord::FmxBase
     @traffic_count_totals ||= TrafficCountTotal.base.filter_by_km(self.id)
   end
   
+  def shop_totals
+    @shop_totals ||= ShopTotal.base.filter_by_km(self.id)
+  end
+  
   def is_active=(val)
     curr_active = self.is_active.to_i
     val = val.to_i
@@ -110,6 +120,7 @@ class Km < ActiveRecord::FmxBase
         self.set_streets
         self.set_deliveries_disruptions
         self.set_traffic_count_totals
+        self.set_shop_totals
         self.add_active_count
       else
         self.substract_active_count
@@ -131,6 +142,14 @@ class Km < ActiveRecord::FmxBase
     self.destroy_traffic_count_totals
     el = TrafficCountTotal.generate(self)
     el.save
+  end
+  
+  def set_shop_totals
+    self.destroy_shop_totals
+    Shop::ShopType::List.each do |key, val|
+      el = ShopTotal.generate(key, self.id)
+      el.save
+    end
   end
   
   def set_deliveries_disruptions
@@ -206,20 +225,20 @@ class Km < ActiveRecord::FmxBase
   
   def set_peak_deliveries
     peak = self.get_peak(Delivery)
-    self.peak_delivery_hour = "#{peak[0]}:00:00 +00:00"
-    self.peak_deliveries = peak[1]
+    self.peak_delivery_hour = "#{peak[1]}:00:00 +00:00"
+    self.peak_deliveries = peak[0]
   end
   
   def set_peak_disruptions
     peak = self.get_peak(TrafficDisruption)
-    self.peak_disruption_hour = "#{peak[0]}:00:00 +00:00"
-    self.peak_disruptions = peak[1]
+    self.peak_disruption_hour = "#{peak[1]}:00:00 +00:00"
+    self.peak_disruptions = peak[0]
   end
   
   def set_peak_traffic
     peak = self.get_peak(TrafficCount, TrafficCount.peak_base)
-    self.peak_traffic_hour = "#{peak[0]}:00:00 +00:00"
-    self.peak_traffic = peak[1]
+    self.peak_traffic_hour = "#{peak[1]}:00:00 +00:00"
+    self.peak_traffic = peak[0]
   end
   
   def get_peak(cls, base=nil)
@@ -242,6 +261,13 @@ class Km < ActiveRecord::FmxBase
       el.destroy
     end
     @traffic_count_totals = nil
+  end
+  
+  def destroy_shop_totals
+    self.shop_totals.each do |el|
+      el.destroy
+    end
+    @shop_totals = nil
   end
   
   def remove_active_count

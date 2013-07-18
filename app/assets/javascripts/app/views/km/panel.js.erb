@@ -1,0 +1,429 @@
+(function(){
+	$(function(){
+		app.km.panel = {};
+		$.extend(app.km.panel, {
+			parent: app.km,
+			root: null,
+			view: null,
+			config: null,
+			panel: null,
+			small_panel: null,
+			selected: null,
+			init: function(){
+				this.initRoot();
+				this.initView();
+				this.initConfig();
+				this.initContainer();
+				this.initPanel();
+				this.initSmallPanel();
+			},
+			initConfig: function(){
+				this.config = this.view.config.panel;
+			},
+			update: function(){
+				this.panel.update();
+				this.initSelected();
+			},
+			initSelected: function(){
+				if(this.selected == null) this.setSelected(this.panel);
+			},
+			setSelected: function(which){
+				if(which != this.selected){
+					if(this.selected != null) this.selected.hide();
+					this.selected = which;
+					this.selected.show();
+				}
+			},
+			getPanelHeaderAction: function(key){
+				var action = $('<a href="#" class="km_panel_header_action"></a>');
+				var src = this.config.header.icons[key];
+				var img = $('<img />', {
+					src: src
+				});
+				img.addClass('km_panel_header_action_img');
+				img.appendTo(action);
+				return action;
+			},
+			initSmallPanel: function(){
+				this.small_panel = {};
+				$.extend(this.small_panel, {
+					parent: this,
+					obj: this,
+					root: null,
+					view: null,
+					init: function(){
+						this.initRoot();
+						this.initView();
+						this.initContainer();
+					},
+					initContainer: function(){
+						this.container = $('<div id="km_small_panel"></div>');
+						this.initHeader();
+						this.initWrapper();
+						this.container.addClass('km_panel');
+						this.container.appendTo(this.parent.container);
+					},
+					show: function(){
+						this.container.css('display', 'block');
+					},
+					hide: function(){
+						this.container.css('display', 'none');
+					},
+					initWrapper: function(){
+						this.wrapper = {};
+						$.extend(this.wrapper, {
+							parent: this,
+							root: null,
+							view: null,
+							obj: null,
+							container: null,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initObj();
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container = $('<div class="km_panel_wrapper"></div>');
+								this.initElements();
+								this.container.appendTo(this.parent.container);
+							},
+							initElements: function(){
+								var _self = this;
+								var elements = this.view.elements.list;
+								$.each(elements, function(key, val){
+									_self.addElement(val);
+								});
+							},
+							addElement: function(element){
+								var panel = element.small_panel;
+								panel.appendTo(this);
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							},
+							initObj: function(){
+								this.obj = this.parent.obj;
+							}
+						});
+						this.wrapper.init();
+					},
+					initHeader: function(){
+						var header = {};
+						$.extend(header, {
+							parent: this,
+							root: null,
+							view: null,
+							obj: null,
+							container: null,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initObj();
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container = $('<div class="km_panel_header"></div>');
+								this.initActions();
+								this.container.append('<div class="clear"></div>');
+								this.container.appendTo(this.parent.container);
+							},
+							initActions: function(){
+								var actions = {};
+								$.extend(actions, {
+									parent: this,
+									root: null,
+									view: null,
+									obj: null,
+									container: null,
+									init: function(){
+										this.initRoot();
+										this.initView();
+										this.initObj();
+										this.initContainer();
+									},
+									initContainer: function(){
+										this.container = $('<div class="km_panel_header_actions"></div>');
+										this.initExpandAction();
+										this.container.append('<div class="clear"></div>');
+										this.container.appendTo(this.parent.container);
+									},
+									initExpandAction: function(){
+										var _self = this;
+										var action = this.obj.getPanelHeaderAction('expand');
+										this.root.click(action, function(e, element){
+											_self.expandActionOnClick(e, element);
+										});
+										action.appendTo(this.container);
+									},
+									expandActionOnClick: function(e, element){
+										this.obj.setSelected(this.obj.panel);
+									},
+									initRoot: function(){
+										this.root = this.parent.root;
+									},
+									initView: function(){
+										this.view = this.parent.view;
+									},
+									initObj: function(){
+										this.obj = this.parent.obj;
+									}
+								});
+								actions.init();
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							},
+							initObj: function(){
+								this.obj = this.parent.obj;
+							}
+						});
+						header.init();
+					},
+					initRoot: function(){
+						this.root = this.parent.root;
+					},
+					initView: function(){
+						this.view = this.parent.view;
+					}
+				});
+				this.small_panel.init();
+			},
+			initPanel: function(){
+				this.panel = {};
+				$.extend(this.panel, {
+					parent: this,
+					obj: this,
+					root: null,
+					view: null,
+					container: null,
+					header: null,
+					init: function(){
+						this.initRoot();
+						this.initView();
+						this.initContainer();
+					},
+					update: function(){
+						//TODO
+						this.header.update();
+					},
+					initContainer: function(){
+						this.container = $('<div id="km_panel"></div>');
+						this.initHeader();
+						this.initWrapper();
+						this.container.addClass('km_panel');
+						this.container.appendTo(this.parent.container);
+					},
+					show: function(){
+						this.container.css('display', 'block');
+					},
+					hide: function(){
+						this.container.css('display', 'none');
+					},
+					initWrapper: function(){
+						this.wrapper = {};
+						$.extend(this.wrapper, {
+							obj: null,
+							parent: this,
+							root: null,
+							view: null,
+							container: null,
+							col_container: null,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initObj();
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container = $('<div class="km_panel_wrapper"></div>');
+								this.initElements();
+								this.container.appendTo(this.parent.container);
+							},
+							initElements: function(){
+								var _self = this;
+								var elements = this.view.elements.list;
+								$.each(elements, function(key, val){
+									_self.addElement(val);
+								});
+							},
+							addColContainer: function(element){
+								if(this.col_container == null){
+									this.initColContainer();
+								}
+								this.col_container.add(element);
+							},
+							initColContainer: function(){
+								this.col_container = {};
+								$.extend(this.col_container, {
+									parent: this,
+									root: null,
+									view: null,
+									obj: null,
+									container: null,
+									el_count: null,
+									init: function(){
+										this.initRoot();
+										this.initView();
+										this.initObj();
+										this.initContainer();
+									},
+									initContainer: function(){
+										this.container = $('<div class="km_panel_wrapper_col_container"></div>');
+										this.container.appendTo(this.parent.container);
+									},
+									add: function(element){
+										element.appendTo(this.container);
+										++this.el_count;
+										if(this.el_count == this.obj.config.col_capacity){
+											this.container.append('<div class="clear"></div>');
+											this.parent.col_container = null;
+										}
+									},
+									initRoot: function(){
+										this.root = this.parent.root;
+									},
+									initView: function(){
+										this.view = this.parent.view;
+									},
+									initObj: function(){
+										this.obj = this.parent.obj;
+									}
+								});
+								this.col_container.init();
+							},
+							addElement: function(element){
+								var panel = element.panel;
+								panel.appendTo(this);
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							},
+							initObj: function(){
+								this.obj = this.parent.obj;
+							}
+						});
+						this.wrapper.init();
+					},
+					initHeader: function(){
+						this.header = {};
+						$.extend(this.header, {
+							obj: null,
+							parent: this,
+							root: null,
+							view: null,
+							container: null,
+							title: null,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initObj();
+								this.initContainer();
+							},
+							initObj: function(){
+								this.obj = this.parent.obj;
+							},
+							initContainer: function(){
+								this.container = $('<div class="km_panel_header"></div>');
+								this.initTitle();
+								this.initActions();
+								this.container.append('<div class="clear"></div>');
+								this.container.appendTo(this.parent.container);
+							},
+							update: function(){
+								this.setTitle();
+							},
+							setTitle: function(){
+								var max_length = this.obj.config.header.max_length.title;
+								var title = this.view.km.full_name;
+								if(title && title.length > max_length) title = (title.substring(0, max_length - 3) + '...');
+								this.title.html(title);
+							},
+							initActions: function(){
+								var actions = {};
+								$.extend(actions, {
+									parent: this,
+									root: null,
+									view: null,
+									obj: null,
+									container: null,
+									init: function(){
+										this.initRoot();
+										this.initView();
+										this.initObj();
+										this.initContainer();
+									},
+									initObj: function(){
+										this.obj = this.parent.obj;
+									},
+									initContainer: function(){
+										this.container = $('<div class="km_panel_header_actions"></div>');
+										this.initCollapseAction();
+										this.container.append('<div class="clear"></div>');
+										this.container.appendTo(this.parent.container);
+									},
+									initCollapseAction: function(){
+										var _self = this;
+										var action = this.obj.getPanelHeaderAction('collapse');
+										this.root.click(action, function(e, element){
+											_self.collapseActionOnClick(e, element);
+										});
+										action.appendTo(this.container);
+									},
+									collapseActionOnClick: function(e, element){
+										this.obj.setSelected(this.obj.small_panel);
+									},
+									initRoot: function(){
+										this.root = this.parent.root;
+									},
+									initView: function(){
+										this.view = this.parent.view;
+									}
+								});
+								actions.init();
+							},
+							initTitle: function(){
+								this.title = $('<div class="km_panel_header_title"></div>');
+								this.title.appendTo(this.container);
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							}
+						});
+						this.header.init();
+					},
+					initRoot: function(){
+						this.root = this.parent.root;
+					},
+					initView: function(){
+						this.view = this.parent.view;
+					}
+				});
+				this.panel.init();
+			},
+			initContainer: function(){
+				this.container = $('<div id="km_panel_container"></div>');
+				this.container.appendTo(this.view.container);
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			},
+			initView: function(){
+				this.view = this.parent;
+			}
+		});
+		app.km.panel.init();
+	});
+})(jQuery);

@@ -7,6 +7,10 @@
 			root: null,
 			config: null,
 			map: null,
+			location: {
+				lat: null,
+				lng: null
+			},
 			init: function(){
 				this.initView();
 				this.initRoot();
@@ -58,6 +62,13 @@
 					return false;
 				});
 				if(style != null) this.setStyle(style);
+			},
+			setLocation: function(opts){
+				if(opts.lat != this.location.lat && opts.lng != this.location.lng){
+					$.extend(this.location, opts);
+					var location = new google.maps.LatLng(this.location.lat, this.location.lng);
+					this.map.panTo(location);
+				}
 			},
 			setStyle: function(which){
 				if(which != this.style){

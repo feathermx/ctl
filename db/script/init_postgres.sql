@@ -94,6 +94,21 @@ CREATE TABLE public.kms (
 
 ALTER SEQUENCE public.kms_id_seq OWNED BY public.kms.id;
 
+CREATE SEQUENCE public.shop_totals_id_seq;
+
+CREATE TABLE public.shop_totals (
+                id BIGINT NOT NULL DEFAULT nextval('public.shop_totals_id_seq'),
+                km_id BIGINT NOT NULL,
+                shop_type VARCHAR(10) NOT NULL,
+                total INTEGER NOT NULL,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL,
+                CONSTRAINT shop_totals_pk PRIMARY KEY (id)
+);
+
+
+ALTER SEQUENCE public.shop_totals_id_seq OWNED BY public.shop_totals.id;
+
 CREATE SEQUENCE public.traffic_count_totals_id_seq;
 
 CREATE TABLE public.traffic_count_totals (
@@ -248,7 +263,7 @@ CREATE TABLE public.street_data (
                 has_loading_area INTEGER DEFAULT 0 NOT NULL,
                 loading_area_length DOUBLE PRECISION,
                 has_parking_area INTEGER DEFAULT 0 NOT NULL,
-                parking_area_length INTEGER,
+                parking_area_length DOUBLE PRECISION,
                 parking_payment VARCHAR(1),
                 notes TEXT,
                 created_at TIMESTAMP NOT NULL,
@@ -528,6 +543,13 @@ ON UPDATE CASCADE
 NOT DEFERRABLE;
 
 ALTER TABLE public.traffic_count_totals ADD CONSTRAINT kms_traffic_count_totals_fk
+FOREIGN KEY (km_id)
+REFERENCES public.kms (id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
+ALTER TABLE public.shop_totals ADD CONSTRAINT kms_shop_totals_fk
 FOREIGN KEY (km_id)
 REFERENCES public.kms (id)
 ON DELETE CASCADE

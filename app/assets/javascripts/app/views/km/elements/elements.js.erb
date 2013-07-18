@@ -1,0 +1,290 @@
+(function(){
+	$(function(){
+		app.km.elements = {};
+		$.extend(app.km.elements, {
+			parent: app.km,
+			root: null,
+			view: null,
+			lang: null,
+			list: {},
+			init: function(){
+				this.initRoot();
+				this.initView();
+				this.initLang();
+			},
+			update: function(){
+				$.each(this.list, function(key, el){
+					el.update();
+				});
+			},
+			getElement: function(key){
+				var element = {};
+				$.extend(element, {
+					parent: this,
+					root: null,
+					view: null,
+					element: null,
+					lang: null,
+					key: key,
+					panel: null,
+					small_panel: null,
+					data_key: '',
+					init: function(){
+						this.initRoot();
+						this.initView();
+						this.initElement();
+						this.initLang();
+						this.initList();
+						this.initPanel();
+						this.initSmallPanel();
+						this.initChart();
+					},
+					update: function(){
+						this.panel.update();
+					},
+					initList: function(){
+						this.parent.list[this.key] = this;
+					},
+					initChart: function(){
+						this.chart = {};
+						$.extend(this.chart, {
+							parent: this,
+							root: null,
+							view: null,
+							element: null,
+							container: null,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initElement();
+								this.initContainer();
+							},
+							initContainer: function(){
+								
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							},
+							initElement: function(){
+								this.element = this.parent.element;
+							}
+						});
+						this.chart.init();
+					},
+					initSmallPanel: function(){
+						this.small_panel = {};
+						$.extend(this.small_panel, {
+							parent: this,
+							root: null,
+							view: null,
+							element: null,
+							panel: null,
+							container: null,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initElement();
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container = $('<div class="km_panel_small_element"></div>');
+								this.initTrigger();
+							},
+							initTrigger: function(){
+								var trigger = $('<a href="#" class="km_panel_small_element_trigger"></a>');
+								this.initIcon(trigger);
+								trigger.appendTo(this.container);
+							},
+							initIcon: function(trigger){
+								var icons = this.view.config.panel.icons.small;
+								var src = icons[this.element.key];
+								var icon = $('<img />', {
+									src: src
+								});
+								icon.appendTo(trigger);
+							},
+							appendTo: function(panel){
+								this.panel = panel;
+								this.container.appendTo(this.panel.container);
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							},
+							initElement: function(){
+								this.element = this.parent.element;
+							}
+						});
+						this.small_panel.init();
+					},
+					initPanel: function(){
+						this.panel = {};
+						$.extend(this.panel, {
+							parent: this,
+							root: null,
+							view: null,
+							element: null,
+							panel: null,
+							stat: null,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initElement();
+								this.initContainer();
+							},
+							appendTo: function(panel){
+								this.panel = panel;
+								this.container.appendTo(this.panel.container);
+							},
+							update: function(){
+								this.updateStat();
+							},
+							updateStat: function(){
+								var data = this.view.km[this.element.data_key];
+								if(data == null) data = '-';
+								this.stat.html(data);
+							},
+							initContainer: function(){
+								this.container = $('<div class="km_panel_element"></div>');
+								this.container.addClass(this.element.key);
+								this.initTitle();
+								this.initActions();
+								this.initMainIcon();
+								this.initStat();
+								this.initUnit();
+							},
+							initUnit: function(){
+								var label = this.element.lang.units;
+								var unit = $('<div class="km_panel_element_unit"></div>');
+								unit.html(label);
+								unit.appendTo(this.container);
+							},
+							initStat: function(){
+								this.stat = $('<div class="km_panel_element_stat"></div>');
+								this.stat.appendTo(this.container);
+							},
+							initMainIcon: function(){
+								var icons = this.view.config.panel.icons.main;
+								var src = icons[this.element.key];
+								var icon = $('<img />', {
+									src: src
+								});
+								icon.addClass('main_icon');
+								icon.appendTo(this.container);
+							},
+							initActions: function(){
+								var actions = {};
+								$.extend(actions, {
+									parent: this,
+									root: null,
+									view: null,
+									element: null,
+									container: null,
+									init: function(){
+										this.initRoot();
+										this.initView();
+										this.initElement();
+										this.initContainer();
+									},
+									initContainer: function(){
+										this.container = $('<div class="km_panel_element_actions"></div>');
+										this.initMapAction();
+										this.initChartAction();
+										this.container.append('<div class="clear"></div>');
+										this.container.appendTo(this.parent.container);
+									},
+									initChartAction: function(){
+										var _self = this;
+										var action = this.getAction('chart');
+										this.root.click(action, function(e, element){
+											_self.chartActionOnClick(e, element);
+										});
+									},
+									chartActionOnClick: function(e, element){
+										//TODO
+									},
+									initMapAction: function(){
+										var _self = this;
+										var action = this.getAction('map');
+										this.root.click(action, function(e, element){
+											_self.mapActionOnClick(e, element);
+										});
+									},
+									mapActionOnClick: function(e, element){
+										//TODO
+									},
+									getAction: function(key){
+										var actions = this.view.config.panel.actions;
+										var src = actions[key];
+										var action = $('<a href="#" class="km_panel_element_action"></a>');
+										var img = $('<img />', {
+											src: src
+										});
+										img.appendTo(action);
+										action.appendTo(this.container);
+										return action;
+									},
+									initRoot: function(){
+										this.root = this.parent.root;
+									},
+									initView: function(){
+										this.view = this.parent.view;
+									},
+									initElement: function(){
+										this.element = this.parent.element;
+									}
+								});
+								actions.init();
+							},
+							initTitle: function(){
+								var title = $('<div class="km_panel_element_title"></div>');
+								var label = this.element.lang.title;
+								title.html(label);
+								title.appendTo(this.container);
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							},
+							initElement: function(){
+								this.element = this.parent.element;
+							}
+						});
+						this.panel.init();
+					},
+					initLang: function(){
+						this.lang = this.parent.lang[this.key];
+					},
+					initRoot: function(){
+						this.root = this.parent.root;
+					},
+					initView: function(){
+						this.view = this.parent.view;
+					},
+					initElement: function(){
+						this.element = this;
+					}
+				});
+				element.init();
+				return element;
+			},
+			initLang: function(){
+				this.lang = this.parent.lang.elements;
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			},
+			initView: function(){
+				this.view = this.parent.view;
+			}
+		});
+		app.km.elements.init();
+	});
+})(jQuery);

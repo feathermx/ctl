@@ -4,6 +4,7 @@
 		$.extend(app.km, {
 			parent: app,
 			root: null,
+			view: null,
 			container: null,
 			config: null,
 			lang: null,
@@ -11,6 +12,7 @@
 			km: {},
 			init: function(){
 				this.initRoot();
+				this.initView();
 				this.initConfig();
 				this.initLang();
 				this.initContainer();
@@ -27,6 +29,9 @@
 			initRoot: function(){
 				this.root = this.parent.root;
 			},
+			initView: function(){
+				this.view = this;
+			},
 			ready: function(){
 				this.loadKm(this.root.selections.km);
 			},
@@ -34,9 +39,27 @@
 				if(this.req != null) this.req.abort(); 
 			},
 			loadKm: function(which){
+				var _self = this;
 				this.abort();
 				$.extend(this.km, { id: which });
-				//this.root.api
+				this.req = this.root.api_client.load({
+					key: 'show_km',
+					data: {
+						km_id: this.km.id
+					},
+					success: function(data){
+						_self.success(data);
+					}
+				});
+			},
+			success: function(data){
+				//TODO
+				if(data && data.km){
+					$.extend(this.km, data.km);
+					this.map.setLocation({ lat: this.km.lat, lng: this.km.lng });
+					this.panel.update();
+					this.elements.update();
+				}
 			}
 		});
 		app.km.init();

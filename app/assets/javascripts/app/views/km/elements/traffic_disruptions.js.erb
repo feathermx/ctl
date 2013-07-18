@@ -1,0 +1,31 @@
+(function(){
+	$(function(){
+		var el = app.km.elements.traffic_disruptions = {};
+		$.extend(el, {
+			parent: app.km.elements,
+			data_key: 'peak_disruptions',
+			init: function(){
+				var base = this.parent.getElement('traffic_disruptions');
+				$.extend(base, this);
+				$.extend(this, base);
+				this.initPanel();
+			},
+			initPanel: function(){
+				$.extend(this.panel, {
+					init: function(){
+						this.initContainer();
+					},
+					appendTo: function(panel){
+						this.panel = panel;
+						this.panel.addColContainer(this.container);
+					},
+					initContainer: function(){
+						this.container.addClass('small');
+					}
+				});
+				this.panel.init();
+			}
+		});
+		el.init();
+	});
+})(jQuery);

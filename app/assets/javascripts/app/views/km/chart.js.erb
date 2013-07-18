@@ -1,0 +1,147 @@
+(function(){
+	$(function(){
+		app.km.chart = {};
+		$.extend(app.km.chart, {
+			parent: app.km,
+			root: null,
+			view: null,
+			config: null,
+			panel: null,
+			init: function(){
+				this.initRoot();
+				this.initView();
+				this.initConfig();
+				this.initPanel();
+			},
+			initConfig: function(){
+				this.config = this.view.config.panel;
+			},
+			getPanelHeaderAction: function(key){
+				var action = $('<a href="#" class="km_panel_header_action"></a>');
+				var src = this.config.header.icons[key];
+				var img = $('<img />', {
+					src: src
+				});
+				img.addClass('km_panel_header_action_img');
+				img.appendTo(action);
+				return action;
+			},
+			initPanel: function(){
+				this.panel = {};
+				$.extend(this.panel, {
+					parent: this,
+					root: null,
+					view: null,
+					chart: this,
+					container: null,
+					header: null,
+					init: function(){
+						this.initRoot();
+						this.initView();
+						this.initContainer();
+					},
+					initContainer: function(){
+						this.container = $('<div id="km_chart_panel"></div>');
+						this.initHeader();
+						this.container.addClass('km_panel');
+						this.container.appendTo(this.view.container);
+					},
+					initHeader: function(){
+						this.header = {};
+						$.extend(this.header, {
+							parent: this,
+							root: null,
+							view: null,
+							chart: null,
+							title: null,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initChart();
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container = $('<div class="km_panel_header"></div>');
+								this.initTitle();
+								this.initActions();
+								this.container.append('<div class="clear"></div>');
+								this.container.appendTo(this.parent.container);
+							},
+							initActions: function(){
+								var actions = {};
+								$.extend(actions, {
+									parent: this,
+									root: null,
+									view: null,
+									chart: null,
+									container: null,
+									init: function(){
+										this.initRoot();
+										this.initView();
+										this.initChart();
+										this.initContainer();
+									},
+									initContainer: function(){
+										this.container = $('<div class="km_panel_header_actions"></div>');
+										this.initCloseAction();
+										this.container.append('<div class="clear"></div>');
+										this.container.appendTo(this.parent.container);
+									},
+									initCloseAction: function(){
+										var _self = this;
+										var action = this.chart.getPanelHeaderAction('close');
+										this.root.click(action, function(e, element){
+											_self.closeActionOnClick(e, element);
+										});
+										action.appendTo(this.container);
+									},
+									closeActionOnClick: function(e, element){
+										//TODO
+									},
+									initRoot: function(){
+										this.root = this.parent.root;
+									},
+									initView: function(){
+										this.view = this.parent.view;
+									},
+									initChart: function(){
+										this.chart = this.parent.chart;
+									}
+								});
+								actions.init();
+							},
+							initTitle: function(){
+								this.title = $('<div class="km_panel_header_title"></div>');
+								this.title.appendTo(this.container);
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							},
+							initChart: function(){
+								this.chart = this.parent.chart;
+							}
+						});
+						this.header.init();
+					},
+					initRoot: function(){
+						this.root = this.parent.root;
+					},
+					initView: function(){
+						this.view = this.parent.view;
+					}
+				});
+				this.panel.init();
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			},
+			initView: function(){
+				this.view = this.parent;
+			}
+		});
+		app.km.chart.init();
+	});
+})(jQuery);

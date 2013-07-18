@@ -5,7 +5,8 @@ module Durable
   module ClassMethods
     
     def duration_base
-      self.select('traffic_disruptions.started_at, traffic_disruptions.ended_at')
+      table_name = self.table_name
+      self.select("#{table_name}.started_at, #{table_name}.ended_at")
     end
     
     def duration_for_hour(hour, km_id)

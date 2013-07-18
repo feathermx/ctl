@@ -8,4 +8,259 @@
 		width: 100%;
 		height: 100%;
 	}
+	#km_panel_container{
+		position: absolute;
+		right: 0;
+		top: 20px;
+	}
+	.km_panel{
+		@include box-shadow(-1px, 1px, 3px, #BBBBBB);
+		background: none repeat scroll 0 0 #FFFFFF;
+		display: none;
+		&#km_chart_panel{
+			display: block;
+			@include box-shadow(1px, 1px, 3px, #BBBBBB);
+			width: 540px;
+			height: 325px;
+			position: absolute;
+			left: 0px;
+			top: 50%;
+			margin-top: -162px;
+		}
+		&#km_panel{
+			width: 250px;
+			height: 320px;
+			&.km_panel_header_title{
+				width: 190px;
+			}
+		}
+		&#km_small_panel{
+			width: 40px;
+			height: 235px;
+			.km_panel_header_actions{
+				margin: 9px 15px 0 0;
+			}
+		}
+		.km_panel_header{
+			height: 30px;
+			@include background-gradient($from-base, $to-base);
+			border-bottom: 1px solid #1E5998;
+		}
+		.km_panel_header_title{
+			float: left;
+			color: #FFFFFF;
+			font-weight: $bold;
+			font-size: 12px;
+			margin: 8px 0 0 10px;
+			width: 180px;
+		}
+		.km_panel_header_actions{
+			float: right;
+			margin: 9px 10px 0 0;
+		}
+		@include link('a.km_panel_header_action') {
+			border: 0 none;
+			outline: none;
+			width: 10px;
+			height: 10px;
+			display: block;
+			cursor: pointer;
+			float: left;
+		}
+		a.km_panel_header_action{
+			img.km_panel_header_action_img{
+				width: 10px;
+				height: 10px;
+				display: block;
+				border: 0 none;
+				outline: none;
+			}
+		}
+		.km_panel_small_element{
+			position: relative;
+			width: 40px;
+			height: 40px;
+			border-bottom: 1px solid #CCCCCC;
+		}
+		@include link('a.km_panel_small_element_trigger') {
+			border: 0 none;
+			outline: none;
+			display: block;
+			position: absolute;
+			overflow: hidden;
+			width: 30px;
+			height: 30px;
+			left: 50%;
+			top: 50%;
+			margin-left: -15px;
+			margin-top: -15px;
+		}
+		a.km_panel_small_element_trigger{
+			img{
+				display: block;
+				border: 0 none;
+				outline: none;
+				width: 30px;
+				height: 60px;
+				position: absolute;
+				left: 0px;
+				top: 0px;
+			}
+			&:hover, .active{
+				img{
+					top: -30px;
+				}
+			}
+			.active{
+				cursor: pointer;
+			}
+		}
+		.km_panel_element{
+			position: relative;
+			&.full{
+				width: 100%;
+				height: 80px;
+				border-bottom: 1px solid #CCCCCC;
+				.km_panel_element_title{
+					left: 10px;
+					top: 3px;
+				}
+				.km_panel_element_actions{
+					right: 10px;
+					top: 3px;
+				}
+				img.main_icon{
+					width: 55px;
+					height: 45px;
+				}
+			}
+			&.small{
+				width: 80px;
+				height: 110px;
+				float: left;
+				margin: 0 0 0 2px;
+				.km_panel_element_stat, .km_panel_element_unit{
+					left: 50%;
+					width: 70px;
+					margin-left: -35px;
+					text-align: center;
+				}
+				.km_panel_element_stat{
+					font-size: 15px;
+					top: 56px;
+				}
+				.km_panel_element_unit{
+					font-size: 11px;
+					top: 75px;
+				}
+				.km_panel_element_title{
+					left: 9px;
+					top: 6px;
+				}
+				.km_panel_element_actions{
+					right: 4px;
+					top: 92px;
+				}
+				img.main_icon{
+					width: 30px;
+					height: 30px;
+					top: 22px;
+					left: 50%;
+					margin-left: -15px;
+				}
+			}
+			&.shops{
+				.km_panel_element_stat, .km_panel_element_unit{
+					left: 115px;
+				}
+				.km_panel_element_stat{
+					width: 120px;
+					font-size: 30px;
+					top: 20px;
+				}
+				.km_panel_element_unit{
+					width: 120px;
+					font-size: 13px;
+					top: 55px;
+				}
+				img.main_icon{
+					left: 40px;
+					top: 25px;
+				}
+			}
+			&.loading{
+				border-bottom: 0 none;
+				.km_panel_element_stat, .km_panel_element_unit{
+					left: 80px;
+					width: 80px;
+					&.second{
+						left: 160px;
+					}
+				}
+				.km_panel_element_stat{
+					font-size: 20px;
+					top: 30px;
+				}
+				.km_panel_element_unit{
+					font-size: 11px;
+					top: 55px;
+				}
+				img.main_icon{
+					left: 10px;
+					top: 23px;
+				}
+			}
+		}
+		.km_panel_element_title{
+			color: #444444;
+			font-size: 11px;
+			position: absolute;
+			display: block;
+		}
+		.km_panel_element_actions{
+			position: absolute;
+		}
+		@include link('a.km_panel_element_action') {
+			cursor: pointer;
+			border: 0 none;
+			position: relative;
+			float: right;
+			width: 14px;
+			height: 14px;
+			overflow: hidden;
+			margin: 0 0 0 10px;
+		}
+		a.km_panel_element_action{
+			img{
+				width: 14px;
+				height: 28px;
+				position: absolute;
+				left: 0px;
+				top: 0px;
+			}
+			&:hover, &.active{
+				img{
+					top: -14px;
+				}
+			}
+		}
+		img.main_icon{
+			position: absolute;
+		}
+		.km_panel_element_stat, .km_panel_element_unit{
+			color: #444444;
+			position: absolute;
+		}
+	}
+	.km_panel_separator{
+		background: none repeat scroll 0 0 #75ACD7;
+		height: 18px;
+		h1.km_panel_separator_title{
+			color: #FFFFFF;
+			font-size: 11px;
+			text-align: center;
+			display: block;
+			padding: 3px 0 0 0;
+		}
+	}
 }
