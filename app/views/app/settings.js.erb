@@ -18,6 +18,15 @@ $.extend(config, {
 				},
 				loading: {
 					chart: '<%= url_for controller: 'api/streets', action: :chart %>'
+				},
+				deliveries: {
+					chart: '<%= url_for controller: 'api/deliveries', action: :chart %>'
+				},
+				traffic_counts: {
+					chart: '<%= url_for controller: 'api/traffic_count_totals', action: :chart %>'
+				},
+				traffic_disruptions: {
+					chart: '<%= url_for controller: 'api/traffic_disruptions', action: :chart %>'
 				}
 			}
 		}

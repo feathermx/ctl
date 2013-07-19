@@ -43,7 +43,15 @@ class Api::Km < Km
     @api_chart_deliveries ||= Api::DeliveriesDisruption.api_deliveries_chart_base.filter_by_km(self.id)
   end
   
+  def api_chart_traffic_count_totals
+    @api_chart_traffic_count_totals ||= ->{
+      el = Api::TrafficCountTotal.find_chart_base_by_km(self.id)
+      el.as_chart unless el.nil?
+    }.call
+  end
   
-  
+  def api_chart_disruptions
+    @api_chart_disruptions ||= Api::DeliveriesDisruption.api_disruptions_chart_base.filter_by_km(self.id)
+  end
   
 end

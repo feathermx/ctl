@@ -46,6 +46,10 @@ class TrafficCountTotal < ActiveRecord::FmxBase
     @@traffic_count_fields ||= %w{cars taxis pickup_trucks articulated_trucks rigid_trucks vans buses bikes motorbikes pedestrians}
   end
   
+  def self.find_by_km(km_id)
+    self.base.filter_by_km(km_id).first
+  end
+  
   def self.generate(km)
     el = self.new
     el.km_id = km.id
