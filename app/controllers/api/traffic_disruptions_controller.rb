@@ -6,7 +6,7 @@ class Api::TrafficDisruptionsController < Api::ApiController
   
   # POST /api/traffic_disruptions/chart
   def chart
-    Api::DeliveriesDisruption.json_display = Api::DeliveriesDisruption::Json::DisruptionsChart
+    Api::DeliveriesDisruption.json_display = Api::DeliveriesDisruption::Json::Chart
     render json: { contents: self.km.api_chart_disruptions }
   end
   

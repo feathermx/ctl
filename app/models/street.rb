@@ -7,6 +7,7 @@ class Street < ActiveRecord::FmxBase
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_km, ->(km_id){ where(km_id: km_id) }
   scope :with_data, ->{ where('(streets.public_meter_length > 0 OR streets.dedicated_meter_length > 0)') }
+  scope :research_ascending, ->{ order('streets.research_id ASC') }
   
   attr_protected :public_meter_length, :dedicated_meter_length, :track_count
   

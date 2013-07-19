@@ -118,7 +118,7 @@ class Shop < ActiveRecord::FmxBase
     
   end
   
-  scope :base, ->{ select("shops.id, shops.km_id, shops.street_id, shops.shop_id, shops.registered_at, shops.shop_type, shops.name, shops.front_length, shops.starting_floor, shops.total_floors, shops.has_loading_area, shops.loading_area_type, shops.notes, shops.lat, shops.lng") }
+  scope :base, ->{ select("shops.id, shops.km_id, shops.deliveries_count, shops.street_id, shops.shop_id, shops.registered_at, shops.shop_type, shops.name, shops.front_length, shops.starting_floor, shops.total_floors, shops.has_loading_area, shops.loading_area_type, shops.notes, shops.lat, shops.lng") }
   scope :base_count, ->{ select("COUNT(shops.id) as num") }
   scope :track_base, ->{ select("shops.street_id") }
   scope :filter_by_id, ->(id){ where(id: id) }
@@ -126,7 +126,11 @@ class Shop < ActiveRecord::FmxBase
   scope :filter_by_type, ->(shop_type){ where(shop_type: shop_type) }
   scope :filter_after, ->(time){ where('shops.registered_at >= ?', time).order('shops.registered_at ASC') }
   scope :filter_before, ->(time){ where('shops.registered_at <= ?', time).order('shops.registered_at ASC') }
+  scope :ascending, ->{ order('shops.name ASC') }
   
+  attr_protected :deliveries_count
+  
+  validates :deliveries_count, numericality: { only_integer: true }, allow_nil: true
   validates :shop_id, length: { maximum: 100 }, presence: true, uniqueness: true
   validates :registered_at, presence: true
   validates :shop_type, presence: true, length: { maximum: 10 }, inclusion: { in: ShopType.keys }

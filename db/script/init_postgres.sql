@@ -307,6 +307,7 @@ CREATE SEQUENCE public.shops_id_seq;
 CREATE TABLE public.shops (
                 id BIGINT NOT NULL DEFAULT nextval('public.shops_id_seq'),
                 km_id BIGINT NOT NULL,
+                deliveries_count INTEGER DEFAULT 0,
                 street_id BIGINT NOT NULL,
                 shop_id VARCHAR(100) NOT NULL,
                 registered_at TIMESTAMP NOT NULL,

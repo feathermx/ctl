@@ -6,8 +6,8 @@ class Api::DeliveriesController < Api::ApiController
   
   # POST /api/deliveries/chart
   def chart
-    Api::DeliveriesDisruption.json_display = Api::DeliveriesDisruption::Json::DeliveriesChart
-    render json: { contents: self.km.api_chart_deliveries }
+    Api::Shop.json_display = Api::Shop::Json::Chart
+    render json: { starts_at: self.km.min_delivery_time_i, ends_at: self.km.max_delivery_time_i, contents: self.km.api_chart_deliveries }
   end
   
   

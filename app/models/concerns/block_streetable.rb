@@ -10,8 +10,8 @@ module BlockStreetable
     attr_protected :street_id, :km_id
     attr_accessor :street_research, :block_research
     
-    validates :street_research, numericality: { only_integer: true } , presence: true
-    validates :block_research, numericality: { only_integer: true }, presence: true
+    validates :street_research, numericality: { only_integer: true } , presence: true, if: :new_record?
+    validates :block_research, numericality: { only_integer: true }, presence: true, if: :new_record?
     
     before_save :block_streetable_on_before_save
     

@@ -7,7 +7,7 @@ class Api::Street < Street
     }
   end
   
-  scope :api_chart_base, ->{ select('streets.research_id, streets.public_meter_length, streets.dedicated_meter_length').chart_order.with_data }
+  scope :api_chart_base, ->{ select('streets.research_id, streets.public_meter_length, streets.dedicated_meter_length').chart_order.with_data.research_ascending }
   scope :chart_order, ->{ order('streets.public_meter_length DESC, streets.dedicated_meter_length DESC')  }
   
   def self.json_display

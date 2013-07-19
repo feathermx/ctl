@@ -35,6 +35,7 @@ class Delivery < ActiveRecord::FmxBase
   scope :min_base, ->{ select('MIN(deliveries.started_at) as min_time').order(nil) }
   scope :max_base, ->{ select('MAX(deliveries.ended_at) as max_time').order(nil) }
   scope :filter_by_id, ->(id){ where(id: id) }
+  scope :filter_by_shop, ->(shop_id){ where(shop_id: shop_id) }
   
   validates :started_at, presence: true
   validates :ended_at, presence: true
@@ -48,6 +49,13 @@ class Delivery < ActiveRecord::FmxBase
   validates :number_of_trips, numericality: { only_integer: true }, allow_blank: true
   validates :notes, length: { maximum: 300 }
   validate :valid_shop_id
+  
+  after_create :add_deliveries_count
+  before_destroy :substract_deliveries_count
+  
+  def shop
+    @shop ||= Shop.find_by_id(self.shop_id)
+  end
   
   def valid_shop_id
     errors.add(:shop_id, I18n.t('activerecord.errors.messages.not_found')) if self.shop_id.nil?
@@ -83,6 +91,18 @@ class Delivery < ActiveRecord::FmxBase
   end
   
   protected
+  
+  def add_deliveries_count
+    curr_count = self.shop.deliveries_count.to_i
+    self.shop.deliveries_count = curr_count + 1
+    self.shop.save
+  end
+  
+  def substract_deliveries_count
+    curr_count = self.shop.deliveries_count.to_i
+    self.shop.deliveries_count = curr_count - 1
+    self.shop.save
+  end
   
   def self.peak_field
     "started_at"
