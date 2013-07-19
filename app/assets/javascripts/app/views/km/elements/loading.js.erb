@@ -10,6 +10,50 @@
 				$.extend(base, this);
 				$.extend(this, base);
 				this.initPanel();
+				this.initChart();
+			},
+			initChart: function(){
+				$.extend(this.chart, {
+					render: function(){
+						var _self = this;
+						var series = [];
+						var categories = [];
+						var el = [];
+						var public_data = {};
+						var dedicated_data = {};
+						var yAxis = {};
+						$.extend(yAxis, {
+							title: {
+								text: this.element.lang.chart.y_label
+							}
+						});
+						$.extend(public_data, {
+							name: this.element.lang.chart.public_meter_length,
+							data: []
+						});
+						$.extend(dedicated_data, {
+							name: this.element.lang.chart.dedicated_meter_length,
+							data: []
+						});
+						$.each(this.data, function(key, val){
+							var category = '' + _self.element.lang.chart.category;
+							category = category.replace('#{research_id}', val.research_id);
+							categories.push(category);
+							public_data.data.push(val.public_meter_length);
+							dedicated_data.data.push(val.dedicated_meter_length);
+						});
+						$.extend(series, [public_data, dedicated_data]);
+						this.wrapper.highcharts(
+							$.extend({
+								yAxis: yAxis,
+								xAxis: {
+									categories: categories
+								},
+								series: series
+							}, this.chart_opts)
+						);
+					}
+				});
 			},
 			initPanel: function(){
 				$.extend(this.panel, {
@@ -23,10 +67,20 @@
 						this.updateStat();
 						this.updateSecondStat();
 					},
+					getStat: function(data){
+						if(data == null) data = '-';
+						else{
+							var val = parseFloat(data);
+							if(!isNaN(val) && isFinite(val)){
+								data = val.toFixed(2);
+								data = parseFloat(data);
+							}
+						}
+						return data;
+					},
 					updateSecondStat: function(){
 						var data = this.view.km[this.element.second_data_key];
-						if(data == null) data = '-';
-						this.second_stat.html(data);
+						this.second_stat.html(this.getStat(data));
 					},
 					initSecondUnit: function(){
 						var label = this.element.lang.second_units;

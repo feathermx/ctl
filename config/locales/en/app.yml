@@ -40,6 +40,11 @@ en:
             units: 'public mts'
             second_units: 'dedicated mts'
             separator: 'Street Info'
+            chart:
+              category: 'Street id #{research_id}'
+              public_meter_length: 'public mts'
+              dedicated_meter_length: 'dedicated mts'
+              y_label: 'length (mts)'
           deliveries:
             title: 'Deliveries'
             units: 'per hour'

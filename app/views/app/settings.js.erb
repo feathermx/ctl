@@ -11,7 +11,15 @@ $.extend(config, {
 			list_countries: '<%= url_for controller: 'api/countries', action: :list %>',
 			list_cities: '<%= url_for controller: 'api/countries', action: :list_cities %>',
 			list_kms: '<%= url_for controller: 'api/cities', action: :list_kms %>',
-			show_km: '<%= url_for controller: 'api/kms', action: :show %>'
+			show_km: '<%= url_for controller: 'api/kms', action: :show %>',
+			elements: {
+				shops: {
+					chart: '<%= url_for controller: 'api/shops', action: :chart %>'
+				},
+				loading: {
+					chart: '<%= url_for controller: 'api/streets', action: :chart %>'
+				}
+			}
 		}
 	},
 	server: {
@@ -40,6 +48,61 @@ $.extend(config, {
 					city: '<%= image_url 'app/icons/dropdown/city.png' %>',
 					km2: '<%= image_url 'app/icons/dropdown/km2.png' %>',
 					style: '<%= image_url 'app/icons/dropdown/style.png' %>'
+				}
+			},
+			chart: {
+				loaders: {
+					main: {
+						width: 630,
+						src: '<%= image_url 'app/loaders/loader35x35.png' %>',
+						opts: {
+							fps: 12,
+							dimensions: {
+								width: 35,
+								height: 35
+							}
+						}
+					}
+				},
+				charts: {
+					base: {
+						chart: {
+							plotBackgroundColor: null,
+							plotBorderWidth: null,
+							plotShadow: false
+			            },
+						credits: {
+							enabled: false
+						},
+						title: {
+						   text: ''
+						}
+					},
+					shops: {
+						tooltip: {
+							formatter: function(){ return this.point.name + '<br /><b>' + this.point.y + ' shops</b> (' + this.percentage.toFixed(2) + '%)'; }
+						},
+						plotOptions: {
+							pie: {
+								allowPointSelect: true,
+								cursor: 'pointer',
+								dataLabels: {
+									enabled: false
+			                    },
+								showInLegend: true
+			                }
+			            }
+					},
+					loading: {
+						chart: {
+							type: 'column'
+						},
+						plotOptions: {
+							column: {
+								stacking: 'normal'
+			                }
+			            }
+					}
 				}
 			},
 			panel: {

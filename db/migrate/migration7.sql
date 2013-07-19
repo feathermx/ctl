@@ -1,0 +1,16 @@
+BEGIN;
+
+ALTER TABLE kms 
+	ALTER COLUMN public_meter_length SET DATA TYPE DOUBLE PRECISION,
+	ALTER COLUMN dedicated_meter_length SET DATA TYPE DOUBLE PRECISION
+;
+
+ALTER TABLE streets
+	ALTER COLUMN public_meter_length SET DATA TYPE DOUBLE PRECISION,
+	ALTER COLUMN public_meter_length SET DEFAULT 0,
+	ALTER COLUMN dedicated_meter_length SET DATA TYPE DOUBLE PRECISION,
+	ALTER COLUMN dedicated_meter_length SET DEFAULT 0
+;
+
+
+COMMIT;

@@ -313,10 +313,10 @@
     <column id="COL87" populated="true" UUID="b940fdd9-cae5-4a4d-9554-06157b5a487a" autoIncrement="false" autoIncrementSequenceName="kms_deliveries_count_seq" defaultValue="0" name="deliveries_count" nullable="0" physicalName="deliveries_count" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
-    <column id="COL88" populated="true" UUID="059a66f1-8968-4d9f-91ca-d23a896a534a" autoIncrement="false" autoIncrementSequenceName="kms_public_meter_length_seq" defaultValue="0" name="public_meter_length" nullable="1" physicalName="public_meter_length" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL88" populated="true" UUID="059a66f1-8968-4d9f-91ca-d23a896a534a" autoIncrement="false" autoIncrementSequenceName="kms_public_meter_length_seq" defaultValue="0" name="public_meter_length" nullable="1" physicalName="public_meter_length" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="8" userDefinedTypeUUID="4fc90970-b2e5-41dd-911c-cc605d87e7a8" >
      <remarks></remarks>
     </column>
-    <column id="COL89" populated="true" UUID="e857a817-b2e4-472e-8c56-f2c5d82a9319" autoIncrement="false" autoIncrementSequenceName="kms_dedicated_meter_length_seq" defaultValue="0" name="dedicated_meter_length" nullable="1" physicalName="dedicated_meter_length" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL89" populated="true" UUID="e857a817-b2e4-472e-8c56-f2c5d82a9319" autoIncrement="false" autoIncrementSequenceName="kms_dedicated_meter_length_seq" defaultValue="0" name="dedicated_meter_length" nullable="1" physicalName="dedicated_meter_length" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="8" userDefinedTypeUUID="4fc90970-b2e5-41dd-911c-cc605d87e7a8" >
      <remarks></remarks>
     </column>
     <column id="COL90" populated="true" UUID="6191bf04-1658-4e90-82dc-6805edacbb9b" autoIncrement="false" autoIncrementSequenceName="kms_peak_deliveries_seq" defaultValue="0" name="peak_deliveries" nullable="1" physicalName="peak_deliveries" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
@@ -682,10 +682,10 @@
     <column id="COL200" populated="true" UUID="5a903326-7b9f-466e-8b58-6658ac188df2" autoIncrement="false" autoIncrementSequenceName="streets_research_id_seq" defaultValue="" name="research_id" nullable="0" physicalName="research_id" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
      <remarks></remarks>
     </column>
-    <column id="COL201" populated="true" UUID="78797424-9640-4576-b99b-b3a8120d9fb9" autoIncrement="false" autoIncrementSequenceName="streets_public_meter_length_seq" defaultValue="" name="public_meter_length" nullable="1" physicalName="public_meter_length" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL201" populated="true" UUID="78797424-9640-4576-b99b-b3a8120d9fb9" autoIncrement="false" autoIncrementSequenceName="streets_public_meter_length_seq" defaultValue="0" name="public_meter_length" nullable="1" physicalName="public_meter_length" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="8" userDefinedTypeUUID="4fc90970-b2e5-41dd-911c-cc605d87e7a8" >
      <remarks></remarks>
     </column>
-    <column id="COL202" populated="true" UUID="17f0cad7-5c94-40fc-adf6-3830b76584b0" autoIncrement="false" autoIncrementSequenceName="streets_dedicated_meter_length_seq" defaultValue="" name="dedicated_meter_length" nullable="1" physicalName="dedicated_meter_length" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL202" populated="true" UUID="17f0cad7-5c94-40fc-adf6-3830b76584b0" autoIncrement="false" autoIncrementSequenceName="streets_dedicated_meter_length_seq" defaultValue="0" name="dedicated_meter_length" nullable="1" physicalName="dedicated_meter_length" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="8" userDefinedTypeUUID="4fc90970-b2e5-41dd-911c-cc605d87e7a8" >
      <remarks></remarks>
     </column>
     <column id="COL203" populated="true" UUID="25210732-e7b1-47eb-abdf-f4af68f8e8ff" autoIncrement="false" autoIncrementSequenceName="streets_track_count_seq" defaultValue="0" name="track_count" nullable="1" physicalName="track_count" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
@@ -1193,7 +1193,7 @@
  <ddl-generator type="ca.sqlpower.architect.ddl.PostgresDDLGenerator" allow-connection="false" target-schema="public"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="false" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
- <play-pen zoom="0.7071067811865481" viewportX="429" viewportY="618" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
+ <play-pen zoom="0.7071067811865481" viewportX="522" viewportY="375" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
   <table-pane table-ref="TAB3" x="390" y="446" bgColor="0xfbdabb" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB18" x="57" y="441" bgColor="0xfbdabb" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB29" x="49" y="156" bgColor="0xfbdabb" fgColor="0x000000" rounded="false" dashed="false"/>

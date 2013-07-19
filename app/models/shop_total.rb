@@ -4,6 +4,7 @@ class ShopTotal < ActiveRecord::FmxBase
   scope :base_count, ->{ select('COUNT(shop_totals.id) as num') }
   scope :filter_by_km, ->(km_id){ where(km_id: km_id) }
   scope :filter_by_id, ->{ where(id: id) }
+  scope :with_data, ->{ where('shop_totals.total > 0') }
   
   attr_protected :km_id, :shop_type, :total
   
@@ -11,6 +12,16 @@ class ShopTotal < ActiveRecord::FmxBase
   validates :km_id, numericality: true
   validates :shop_type, length: { maximum: 10 }, inclusion: { in: Shop::ShopType.keys }
   validates :total, numericality: { only_integer: true }
+  
+  def s_type
+    @s_type ||= Shop::ShopType::List[self.shop_type]
+  end
+  
+  def s_type_name
+    @s_type_name ||= ->{
+      self.s_type[:name] unless self.s_type.nil?
+    }.call
+  end
   
   def self.generate(type, km_id)
     el = self.new

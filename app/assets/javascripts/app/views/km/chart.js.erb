@@ -26,6 +26,15 @@
 				img.appendTo(action);
 				return action;
 			},
+			setElement: function(which){
+				this.panel.setElement(which);
+			},
+			show: function(){
+				this.panel.show();
+			},
+			hide: function(){
+				this.panel.hide();
+			},
 			initPanel: function(){
 				this.panel = {};
 				$.extend(this.panel, {
@@ -35,6 +44,7 @@
 					chart: this,
 					container: null,
 					header: null,
+					element: null,
 					init: function(){
 						this.initRoot();
 						this.initView();
@@ -43,8 +53,27 @@
 					initContainer: function(){
 						this.container = $('<div id="km_chart_panel"></div>');
 						this.initHeader();
+						this.initWrapper();
 						this.container.addClass('km_panel');
 						this.container.appendTo(this.view.container);
+					},
+					setElement: function(which){
+						if(which != this.element && which != null){
+							if(this.element != null) this.element.chart.remove();
+							this.element = which;
+							this.element.chart.appendTo(this.wrapper);
+							this.header.update();
+							this.show();
+						}
+						else{
+							if(this.element != null) this.element.chart.remove();
+							this.element = null;
+							this.hide();
+						}
+					},
+					initWrapper: function(){
+						this.wrapper = $('<div id="km_chart_panel_wrapper"></div>');
+						this.wrapper.appendTo(this.container);
 					},
 					initHeader: function(){
 						this.header = {};
@@ -59,6 +88,13 @@
 								this.initView();
 								this.initChart();
 								this.initContainer();
+							},
+							update: function(){
+								this.setTitle();
+							},
+							setTitle: function(){
+								var element = this.chart.panel.element;
+								this.title.html(element.lang.title);
 							},
 							initContainer: function(){
 								this.container = $('<div class="km_panel_header"></div>');
@@ -96,7 +132,7 @@
 										action.appendTo(this.container);
 									},
 									closeActionOnClick: function(e, element){
-										//TODO
+										this.chart.setElement(null);
 									},
 									initRoot: function(){
 										this.root = this.parent.root;
@@ -125,6 +161,12 @@
 							}
 						});
 						this.header.init();
+					},
+					show: function(){
+						this.container.css('display', 'block');
+					},
+					hide: function(){
+						this.container.css('display', 'none');
 					},
 					initRoot: function(){
 						this.root = this.parent.root;

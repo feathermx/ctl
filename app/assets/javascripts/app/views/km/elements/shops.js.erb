@@ -9,6 +9,29 @@
 				$.extend(base, this);
 				$.extend(this, base);
 				this.initPanel();
+				this.initChart();
+			},
+			initChart: function(){
+				$.extend(this.chart, {
+					render: function(){
+						var data = [];
+						var series = [];
+						var el = {};
+						$.each(this.data, function(key, val){
+							data.push([val.s_type_name, val.total]);
+						});
+						$.extend(el, {
+							type: 'pie',
+							data: data
+						});
+						series.push(el);
+						this.wrapper.highcharts(
+							$.extend({
+								series: series
+							}, this.chart_opts)
+						);
+					}
+				});
 			},
 			initPanel: function(){
 				$.extend(this.panel, {

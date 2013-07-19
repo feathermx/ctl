@@ -38,8 +38,15 @@
 			abort: function(){
 				if(this.req != null) this.req.abort(); 
 			},
+			kmChange: function(){
+				if(this.chart != null){
+					this.chart.setElement(null);
+					this.chart.hide();
+				}
+			},
 			loadKm: function(which){
 				var _self = this;
+				this.kmChange();
 				this.abort();
 				$.extend(this.km, { id: which });
 				this.req = this.root.api_client.load({

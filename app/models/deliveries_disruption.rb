@@ -4,6 +4,8 @@ class DeliveriesDisruption < ActiveRecord::FmxBase
   scope :base_count, ->{ select("COUNT(deliveries_disruptions.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_km, ->(km_id){ where(km_id: km_id) }
+  scope :with_delivery_data, ->{ where('deliveries_disruptions.delivery_count > 0') }
+  scope :ascending_deliveries, ->{ order('deliveries_disruptions.hour ASC') }
   
   attr_protected :km_id, :hour, :disruption_count, :delivery_count
   
@@ -19,6 +21,10 @@ class DeliveriesDisruption < ActiveRecord::FmxBase
     el.disruption_count = TrafficDisruption.duration_for_hour(hour, km.id)
     el.delivery_count = Delivery.duration_for_hour(hour, km.id)
     el
+  end
+  
+  def hour_i
+    @hour_i ||= self.hour.hour
   end
   
   

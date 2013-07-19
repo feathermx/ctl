@@ -28,6 +28,7 @@
 					key: key,
 					panel: null,
 					small_panel: null,
+					chart: null,
 					data_key: '',
 					init: function(){
 						this.initRoot();
@@ -40,6 +41,7 @@
 						this.initChart();
 					},
 					update: function(){
+						this.chart.reset();
 						this.panel.update();
 					},
 					initList: function(){
@@ -53,14 +55,116 @@
 							view: null,
 							element: null,
 							container: null,
+							wrapper: null,
+							loader: null,
+							api_key: null,
+							error_container: null,
+							is_loaded: false,
+							req: null,
+							data: null,
+							chart_opts: null,
 							init: function(){
 								this.initRoot();
 								this.initView();
 								this.initElement();
+								this.initApiKey();
+								this.initChartOpts();
 								this.initContainer();
 							},
+							initChartOpts: function(){
+								this.chart_opts = {};
+								var config = this.view.config.chart.charts;
+								$.extend(this.chart_opts, config.base, config[this.element.key]);
+							},
+							initApiKey: function(){
+								this.api_key = 'elements.' + this.element.key + '.chart';
+							},
+							abort: function(){
+								if(this.req != null) this.req.abort();
+							},
+							load: function(){
+								var _self = this;
+								this.abort();
+								var data = this.getData();
+								this.req = this.root.api_client.load({
+									key: this.api_key,
+									data: data,
+									loading: function(){
+										_self.loading();
+									},
+									loaded: function(){
+										_self.loaded();
+									},
+									success: function(data){
+										_self.success(data);
+									},
+									error: function(){
+										_self.error();
+									}
+								});
+							},
+							reset: function(){
+								this.is_loaded = false;
+								this.data = null;
+							},
+							success: function(data){
+								this.is_loaded = true;
+								if(data && data.contents){
+									this.data = data.contents;
+									this.render();
+								}
+							},
+							render: function(){},
+							error: function(){
+								this.is_loaded = true;
+								this.error_container.css('display', 'block');
+							},
+							loading: function(){
+								this.wrapper.empty();
+								this.error_container.css('display', 'none');
+								this.loader.css('display', 'block');
+							},
+							loaded: function(){
+								this.loader.css('display', 'none');
+							},
+							getData: function(){
+								var km = this.view.km;
+								var data = {};
+								$.extend(data, {
+									km_id: km.id
+								});
+								return data;
+							},
 							initContainer: function(){
-								
+								this.container = $('<div class="km_chart_panel_chart_element"></div>');
+								this.initLoader();
+								this.initWrapper();
+								this.initLoader();
+								this.initErrorContainer();
+							},
+							initErrorContainer: function(){
+								var label = lang.messages.error;
+								this.error_container = $('<h1 class="km_chart_panel_chart_error"></div>');
+								this.error_container.html(label);
+								this.error_container.appendTo(this.container);
+							},
+							initLoader: function(){
+								var config = this.view.config.chart.loaders.main;
+								this.loader = $('<div class="km_chart_panel_chart_loader"></div>');
+								this.loader.attr({
+									'data-width': config.width,
+									'data-src': config.src
+								});
+								this.root.fmx.sprite(
+									$.extend({
+										container: this.loader
+									}, config.opts)
+								);
+								this.loader.appendTo(this.container);
+							},
+							initWrapper: function(){
+								this.wrapper = $('<div class="km_chart_panel_chart_element_wrapper"></div>');
+								this.wrapper.appendTo(this.container);
 							},
 							initRoot: function(){
 								this.root = this.parent.root;
@@ -70,6 +174,14 @@
 							},
 							initElement: function(){
 								this.element = this.parent.element;
+							},
+							appendTo: function(container){
+								if(!this.is_loaded) this.load();
+								this.container.appendTo(container);
+							},
+							remove: function(){
+								this.abort();
+								this.container.remove();
 							}
 						});
 						this.chart.init();
@@ -146,8 +258,11 @@
 							},
 							updateStat: function(){
 								var data = this.view.km[this.element.data_key];
+								this.stat.html(this.getStat(data));
+							},
+							getStat: function(data){
 								if(data == null) data = '-';
-								this.stat.html(data);
+								return data;
 							},
 							initContainer: function(){
 								this.container = $('<div class="km_panel_element"></div>');
@@ -206,7 +321,7 @@
 										});
 									},
 									chartActionOnClick: function(e, element){
-										//TODO
+										this.view.chart.setElement(this.element);
 									},
 									initMapAction: function(){
 										var _self = this;

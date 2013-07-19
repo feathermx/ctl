@@ -80,7 +80,16 @@
 						}
 					},
 					getUrl: function(){
-						var url = this.root.endpoint = this.root.paths[this.opts.key];
+						var key = this.opts.key;
+						var url = null;
+						if(key){
+							var parts = key.split('.');
+							url = this.root.paths;
+							$.each(parts, function(key, part){
+								url = url[part];
+								return url != null;
+							});
+						}
 						return url;
 					}
 				});

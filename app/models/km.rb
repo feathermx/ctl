@@ -17,8 +17,8 @@ class Km < ActiveRecord::FmxBase
   validates :is_active, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }
   validates :city_id, :name, :lat, :lng, presence: true
   validates :city_id, numericality: { only_integer: true }
-  validates :public_meter_length, numericality: { only_integer: true }, allow_nil: true
-  validates :dedicated_meter_length, numericality: { only_integer: true }, allow_nil: true
+  validates :public_meter_length, numericality: true, allow_nil: true
+  validates :dedicated_meter_length, numericality: true, allow_nil: true
   validates :peak_deliveries, numericality: { only_integer: true }, allow_nil: true
   validates :peak_disruptions, numericality: { only_integer: true }, allow_nil: true
   validates :peak_traffic, numericality: { only_integer: true }, allow_nil: true
@@ -46,7 +46,7 @@ class Km < ActiveRecord::FmxBase
   end
   
   def utc_offset
-    @time_zone_offset ||= ->{
+    @utc_offset ||= ->{
       self.time_zone.now.utc_offset unless self.time_zone.nil?
     }.call
   end
@@ -95,7 +95,7 @@ class Km < ActiveRecord::FmxBase
     @bool_active ||= self.is_active.to_i == 1
   end
   
-  #protected
+  protected
   
   def reset_active_fields
     self.public_meter_length = self.dedicated_meter_length = self.peak_deliveries = self.peak_disruptions = self.peak_traffic = 0
@@ -219,8 +219,8 @@ class Km < ActiveRecord::FmxBase
   
   def set_meter_length
     data = StreetData.meter_base.filter_by_km(self.id).first
-    self.public_meter_length = data[:public_meter_length].to_i
-    self.dedicated_meter_length = data[:dedicated_meter_length].to_i
+    self.public_meter_length = data[:public_meter_length].to_f
+    self.dedicated_meter_length = data[:dedicated_meter_length].to_f
   end
   
   def set_peak_deliveries
