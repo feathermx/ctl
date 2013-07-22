@@ -51,6 +51,28 @@ en:
           traffic_counts:
             title: 'Traffic count'
             units: 'average'
+            chart:
+              y_label: 'Total'
+              labels:
+                morning: 'Morning'
+                evening: 'Evening'
+                noon: 'Noon'
+              categories:
+                cars: 'Cars'
+                taxis: 'Taxis'
+                pickup_trucks: 'Pickup Trucks'
+                articulated_trucks: 'Articulated Trucks'
+                rigid_trucks: 'Rigid Trucks'
+                vans: 'Vans'
+                buses: 'Buses'
+                bikes: 'Bikes'
+                motorbikes: 'Motorbikes'
+                pedestrians: 'Pedestrians'
           traffic_disruptions:
             title: 'Disruption'
             units: 'per hour'
+            chart:
+              y_label: 'Duration (Minutes)'
+              categories:
+                deliveries: 'Deliveries'
+                disruptions: 'Disruptions'

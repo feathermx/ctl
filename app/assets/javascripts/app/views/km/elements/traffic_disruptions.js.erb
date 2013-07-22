@@ -9,6 +9,136 @@
 				$.extend(base, this);
 				$.extend(this, base);
 				this.initPanel();
+				this.initChart();
+			},
+			initChart: function(){
+				$.extend(this.chart, {
+					render: function(){
+						var _self = this;
+						var categories = [];
+						var series = [];
+						var lang = this.element.lang.chart;
+						var deliveries_data = {};
+						var yAxis = {};
+						$.extend(yAxis, {
+							title: {
+								text: lang.y_label
+							}
+						});
+						$.extend(deliveries_data, {
+							name: lang.categories.deliveries,
+							data: []
+						});
+						var disruptions_data = {};
+						$.extend(disruptions_data, {
+							name: lang.categories.disruptions,
+							data: []
+						});
+						var now = new Date();
+						var utc = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+						var offset = this.view.km.utc_offset;
+						var data = {};
+						$.extend(data, {
+							now: now,
+							utc: utc,
+							offset: offset
+						});
+						$.each(this.data, function(key, val){
+							var el_data = {};
+							$.extend(el_data, {
+								val: val
+							}, data);
+							var element = _self.getElement(el_data);
+							categories.push(element);
+							deliveries_data.data.push(element.data.val.delivery_count);
+							disruptions_data.data.push(element.data.val.disruption_count);
+						});
+						$.extend(series, [deliveries_data, disruptions_data]);
+						/**
+						tooltip: {
+							formatter: function(){ 
+								//return this.point.name + '<br /><b>' + this.point.y + ' shops</b> (' + this.percentage.toFixed(2) + '%)'; 
+								return this.point.name;
+							}
+						}
+						*/
+						this.wrapper.highcharts(
+							$.extend({
+								yAxis: yAxis,
+								tooltip: {
+									formatter: function(){
+										return this.x.getTooltip(this);
+									}
+								},
+								xAxis: {
+									categories: categories,
+									labels: {
+										formatter: function(){
+											return this.value.getLabel();
+										}
+									}
+								},
+								series: series
+							}, this.chart_opts)
+						);
+					},
+					getElement: function(data){
+						var element = {};
+						$.extend(element, {
+							data: data,
+							hours: null,
+							_label: null,
+							_tooltip: null,
+							init: function(){
+								this.initData();
+							},
+							getTooltip: function(obj){
+								var label = this.getLabel();
+								return label + '<br /><b>' + this.getFixed(obj.y) + '</b> mins'; ;
+							},
+							getFixed: function(val){
+								val = val.toFixed(2);
+								return parseFloat(val);
+							},
+							getLabel: function(){
+								if(this._label == null){
+									this._label = this.hours.start + ':00 - ' + this.hours.end + ':00';
+								}
+								return this._label;
+							},
+							initData: function(){
+								this.initHours();
+								this.data.val.delivery_count = this.from_time(this.data.val.delivery_count);
+								this.data.val.disruption_count = this.from_time(this.data.val.disruption_count);
+							},
+							from_time: function(val){
+								return (val / 60);
+							},
+							initHours: function(){
+								this.hours = {};
+								var _self = this;
+								var start = new Date(this.data.utc);
+								start.setHours(this.data.val.hour_i);
+								start.setSeconds(this.data.offset);
+								var end = new Date(start.getTime());
+								end.setHours(end.getHours() + 1);
+								$.extend(this.hours, {
+									start: start.getHours(),
+									end: end.getHours()
+								});
+								$.each(this.hours, function(key, val){
+									if(val < 10) _self.hours[key] = ("0" + val);
+								});
+							}
+						});
+						element.init();
+						return element;
+					},
+					//get
+					/**getElement: function(val){
+						
+					}*/
+				});
 			},
 			initPanel: function(){
 				$.extend(this.panel, {

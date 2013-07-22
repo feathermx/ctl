@@ -127,6 +127,7 @@ class Shop < ActiveRecord::FmxBase
   scope :filter_after, ->(time){ where('shops.registered_at >= ?', time).order('shops.registered_at ASC') }
   scope :filter_before, ->(time){ where('shops.registered_at <= ?', time).order('shops.registered_at ASC') }
   scope :ascending, ->{ order('shops.name ASC') }
+  scope :with_deliveries, ->{ where('shops.deliveries_count > 0') }
   
   attr_protected :deliveries_count
   

@@ -57,11 +57,38 @@ $.extend(lang, {
 				},
 				traffic_counts: {
 					title: '<%= t 'app.views.km.elements.traffic_counts.title' %>',
-					units: '<%= t 'app.views.km.elements.traffic_counts.units' %>'
+					units: '<%= t 'app.views.km.elements.traffic_counts.units' %>',
+					chart: {
+						y_label: '<%= t 'app.views.km.elements.traffic_counts.chart.y_label' %>',
+						labels: {
+							morning: '<%= t 'app.views.km.elements.traffic_counts.chart.labels.morning' %>',
+							evening: '<%= t 'app.views.km.elements.traffic_counts.chart.labels.evening' %>',
+							noon: '<%= t 'app.views.km.elements.traffic_counts.chart.labels.noon' %>'
+						},
+						categories: {
+							cars: '<%= t 'app.views.km.elements.traffic_counts.chart.categories.cars' %>',
+							taxis: '<%= t 'app.views.km.elements.traffic_counts.chart.categories.taxis' %>',
+				            pickup_trucks: '<%= t 'app.views.km.elements.traffic_counts.chart.categories.pickup_trucks' %>',
+				            articulated_trucks: '<%= t 'app.views.km.elements.traffic_counts.chart.categories.articulated_trucks' %>',
+				            rigid_trucks: '<%= t 'app.views.km.elements.traffic_counts.chart.categories.rigid_trucks' %>',
+				            vans: '<%= t 'app.views.km.elements.traffic_counts.chart.categories.vans' %>',
+				            buses: '<%= t 'app.views.km.elements.traffic_counts.chart.categories.buses' %>',
+				            bikes: '<%= t 'app.views.km.elements.traffic_counts.chart.categories.bikes' %>',
+				            motorbikes: '<%= t 'app.views.km.elements.traffic_counts.chart.categories.motorbikes' %>',
+				            pedestrians: '<%= t 'app.views.km.elements.traffic_counts.chart.categories.pedestrians' %>'
+						}
+					}
 				},
 				traffic_disruptions: {
 					title: '<%= t 'app.views.km.elements.traffic_disruptions.title' %>',
-					units: '<%= t 'app.views.km.elements.traffic_disruptions.units' %>'
+					units: '<%= t 'app.views.km.elements.traffic_disruptions.units' %>',
+					chart: {
+						y_label: '<%= t 'app.views.km.elements.traffic_disruptions.chart.y_label' %>',
+						categories: {
+							deliveries: '<%= t 'app.views.km.elements.traffic_disruptions.chart.categories.deliveries' %>',
+							disruptions: '<%= t 'app.views.km.elements.traffic_disruptions.chart.categories.disruptions' %>'
+						}
+					}
 				}
 			}
 		}

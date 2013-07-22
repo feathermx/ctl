@@ -1,6 +1,7 @@
 //= require jquery-1.10.2.min
 //= require jquery.nicescroll
 //= require highcharts-3.0.2.min
+//= require highcharts.more-3.0.2.min
 //= require fmx/notification
 //= require fmx/sprite
 //= require fmx/app/fullscreen

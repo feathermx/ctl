@@ -4,7 +4,7 @@ class Api::DeliveriesDisruption < DeliveriesDisruption
     Default = {}
     Chart = {
       only: [:disruption_count, :delivery_count],
-      methods: [:hour_i, :delivery_hours, :disruption_hours]
+      methods: [:hour_i]
     }
   end
   

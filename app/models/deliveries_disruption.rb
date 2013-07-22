@@ -1,7 +1,5 @@
 class DeliveriesDisruption < ActiveRecord::FmxBase
   
-  HOUR_SECS = 3600.0
-  
   scope :base, ->{ select('deliveries_disruptions.id, deliveries_disruptions.km_id, deliveries_disruptions.hour, deliveries_disruptions.disruption_count, deliveries_disruptions.delivery_count') }
   scope :base_count, ->{ select("COUNT(deliveries_disruptions.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
@@ -23,14 +21,6 @@ class DeliveriesDisruption < ActiveRecord::FmxBase
     el.disruption_count = TrafficDisruption.duration_for_hour(hour, km.id)
     el.delivery_count = Delivery.duration_for_hour(hour, km.id)
     el
-  end
-  
-  def delivery_hours
-    @delivery_hours ||= (self.delivery_count / HOUR_SECS)
-  end
-  
-  def disruption_hours
-    @disruption_hours ||= (self.disruption_count / HOUR_SECS)
   end
   
   def hour_i

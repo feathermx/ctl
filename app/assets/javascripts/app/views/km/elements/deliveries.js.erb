@@ -9,12 +9,75 @@
 				$.extend(base, this);
 				$.extend(this, base);
 				this.initPanel();
+				this.initChart();
 			},
 			initChart: function(){
 				$.extend(this.chart, {
 					render: function(){
-						
-					}
+						var _self = this;
+						var categories = [];
+						var series = [];
+						$.each(this.data, function(key, val){
+							categories.push(val.name);
+							var el = [];
+							$.each(val.chart_deliveries, function(c_key, c_val){
+								el.push(_self.getDateVal(c_val.s_at, c_val.e_at));
+							});
+							series.push(el);
+						});
+						// TODO
+						//console.log(series[0]);
+						//console.log(categories);
+						/**this.wrapper.highcharts(
+							{
+								chart: {
+									type: 'columnrange',
+									inverted: true
+							    },
+							    title: {
+							        text: null
+							    },
+							    xAxis: {
+							        //categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+									categories: ['Shop 1', 'Shop 2']
+							    },
+							    yAxis: {
+							        type: 'datetime',
+									dateTimeLabelFormats: {
+					                    hour: '%H:%M'
+					                }
+							    },
+							    tooltip: {
+							        valueSuffix: '°C'
+							    },
+
+							    legend: {
+							        enabled: false
+							    },
+
+							    series: [{
+							        name: 'Temperatures',
+									pointStart: Date.UTC(2010, 0, 1),
+									pointInterval: 3600 * 1000,
+							        data: [
+										10, 20, 30
+									]
+							    }]
+							}
+						);*/
+						//console.log(series);
+					},
+					getDateVal: function(start, end){
+						var res = [];
+						var date = new Date(start);
+						var mins = date.getMinutes() / 60;
+						var diff = ((end - start) / (1000 * 3600));
+						var hours = date.getHours() + mins;
+						res.push(hours);
+						res.push(diff);
+						return res;
+						//return date.getHours
+					},
 				});
 			},
 			initPanel: function(){

@@ -9,6 +9,54 @@
 				$.extend(base, this);
 				$.extend(this, base);
 				this.initPanel();
+				this.initChart();
+			},
+			initChart: function(){
+				$.extend(this.chart, {
+					render: function(){
+						var _self = this;
+						var categories = [];
+						var series = [];
+						var config = this.view.config.chart.charts[this.element.key];
+						var fields = config.fields;
+						var lang = this.element.lang.chart;
+						var yAxis = {};
+						$.extend(yAxis, {
+							title: {
+								text: this.element.lang.chart.y_label
+							}
+						});
+						$.each(lang.labels, function(key, category){
+							categories.push(category);
+						});
+						$.each(this.data, function(key, val){
+							var el = {};
+							var data = [];
+							var total = 0;
+							$.each(lang.labels, function(l_key, label){
+								var num = val[l_key];
+								total += num;
+								data.push(num);
+							});
+							if(total > 0){
+								$.extend(el, {
+									name: lang.categories[key],
+									data: data
+								});
+								series.push(el);
+							}
+						});
+						this.wrapper.highcharts(
+							$.extend({
+								yAxis: yAxis,
+								xAxis: {
+									categories: categories
+								},
+								series: series
+							}, this.chart_opts)
+						);
+					}
+				});
 			},
 			initPanel: function(){
 				$.extend(this.panel, {

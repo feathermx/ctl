@@ -25,14 +25,14 @@ class Api::TrafficCountTotal < TrafficCountTotal
   def as_chart
     @as_chart || ->{
       data = {}
-      DayTime::List.each do |key, el|
-        namespace = el[:namespace]
+      self.class.traffic_count_fields.each do |field|
         totals = {}
-        self.class.traffic_count_fields.each do |field|
+        DayTime::List.each do |key, el|
+          namespace = el[:namespace]
           field_name = "#{namespace}_#{field}"
-          totals[field] = self.send(field_name)
+          totals[namespace] = self.send(field_name)
         end
-        data[namespace] = totals
+        data[field] = totals
       end
       data
     }.call

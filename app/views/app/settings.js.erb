@@ -75,42 +75,71 @@ $.extend(config, {
 				},
 				charts: {
 					base: {
-						chart: {
-							plotBackgroundColor: null,
-							plotBorderWidth: null,
-							plotShadow: false
-			            },
-						credits: {
-							enabled: false
-						},
-						title: {
-						   text: ''
+						opts: {
+							credits: {
+								enabled: false
+							},
+							title: {
+							   text: ''
+							}
 						}
 					},
 					shops: {
-						tooltip: {
-							formatter: function(){ return this.point.name + '<br /><b>' + this.point.y + ' shops</b> (' + this.percentage.toFixed(2) + '%)'; }
-						},
-						plotOptions: {
-							pie: {
-								allowPointSelect: true,
-								cursor: 'pointer',
-								dataLabels: {
-									enabled: false
-			                    },
-								showInLegend: true
-			                }
-			            }
+						opts: {
+							chart: {
+								plotBackgroundColor: null,
+								plotBorderWidth: null,
+								plotShadow: false
+				            },
+							tooltip: {
+								formatter: function(){ return this.point.name + '<br /><b>' + this.point.y + ' shops</b> (' + this.percentage.toFixed(2) + '%)'; }
+							},
+							plotOptions: {
+								pie: {
+									allowPointSelect: true,
+									cursor: 'pointer',
+									dataLabels: {
+										enabled: false
+				                    },
+									showInLegend: true
+				                }
+				            }
+						}
 					},
 					loading: {
-						chart: {
-							type: 'column'
-						},
-						plotOptions: {
-							column: {
-								stacking: 'normal'
-			                }
-			            }
+						opts: {
+							chart: {
+								type: 'column'
+							},
+							plotOptions: {
+								column: {
+									stacking: 'normal'
+				                }
+				            }
+						}
+					},
+					deliveries: {
+						opts: {}
+					},
+					traffic_counts: {
+						fields: <%= TrafficCountTotal.traffic_count_fields.to_json.html_safe %>,
+						opts: {
+							chart: {
+								type: 'column'
+							},
+							plotOptions: {
+								column: {
+									stacking: 'normal'
+				                }
+				            }
+						}
+					},
+					traffic_disruptions: {
+						opts: {
+							chart: {
+								type: 'area'
+							}
+						}
 					}
 				}
 			},

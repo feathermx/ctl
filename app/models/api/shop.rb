@@ -8,7 +8,7 @@ class Api::Shop < Shop
     }
   end
   
-  scope :api_chart_base, ->{ select('shops.id, shops.name').ascending }
+  scope :api_chart_base, ->{ select('shops.id, shops.name').with_deliveries.ascending }
   
   def chart_deliveries
     Api::Delivery.json_display = Api::Delivery::Json::Chart

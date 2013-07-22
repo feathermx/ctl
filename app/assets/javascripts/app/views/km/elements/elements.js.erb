@@ -74,7 +74,7 @@
 							initChartOpts: function(){
 								this.chart_opts = {};
 								var config = this.view.config.chart.charts;
-								$.extend(this.chart_opts, config.base, config[this.element.key]);
+								$.extend(this.chart_opts, config.base.opts, config[this.element.key].opts);
 							},
 							initApiKey: function(){
 								this.api_key = 'elements.' + this.element.key + '.chart';
