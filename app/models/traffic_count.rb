@@ -5,7 +5,7 @@ class TrafficCount < ActiveRecord::FmxBase
   include Kmable
   include Peakable
   
-  scope :base, ->{ select("traffic_counts.id, traffic_counts.km_id, traffic_counts.street_id. traffic_counts.started_at, traffic_counts.ended_at, traffic_counts.cars, traffic_counts.taxis, traffic_counts.pickup_trucks, traffic_counts.articulated_trucks, traffic_counts.rigid_trucks, traffic_counts.vans, traffic_counts.buses, traffic_counts.bikes, traffic_counts.motorbikes, traffic_counts.pedestrians, traffic_counts.traffic_total, traffic_counts.notes") }
+  scope :base, ->{ select("traffic_counts.id, traffic_counts.km_id, traffic_counts.street_id, traffic_counts.started_at, traffic_counts.ended_at, traffic_counts.cars, traffic_counts.taxis, traffic_counts.pickup_trucks, traffic_counts.articulated_trucks, traffic_counts.rigid_trucks, traffic_counts.vans, traffic_counts.buses, traffic_counts.bikes, traffic_counts.motorbikes, traffic_counts.pedestrians, traffic_counts.traffic_total, traffic_counts.notes") }
   scope :peak_base, ->{ select('SUM(traffic_counts.traffic_total) as num') }
   scope :base_count, ->{ select("COUNT(traffic_counts.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
