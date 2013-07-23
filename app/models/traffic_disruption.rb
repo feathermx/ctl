@@ -69,8 +69,10 @@ class TrafficDisruption < ActiveRecord::FmxBase
     Utility = 'U'
     Waste = 'W'
     Taxi = 'T'
-    PrivateCar = 'P'
+    Car = 'C'
+    Pedestrian = 'P'
     Accident = 'A'
+    Bus = 'B'
     
     List = {
       Freight => {
@@ -85,11 +87,17 @@ class TrafficDisruption < ActiveRecord::FmxBase
       Taxi => {
         name: I18n.t('app.model.traffic_disruption.source.taxi')
       },
-      PrivateCar => {
-        name: I18n.t('app.model.traffic_disruption.source.private_car')
+      Car => {
+        name: I18n.t('app.model.traffic_disruption.source.car')
+      },
+      Pedestrian => {
+        name: I18n.t('app.model.traffic_disruption.source.pedestrian')
       },
       Accident => {
         name: I18n.t('app.model.traffic_disruption.source.accident')
+      },
+      Bus => {
+        name: I18n.t('app.model.traffic_disruption.source.bus')
       }
     }
     
@@ -126,7 +134,7 @@ class TrafficDisruption < ActiveRecord::FmxBase
     
   end
   
-  scope :base, ->{ select("traffic_disruptions.id, traffic_disruptions.km_id, traffic_disruptions.street_id, traffic_disruptions.source, traffic_disruptions.vehicle_type, traffic_disruptions.started_at, traffic_disruptions.ended_at, traffic_disruptions.more_than_five_secs, traffic_disruptions.disruption_type, traffic_disruptions.blocked_lanes, traffic_disruptions.vehicles_affected, traffic_disruptions.slowed_or_stop, traffic_disruptions.notes, traffic_disruptions.length_type, traffic_disruptions.lat, traffic_disruptions.lng") }
+  scope :base, ->{ select("traffic_disruptions.id, traffic_disruptions.km_id, traffic_disruptions.delivery_key, traffic_disruptions.street_id, traffic_disruptions.source, traffic_disruptions.vehicle_type, traffic_disruptions.started_at, traffic_disruptions.ended_at, traffic_disruptions.more_than_five_secs, traffic_disruptions.disruption_type, traffic_disruptions.blocked_lanes, traffic_disruptions.vehicles_affected, traffic_disruptions.entered_car, traffic_disruptions.slowed_or_stop, traffic_disruptions.notes, traffic_disruptions.length_type, traffic_disruptions.lat, traffic_disruptions.lng") }
   scope :base_count, ->{ select("COUNT(traffic_disruptions.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_length_type, ->(length_type){ where(length_type: length_type) }
@@ -143,10 +151,19 @@ class TrafficDisruption < ActiveRecord::FmxBase
   validates :blocked_lanes, numericality: true, allow_blank: true
   validates :vehicles_affected, numericality: { only_integer: true }, allow_blank: true
   validates :slowed_or_stop, length: { is: 1 }, inclusion: { in: AffectionType.keys }, allow_blank: true
+  validates :entered_car, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }
   validates :notes, length: { in: 2..300 }, allow_blank: true
   validates :length_type, numericality: { only_integer: true }, inclusion: { in: LengthType.keys }, allow_nil: true
+  validate :valid_delivery_key
   
   before_save :set_length_type
+  
+  def source_name
+    @source_name ||= ->{
+      source = Source::List[self.source]
+      source[:name] unless source.nil?
+    }.call
+  end
   
   def s_at
     @s_at ||= ->{
@@ -185,6 +202,13 @@ class TrafficDisruption < ActiveRecord::FmxBase
   end
   
   protected
+  
+  def valid_delivery_key
+    unless self.delivery_key.blank?
+      delivery = Delivery.find_by_delivery_key(self.delivery_key)
+      errors.add(:delivery_key, I18n.t('activerecord.errors.messages.not_found')) if delivery.nil?
+    end
+  end
   
   def date_parsable_format
     @date_parsable_format ||= Settings.get('csv.date_full_format')

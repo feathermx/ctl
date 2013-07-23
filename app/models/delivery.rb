@@ -30,14 +30,16 @@ class Delivery < ActiveRecord::FmxBase
     
   end
   
-  scope :base, ->{ select("deliveries.id, deliveries.km_id, deliveries.street_id, deliveries.shop_id, deliveries.started_at, deliveries.ended_at, deliveries.vehicle_type, deliveries.delivering_company, deliveries.product_delivered, deliveries.refrigerated_vehicle, deliveries.boxes_delivered, deliveries.delivery_type, deliveries.with_equipment, deliveries.number_of_trips, deliveries.notes, deliveries.lat, deliveries.lng") }
+  scope :base, ->{ select("deliveries.id, deliveries.km_id, deliveries.delivery_key, deliveries.street_id, deliveries.shop_id, deliveries.started_at, deliveries.ended_at, deliveries.vehicle_type, deliveries.delivering_company, deliveries.product_delivered, deliveries.refrigerated_vehicle, deliveries.boxes_delivered, deliveries.delivery_type, deliveries.with_equipment, deliveries.number_of_trips, deliveries.notes, deliveries.lat, deliveries.lng") }
   scope :base_count, ->{ select("COUNT(deliveries.id) as num") }
   scope :min_base, ->{ select('MIN(deliveries.started_at) as min_time').order(nil) }
   scope :max_base, ->{ select('MAX(deliveries.ended_at) as max_time').order(nil) }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_shop, ->(shop_id){ where(shop_id: shop_id) }
   scope :filter_by_type, ->(delivery_type){ where(delivery_type: delivery_type) }
+  scope :filter_by_delivery_key, ->(delivery_key){ where(delivery_key: delivery_key) }
   
+  validates :delivery_key, uniqueness: true
   validates :started_at, presence: true
   validates :ended_at, presence: true
   validates :vehicle_type, presence: true, length: { maximum: 30 }
@@ -53,6 +55,10 @@ class Delivery < ActiveRecord::FmxBase
   
   after_create :add_deliveries_count
   before_destroy :substract_deliveries_count
+  
+  def self.find_by_delivery_key(delivery_key)
+    self.base.filter_by_delivery_key(delivery_key).first
+  end
   
   def shop
     @shop ||= Shop.find_by_id(self.shop_id)

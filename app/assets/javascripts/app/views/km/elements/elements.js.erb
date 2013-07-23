@@ -8,21 +8,22 @@
 			lang: null,
 			list: {},
 			active: null,
+			views: {
+				chart: 1,
+				map: 2
+			},
 			init: function(){
 				this.initRoot();
 				this.initView();
 				this.initLang();
 			},
 			setActive: function(which){
+				if(this.active != null) this.active.disable();
 				if(which != this.active && which != null){
-					if(this.active != null) this.active.disable();
 					this.active = which;
 					this.active.enable();
 				}
 				else{
-					if(this.active != null) {
-						this.active.disable();
-					}
 					this.active = null;
 				}
 			},
@@ -45,6 +46,7 @@
 					chart: null,
 					map: null,
 					data_key: '',
+					_views: null,
 					init: function(){
 						this.initRoot();
 						this.initView();
@@ -57,18 +59,19 @@
 						this.initMap();
 					},
 					update: function(){
+						this.map.reset();
 						this.chart.reset();
 						this.panel.update();
 					},
 					enable: function(){
 						this.small_panel.enable();
 						this.map.enable();
-						//TODO
 					},
 					disable: function(){
+						var layer_panel = this.view.map.layer_panel;
 						this.small_panel.disable();
 						this.map.disable();
-						//TODO
+						layer_panel.removeTriggers();
 					},
 					initList: function(){
 						this.parent.list[this.key] = this;
@@ -102,7 +105,10 @@
 								if(this.info_window != null) this.info_window.info_window.hide();
 								if(this.info_window != which){
 									this.info_window = which;
-									this.info_window.info_window.show();
+									if(this.info_window != null) this.info_window.info_window.show();
+								}
+								else{
+									this.info_window = null;
 								}
 							},
 							initLayerPanel: function(){
@@ -153,15 +159,12 @@
 									}
 								});
 							},
-							reset: function(){
-								this.is_loaded = false;
-								this.data = null;
-							},
 							success: function(data){
 								this.is_loaded = true;
 								if(data && data.contents){
 									this.data = data.contents;
 									this.render();
+									this.view.map.layer_panel.render();
 								}
 							},
 							render: function(){
@@ -180,10 +183,85 @@
 								var marker = this.getMarker(opts);
 								return marker;
 							},
+							addContent: function(opts){
+								var content = this.getContent(opts);
+								return content;
+							},
+							getContent: function(opts){
+								var content = {};
+								$.extend(content, {
+									parent: null,
+									root: null,
+									view: null,
+									element: null,
+									map: null,
+									layer: null,
+									container: null,
+									wrapper: null,
+									lang: null,
+									els: [],
+									init: function(){
+										this.initRoot();
+										this.initView();
+										this.initElement();
+										this.initMap();
+										this.initLang();
+										this.initContainer();
+										this.initContent();
+									},
+									initLang: function(){
+										this.lang = this.element.lang;
+									},
+									addBaseElement: function(key){
+										var fields = this.lang.fields;
+										var els = $();
+										var label = $('<b></b>');
+										label.html(fields[key] + ':');
+										var val_dom = $('<span class="km_info_separation"></span>');
+										val_dom.html(this.data[key]);
+										els = els.add(label).add(val_dom);
+										this.els.push(els);
+									},
+									initContent: function(){},
+									addContents: function(){
+										var _self = this;
+										$.each(this.els, function(key, el){
+											var element = $('<span class="km_info_element"></span>');
+											el.appendTo(element);
+											element.appendTo(_self.wrapper);
+										});
+									},
+									initContainer: function(){
+										this.container = $('<div class="km_info_window"></div>');
+										this.initWrapper();
+									},
+									initWrapper: function(){
+										this.wrapper = $('<div class="km_info_window_wrapper"></div>');
+										this.wrapper.appendTo(this.container);
+									},
+									initRoot: function(){
+										this.root = this.parent.root;
+									},
+									initView: function(){
+										this.view = this.parent.view;
+									},
+									initElement: function(){
+										this.element = this.parent.element;
+									},
+									initMap: function(){
+										this.map = this.parent.map;
+									},
+									html: function(){
+										return this.container.html();
+									}
+								}, opts);
+								return content;
+							},
 							getMarker: function(opts){
 								var marker = {};
 								$.extend(marker, {
 									parent: null,
+									layer: null,
 									root: null,
 									view: null,
 									element: null,
@@ -212,17 +290,38 @@
 											element: null,
 											map: null,
 											info: null,
+											content: null,
+											layer: null,
 											init: function(){
 												this.initRoot();
 												this.initView();
 												this.initElement();
 												this.initMap();
+												this.initLayer();
 												this.initInfo();
 											},
-											initInfo: function(){
-												this.info = new google.maps.InfoWindow({
-													content: 'foo bar'
+											getContent: function(){
+												var opts = {};
+												$.extend(opts, {
+													parent: this,
+													layer: this.layer,
+													data: this.parent.data
 												});
+												this.content = this.map.addContent(opts);
+												this.content.init();
+											},
+											initInfo: function(){
+												var _self = this;
+												this.getContent();
+												this.info = new google.maps.InfoWindow({
+													content: this.content.html()
+												});
+												google.maps.event.addListener(this.info, 'closeclick', function(){
+													_self.infoOnClick();
+												});
+											},
+											infoOnClick: function(){
+												this.map.setInfoWindow(null);
 											},
 											initRoot: function(){
 												this.root = this.parent.root;
@@ -236,24 +335,32 @@
 											initMap: function(){
 												this.map = this.parent.map;
 											},
+											initLayer: function(){
+												this.layer = this.parent.layer;
+											},
 											show: function(){
 												var map = this.view.map.map;
+												this.layer.has_info_window = true;
 												this.info.setPosition(this.parent.location);
 												this.info.open(map);
 											},
 											hide: function(){
+												this.layer.has_info_window = false;
 												this.info.close();
 											}
 										});
 									},
 									setListeners: function(){
 										var _self = this;
-										if(this.info_window == null) this.getInfoWindow();
 										var marker = this.marker;
 										var map = this.view.map.map;
 										google.maps.event.addListener(marker, 'click', function(){
-											_self.map.setInfoWindow(_self);
+											_self.mapMarkerOnClick();
 										});
+									},
+									mapMarkerOnClick: function(){
+										if(this.info_window == null) this.getInfoWindow();
+										this.map.setInfoWindow(this);
 									},
 									getInfoWindow: function(){
 										this.initInfoWindow();
@@ -317,7 +424,7 @@
 									trigger: null,
 									name: null,
 									markers: [],
-									name_field: 'name',
+									has_info_window: false,
 									init: function(){
 										this.initRoot();
 										this.initView();
@@ -328,17 +435,19 @@
 										this.initTrigger();
 										this.initMarkers();
 									},
+									render: function(){
+										this.trigger.render();
+									},
 									enable: function(){
-										//TODO
 										$.each(this.markers, function(key, marker){
 											marker.enable();
 										});
 									},
 									disable: function(){
-										//TODO
 										$.each(this.markers, function(key, marker){
 											marker.disable();
 										});
+										if(this.has_info_window) this.map.setInfoWindow(null);
 									},
 									initMarkers: function(){
 										var _self = this;
@@ -351,6 +460,7 @@
 										var m_data = {};
 										$.extend(m_data, {
 											parent: this,
+											layer: this,
 											data: data
 										});
 										var marker = this.parent.addMarker(m_data);
@@ -382,21 +492,27 @@
 												this.initElement();
 												this.initMap();
 												this.initContainer();
+												this.render();
+											},
+											render: function(){
 												this.enable();
 												this.append();
+												this.setListeners();
+											},
+											setListeners: function(){
+												var _self = this;
+												this.root.click(this.container, function(e, element){
+													_self.containerOnClick(e, element);
+												});
 											},
 											append: function(){
 												var panel = this.view.map.layer_panel;
 												panel.addTrigger(this);
 											},
 											initContainer: function(){
-												var _self = this;
 												this.container = $('<a href="#" class="km_map_layer_trigger"></a>');
 												this.initColor();
 												this.initLabel();
-												this.root.click(this.container, function(e, element){
-													_self.containerOnClick(e, element);
-												});
 												this.container.append('<span class="clear"></div>');
 											},
 											containerOnClick: function(e, element){
@@ -430,6 +546,10 @@
 											toggle: function(){
 												if(this.enabled) this.disable();
 												else this.enable();
+											},
+											remove: function(){
+												this.disable();
+												this.container.remove();
 											},
 											enable: function(){
 												this.enabled = true;
@@ -498,11 +618,20 @@
 								this.map = this;
 							},
 							enable: function(){
-								//TODO
 								if(!this.is_loaded) this.load();
+								else{
+									$.each(this.layers, function(key, layer){
+										layer.render();
+									});
+									this.view.map.layer_panel.render();
+								}
 							},
 							disable: function(){
 								this.abort();
+							},
+							reset: function(){
+								this.is_loaded = false;
+								this.data = null;
 							}
 						});
 						this.map.init();

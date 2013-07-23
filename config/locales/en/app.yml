@@ -35,6 +35,9 @@ en:
           shops:
             title: 'Shop Inventory'
             units: 'stores per km2'
+            fields:
+              loading_unloading: 'Loading / Unloading?'
+              deliveries_count: '#{deliveries_count} deliveries'
           loading:
             title: 'Loading/Unloading areas'
             units: 'public mts'
@@ -45,9 +48,16 @@ en:
               public_meter_length: 'public mts'
               dedicated_meter_length: 'dedicated mts'
               y_label: 'length (mts)'
+            fields:
+              meters: 'meters'
           deliveries:
             title: 'Deliveries'
             units: 'per hour'
+            fields:
+              vehicle_type: 'Vehicle'
+              delivering_company: 'Company'
+              duration: 'Duration'
+              mins: 'mins'
           traffic_counts:
             title: 'Traffic count'
             units: 'average'
@@ -76,3 +86,8 @@ en:
               categories:
                 deliveries: 'Deliveries'
                 disruptions: 'Disruptions'
+            fields:
+              source_name: 'Source'
+              duration: 'Duration'
+              vehicles_affected: 'Vehicles affected'
+              mins: 'mins'

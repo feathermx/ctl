@@ -37,7 +37,11 @@ $.extend(lang, {
 			elements: {
 				shops: {
 					title: '<%= t 'app.views.km.elements.shops.title' %>',
-					units: '<%= t 'app.views.km.elements.shops.units' %>'
+					units: '<%= t 'app.views.km.elements.shops.units' %>',
+					fields: {
+						loading_unloading: '<%= t 'app.views.km.elements.shops.fields.loading_unloading' %>',
+						deliveries_count: '<%= t 'app.views.km.elements.shops.fields.deliveries_count' %>'
+					}
 				},
 				loading: {
 					title: '<%= t 'app.views.km.elements.loading.title' %>',
@@ -49,11 +53,20 @@ $.extend(lang, {
 						public_meter_length: '<%= t 'app.views.km.elements.loading.chart.public_meter_length' %>',
 						dedicated_meter_length: '<%= t 'app.views.km.elements.loading.chart.dedicated_meter_length' %>',
 						y_label: '<%= t 'app.views.km.elements.loading.chart.y_label' %>'
+					},
+					fields: {
+						meters: '<%= t 'app.views.km.elements.loading.fields.meters' %>'
 					}
 				},
 				deliveries: {
 					title: '<%= t 'app.views.km.elements.deliveries.title' %>',
-					units: '<%= t 'app.views.km.elements.deliveries.units' %>'
+					units: '<%= t 'app.views.km.elements.deliveries.units' %>',
+					fields: {
+						vehicle_type: '<%= t 'app.views.km.elements.deliveries.fields.vehicle_type' %>',
+          				delivering_company: '<%= t 'app.views.km.elements.deliveries.fields.delivering_company' %>',
+          				duration: '<%= t 'app.views.km.elements.deliveries.fields.duration' %>',
+						mins: '<%= t 'app.views.km.elements.deliveries.fields.mins' %>'
+					}
 				},
 				traffic_counts: {
 					title: '<%= t 'app.views.km.elements.traffic_counts.title' %>',
@@ -88,6 +101,12 @@ $.extend(lang, {
 							deliveries: '<%= t 'app.views.km.elements.traffic_disruptions.chart.categories.deliveries' %>',
 							disruptions: '<%= t 'app.views.km.elements.traffic_disruptions.chart.categories.disruptions' %>'
 						}
+					},
+					fields: {
+						source_name: '<%= t 'app.views.km.elements.traffic_disruptions.fields.source_name' %>',
+						duration: '<%= t 'app.views.km.elements.traffic_disruptions.fields.duration' %>',
+						vehicles_affected: '<%= t 'app.views.km.elements.traffic_disruptions.fields.vehicles_affected' %>',
+						mins: '<%= t 'app.views.km.elements.traffic_disruptions.fields.mins' %>'
 					}
 				}
 			}

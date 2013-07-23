@@ -32,8 +32,10 @@ en:
           utility: 'Utility'
           waste: 'Waste'
           taxi: 'Taxi'
-          private_car: 'Private Car'
+          car: 'Car'
+          pedestrian: 'Pedestrian'
           accident: 'Accident'
+          bus: 'Bus'
         length_type:
           small: '0-5'
           med: '5-30'

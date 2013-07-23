@@ -14,12 +14,48 @@
 			},
 			initMap: function(){
 				$.extend(this.map, {
-					addLayer: function(key, data, index){
-						var layer = this.getLayer(key, data, index);
-						$.extend(layer, {
-							
+					addContent: function(opts){
+						var content = this.getContent(opts);
+						$.extend(content, {
+							initContent: function(){
+								this.initName();
+								this.initLoadingUnloading();
+								this.initDeluveriesCount();
+								this.addContents();
+							},
+							initDeluveriesCount: function(){
+								if(this.data.deliveries_count > 0){
+									var fields = this.lang.fields;
+									var label = fields.deliveries_count;
+									label = label.replace('#{deliveries_count}', this.data.deliveries_count);
+									var container = $('<span></span>');
+									container.html(label);
+									this.els.push(container);
+								}
+							},
+							initLoadingUnloading: function(){
+								var fields = this.lang.fields;
+								var icons = this.map.config.icons.info_window;
+								var container = $('<span class="km_info_element_group"></span>');
+								var label = $('<span class="km_info_float_label"></span>');
+								var icon_key = this.data.has_loading_area ? 'on' : 'off';
+								var icon = $('<img />', {
+									src: icons[icon_key]
+								});
+								icon.addClass('km_info_element_icon')
+								label.html(fields.loading_unloading);
+								label.appendTo(container);
+								icon.appendTo(container);
+								container.append('<span class="clear"></span>');
+								this.els.push(container);
+							},
+							initName: function(){
+								var el = $('<b></b>');
+								el.html(this.data.name);
+								this.els.push(el);
+							}
 						});
-						layer.init();
+						return content;
 					},
 					addMarker: function(opts){
 						var marker = this.getMarker(opts);

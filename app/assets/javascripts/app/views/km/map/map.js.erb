@@ -31,6 +31,7 @@
 					wrapper: null,
 					clear_div: null,
 					actions: null,
+					triggers: [],
 					init: function(){
 						this.initRoot();
 						this.initView();
@@ -43,7 +44,20 @@
 						this.container.addClass('km_panel');
 						this.container.appendTo(this.view.container);
 					},
+					render: function(){
+						if(this.triggers.length == 0) this.hide();
+						else this.show();
+					},
+					removeTriggers: function(){
+						var trigger = this.triggers.pop();
+						while(trigger != null){
+							trigger.remove();
+							trigger = this.triggers.pop();
+						}
+						this.render();
+					},
 					addTrigger: function(trigger){
+						this.triggers.push(trigger);
 						trigger.container.insertBefore(this.clear_div);
 					},
 					initWrapper: function(){
@@ -113,6 +127,12 @@
 					},
 					initView: function(){
 						this.view = this.parent.view;
+					},
+					show: function(){
+						this.container.css('display', 'block');
+					},
+					hide: function(){
+						this.container.css('display', 'none');
 					}
 				});
 				this.layer_panel.init();

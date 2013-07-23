@@ -67,6 +67,12 @@ $.extend(config, {
 								fillOpacity: 0.5,
 								strokeWeight: 0
 							}
+						},
+						icons: {
+							info_window: {
+								off: '<%= image_url 'app/icons/km/map/info_window/shops/off.png' %>',
+								on: '<%= image_url 'app/icons/km/map/info_window/shops/on.png' %>'
+							}
 						}
 					},
 					loading: {
@@ -75,8 +81,10 @@ $.extend(config, {
 							dedicated_data: '#0200ff'
 						},
 						icons: {
-							public_data: '<%= image_url 'app/icons/km/map/markers/loading/public_data.png' %>',
-							dedicated_data: '<%= image_url 'app/icons/km/map/markers/loading/dedicated_data.png' %>'
+							marker: {
+								public_data: '<%= image_url 'app/icons/km/map/markers/loading/public_data.png' %>',
+								dedicated_data: '<%= image_url 'app/icons/km/map/markers/loading/dedicated_data.png' %>'
+							}
 						}
 					},
 					deliveries: {
@@ -86,9 +94,11 @@ $.extend(config, {
 							B: '#4ea532'
 						},
 						icons: {
-							D: '<%= image_url 'app/icons/km/map/markers/deliveries/D.png' %>',
-							P: '<%= image_url 'app/icons/km/map/markers/deliveries/P.png' %>',
-							B: '<%= image_url 'app/icons/km/map/markers/deliveries/B.png' %>'
+							marker: {
+								D: '<%= image_url 'app/icons/km/map/markers/deliveries/D.png' %>',
+								P: '<%= image_url 'app/icons/km/map/markers/deliveries/P.png' %>',
+								B: '<%= image_url 'app/icons/km/map/markers/deliveries/B.png' %>'
+							}
 						}
 					},
 					traffic_counts: {},
@@ -99,9 +109,11 @@ $.extend(config, {
 							'2': '#496c43'
 						},
 						icons: {
-							'0': '<%= image_url 'app/icons/km/map/markers/traffic_disruptions/0.png' %>',
-							'1': '<%= image_url 'app/icons/km/map/markers/traffic_disruptions/1.png' %>',
-							'2': '<%= image_url 'app/icons/km/map/markers/traffic_disruptions/2.png' %>'
+							marker: {
+								'0': '<%= image_url 'app/icons/km/map/markers/traffic_disruptions/0.png' %>',
+								'1': '<%= image_url 'app/icons/km/map/markers/traffic_disruptions/1.png' %>',
+								'2': '<%= image_url 'app/icons/km/map/markers/traffic_disruptions/2.png' %>'
+							}
 						}
 					}
 				}

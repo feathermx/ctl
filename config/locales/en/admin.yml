@@ -190,6 +190,8 @@ en:
             blocked_lanes: 'Lanes'
             vehicles_affected: 'Vehicles'
             slowed_or_stop: 'S / C'
+            delivery_key: 'D. Key'
+            entered_car: 'E Car?'
             notes: 'Notes'
           new:
             title: 'CSV Upload'
@@ -248,6 +250,7 @@ en:
             delivery_type: 'D. Type'
             with_equipment: 'w/e'
             number_of_trips: 'Trips'
+            delivery_key: 'D. Key'
             notes: 'Notes'
           new:
             title: 'CSV Upload'

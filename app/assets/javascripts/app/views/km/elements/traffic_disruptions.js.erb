@@ -14,19 +14,43 @@
 			},
 			initMap: function(){
 				$.extend(this.map, {
+					addContent: function(opts){
+						var content = this.getContent(opts);
+						$.extend(content, {
+							initContent: function(){
+								this.initDuration();
+								this.addBaseElement('source_name');
+								this.addBaseElement('duration');
+								this.initVehiclesAffected();
+								this.addContents();
+							},
+							initVehiclesAffected: function(){
+								if(this.data.vehicles_affected != null){
+									this.addBaseElement('vehicles_affected');
+								}
+							},
+							initDuration: function(){
+								var fields = this.lang.fields;
+								var duration = (this.data.duration / 60);
+								duration = duration.toFixed(2);
+								duration = parseFloat(duration);
+								this.data.duration = duration + ' ' + fields.mins;
+							}
+						});
+						return content;
+					},
 					addMarker: function(opts){
 						var marker = this.getMarker(opts);
 						$.extend(marker, {
 							initMarker: function(){
-								var icons = this.map.config.icons;
+								var icons = this.map.config.icons.marker;
 								var icon = icons[this.parent.key];
 								this.marker = new google.maps.Marker(
 									$.extend({
 										draggable: false,
 										position: this.location,
 										animation: google.maps.Animation.DROP,
-										icon: icon,
-										title: 'foo'
+										icon: icon
 									}, this.marker_opts)
 								);
 							}

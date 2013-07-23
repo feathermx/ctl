@@ -209,6 +209,7 @@ CREATE SEQUENCE public.traffic_disruptions_id_seq;
 CREATE TABLE public.traffic_disruptions (
                 id BIGINT NOT NULL DEFAULT nextval('public.traffic_disruptions_id_seq'),
                 km_id BIGINT NOT NULL,
+                delivery_key VARCHAR(30),
                 street_id BIGINT NOT NULL,
                 source VARCHAR(1) NOT NULL,
                 vehicle_type VARCHAR(30) NOT NULL,
@@ -220,6 +221,7 @@ CREATE TABLE public.traffic_disruptions (
                 blocked_lanes DOUBLE PRECISION,
                 vehicles_affected INTEGER,
                 slowed_or_stop VARCHAR(1),
+                entered_car INTEGER DEFAULT 0,
                 notes TEXT,
                 lat DOUBLE PRECISION,
                 lng DOUBLE PRECISION,
@@ -338,6 +340,7 @@ CREATE SEQUENCE public.deliveries_id_seq;
 CREATE TABLE public.deliveries (
                 id BIGINT NOT NULL DEFAULT nextval('public.deliveries_id_seq'),
                 km_id BIGINT NOT NULL,
+                delivery_key VARCHAR(30),
                 street_id BIGINT NOT NULL,
                 shop_id BIGINT NOT NULL,
                 started_at TIMESTAMP NOT NULL,

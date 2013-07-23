@@ -30,12 +30,12 @@ class Api::Street < Street
     dedicated_data = []
     self.api_map_base.filter_by_km(km_id).each do |el|
       public_data.push({
-        name: el.research_id,
+        mts: el.research_id,
         lat: el.lat1,
         lng: el.lng1
       })
       dedicated_data.push({
-        name: el.research_id,
+        mts: el.research_id,
         lat: el.lat2,
         lng: el.lng2
       })
