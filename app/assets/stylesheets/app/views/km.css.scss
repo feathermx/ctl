@@ -17,14 +17,55 @@
 		@include box-shadow(-1px, 1px, 3px, #BBBBBB);
 		background: none repeat scroll 0 0 #FFFFFF;
 		display: none;
+		&#km_map_layer_panel{
+			@include box-shadow(-1px, 1px, 3px, #BBBBBB);
+			width: 700px;
+			height: 80px;
+			position: absolute;
+			bottom: 0;
+			left: 50%;
+			margin-left: -350px;
+			display: block;
+			#km_map_layer_panel_wrapper{
+				margin: 30px 0 0 0;
+				padding: 0 20px 0 20px;
+			}
+		}
+		@include link('a.km_map_layer_trigger') {
+			border: 0 none;
+			outline: none;
+			display: block;
+			float: left;
+			margin: 0 10px 10px 0;
+			cursor: pointer;
+		}
+		a.km_map_layer_trigger{
+			span.km_map_layer_trigger_color{
+				@include border-radius(2px, 2px, 2px, 2px);
+				width: 16px;
+				height: 12px;
+				display: block;
+				float: left;
+			}
+			span.km_map_layer_trigger_label{
+				float: left;
+				font-size: 12px;
+				color: #444444;
+				margin: 0 0 0 5px;
+			}
+			&.disabled{
+				span.km_map_layer_trigger_label{
+					color: #CCCCCC;
+				}
+			}
+		}
 		&#km_chart_panel{
 			@include box-shadow(1px, 1px, 3px, #BBBBBB);
 			width: 600px;
 			height: 400px;
 			position: absolute;
 			left: 0px;
-			top: 50%;
-			margin-top: -200px;
+			top: 30px;
 			#km_chart_panel_wrapper{
 				width: 100%;
 				height: 370px;
@@ -76,6 +117,37 @@
 			height: 235px;
 			.km_panel_header_actions{
 				margin: 9px 15px 0 0;
+			}
+		}
+		.km_panel_actions{
+			position: absolute;
+			right: 10px;
+			top: 3px;
+		}
+		@include link('a.km_panel_action') {
+			border: 0 none;
+			outline: none;
+			display: block;
+			float: right;
+			width: 14px;
+			height: 14px;
+			margin: 0 0 0 5px;
+			overflow: hidden;
+			position: relative;
+			cursor: pointer;
+		}
+		a.km_panel_action{
+			img{
+				width: 14px;
+				height: 28px;
+				position: absolute;
+				left: 0px;
+				top: 0px;
+			}
+			&:hover{
+				img{
+					top: -14px;
+				}
 			}
 		}
 		.km_panel_header{
@@ -131,6 +203,7 @@
 			top: 50%;
 			margin-left: -15px;
 			margin-top: -15px;
+			cursor: pointer;
 		}
 		a.km_panel_small_element_trigger{
 			img{
@@ -143,13 +216,13 @@
 				left: 0px;
 				top: 0px;
 			}
-			&:hover, .active{
+			&:hover, &.active{
 				img{
 					top: -30px;
 				}
 			}
-			.active{
-				cursor: pointer;
+			&.active{
+				cursor: auto;
 			}
 		}
 		.km_panel_element{

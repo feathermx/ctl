@@ -129,6 +129,8 @@ class TrafficDisruption < ActiveRecord::FmxBase
   scope :base, ->{ select("traffic_disruptions.id, traffic_disruptions.km_id, traffic_disruptions.street_id, traffic_disruptions.source, traffic_disruptions.vehicle_type, traffic_disruptions.started_at, traffic_disruptions.ended_at, traffic_disruptions.more_than_five_secs, traffic_disruptions.disruption_type, traffic_disruptions.blocked_lanes, traffic_disruptions.vehicles_affected, traffic_disruptions.slowed_or_stop, traffic_disruptions.notes, traffic_disruptions.length_type, traffic_disruptions.lat, traffic_disruptions.lng") }
   scope :base_count, ->{ select("COUNT(traffic_disruptions.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
+  scope :filter_by_length_type, ->(length_type){ where(length_type: length_type) }
+  scope :with_location, ->{ where('traffic_disruptions.lat IS NOT NULL AND traffic_disruptions.lng IS NOT NULL') }
   
   attr_protected :length_type
   

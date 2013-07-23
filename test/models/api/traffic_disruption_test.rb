@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Api::TrafficCountTotalsControllerTest < ActionController::TestCase
+class Api::TrafficDisruptionTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

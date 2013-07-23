@@ -65,3 +65,9 @@ body{
 		}
 	}
 }
+/** google maps fix */
+#map_canvas{
+	img{
+		max-width:none
+	}
+}

@@ -43,6 +43,9 @@
 					this.chart.setElement(null);
 					this.chart.hide();
 				}
+				if(this.elements != null){
+					this.elements.setActive(null);
+				}
 			},
 			loadKm: function(which){
 				var _self = this;

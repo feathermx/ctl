@@ -38,6 +38,10 @@ en:
           small: '0-5'
           med: '5-30'
           big: '30+'
+      street:
+        type:
+          public: 'public mts'
+          dedicated: 'dedicated mts'
       street_data:
         way:
           one_way: 'One Way'

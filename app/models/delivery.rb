@@ -14,7 +14,7 @@ class Delivery < ActiveRecord::FmxBase
     
     List = {
       Delivery => {
-        name: I18n.t('app.model.delivery.delivery_type.grocery')
+        name: I18n.t('app.model.delivery.delivery_type.delivery')
       },
       Pickup => {
         name: I18n.t('app.model.delivery.delivery_type.pickup')
@@ -36,6 +36,7 @@ class Delivery < ActiveRecord::FmxBase
   scope :max_base, ->{ select('MAX(deliveries.ended_at) as max_time').order(nil) }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_shop, ->(shop_id){ where(shop_id: shop_id) }
+  scope :filter_by_type, ->(delivery_type){ where(delivery_type: delivery_type) }
   
   validates :started_at, presence: true
   validates :ended_at, presence: true

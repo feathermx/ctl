@@ -1,5 +1,7 @@
 class Shop < ActiveRecord::FmxBase
 
+  DefaultLength = 1.0
+
   include BlockStreetable
   include DateParsable
   include Kmable
@@ -120,12 +122,12 @@ class Shop < ActiveRecord::FmxBase
   
   scope :base, ->{ select("shops.id, shops.km_id, shops.deliveries_count, shops.street_id, shops.shop_id, shops.registered_at, shops.shop_type, shops.name, shops.front_length, shops.starting_floor, shops.total_floors, shops.has_loading_area, shops.loading_area_type, shops.notes, shops.lat, shops.lng") }
   scope :base_count, ->{ select("COUNT(shops.id) as num") }
-  scope :track_base, ->{ select("shops.street_id") }
+  scope :track_base, ->{ select("shops.street_id, shops.registered_at") }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_shop_id, ->(shop_id){ where(shop_id: shop_id) }
   scope :filter_by_type, ->(shop_type){ where(shop_type: shop_type) }
   scope :filter_after, ->(time){ where('shops.registered_at >= ?', time).order('shops.registered_at ASC') }
-  scope :filter_before, ->(time){ where('shops.registered_at <= ?', time).order('shops.registered_at ASC') }
+  scope :filter_before, ->(time){ where('shops.registered_at <= ?', time).order('shops.registered_at DESC') }
   scope :ascending, ->{ order('shops.name ASC') }
   scope :with_deliveries, ->{ where('shops.deliveries_count > 0') }
   
@@ -142,6 +144,12 @@ class Shop < ActiveRecord::FmxBase
   validates :has_loading_area, presence: true, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }
   validates :loading_area_type, presence: true, numericality: { only_integer: true }, inclusion: { in: LoadingAreaType.keys }
   validates :notes, length: { maximum: 300 }, allow_blank: true
+  
+  def f_length
+    @f_length ||= ->{
+      (self.front_length || DefaultLength)
+    }.call
+  end
   
   def self.total_for_type(type, km_id)
     self.base_count.filter_by_type(type).filter_by_km(km_id).order(nil).first[:num].to_i

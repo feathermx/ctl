@@ -10,6 +10,34 @@
 				$.extend(this, base);
 				this.initPanel();
 				this.initChart();
+				this.initMap();
+			},
+			initMap: function(){
+				$.extend(this.map, {
+					addLayer: function(key, data, index){
+						var layer = this.getLayer(key, data, index);
+						$.extend(layer, {
+							
+						});
+						layer.init();
+					},
+					addMarker: function(opts){
+						var marker = this.getMarker(opts);
+						$.extend(marker, {
+							initMarker: function(){
+								var config = this.map.config.marker;
+								this.marker = new google.maps.Circle(
+									$.extend({
+										fillColor: this.parent.color,
+										center: this.location,
+										radius: this.data.f_length * config.length
+									}, config.opts, this.marker_opts)
+								);
+							}
+						});
+						return marker;
+					}
+				});
 			},
 			initChart: function(){
 				$.extend(this.chart, {

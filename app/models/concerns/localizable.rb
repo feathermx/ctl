@@ -17,8 +17,8 @@ module Localizable
         track = before.nil? ? after : before
       else
         t = time.to_i
-        diff_before = (before.to_i - t).abs
-        diff_after = (after.to_i - t).abs
+        diff_before = (before.tracked_at.to_i - t).abs
+        diff_after = (after.tracked_at.to_i - t).abs
         track = (diff_before < diff_after) ? before : after
       end
       unless track.nil?

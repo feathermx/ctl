@@ -35,12 +35,50 @@ class Api::Km < Km
     @api_chart_shop_totals ||= Api::ShopTotal.api_chart_base.filter_by_km(self.id)
   end
   
+  def api_map_shops
+    @api_map_shops ||= ->{
+      list = {}
+      Shop::ShopType::List.each do |key, s_type|
+        shop_total = Api::ShopTotal.find_by_km_shop_type(self.id, key)
+        unless shop_total.nil? || shop_total.total.to_i <= 0
+          el = {
+            name: s_type[:name],
+            elements: Api::Shop.map_data(self.id, key)
+          }
+          list[key] = el
+        end
+      end
+      list
+    }.call
+  end
+  
   def api_chart_streets
     @api_chart_streets ||= Api::Street.api_chart_base.filter_by_km(self.id)
   end
   
+  def api_map_streets
+    @api_map_streets ||= Api::Street.map_data(self.id)
+  end
+  
   def api_chart_deliveries
     @api_chart_deliveries ||= Api::Shop.api_chart_base.filter_by_km(self.id)
+  end
+  
+  def api_map_deliveries
+    @api_map_deliveries ||= ->{
+      list = {}
+      Delivery::DeliveryType::List.each do |key, d_type|
+        elements = Api::Delivery.map_data(self.id, key)
+        if elements.length > 0
+          el = {
+            name: d_type[:name],
+            elements: elements
+          }
+          list[key] = el
+        end
+      end
+      list
+    }.call
   end
   
   def api_chart_traffic_count_totals
@@ -52,6 +90,23 @@ class Api::Km < Km
   
   def api_chart_disruptions
     @api_chart_disruptions ||= Api::DeliveriesDisruption.api_chart_base.filter_by_km(self.id)
+  end
+  
+  def api_map_disruptions
+    @api_map_disruptions ||= ->{
+      list = {}
+      TrafficDisruption::LengthType::List.each do |key, l_type|
+        elements = Api::TrafficDisruption.map_data(self.id, key)
+        if elements.length > 0
+          el = {
+            name: l_type[:name],
+            elements: elements
+          }
+          list[key] = el
+        end
+      end
+      list
+    }.call
   end
   
 end

@@ -103,7 +103,7 @@ class Km < ActiveRecord::FmxBase
     @bool_active ||= self.is_active.to_i == 1
   end
   
-  protected
+  #protected
   
   def reset_active_fields
     self.public_meter_length = self.dedicated_meter_length = self.peak_deliveries = self.peak_disruptions = self.peak_traffic = 0
@@ -174,6 +174,7 @@ class Km < ActiveRecord::FmxBase
     self.streets.each do |el|
       el.set_meter_length
       el.set_track_count
+      el.set_location
       el.save
     end
   end

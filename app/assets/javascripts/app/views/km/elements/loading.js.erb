@@ -11,6 +11,39 @@
 				$.extend(this, base);
 				this.initPanel();
 				this.initChart();
+				this.initMap();
+			},
+			initMap: function(){
+				$.extend(this.map, {
+					addMarker: function(opts){
+						var marker = this.getMarker(opts);
+						$.extend(marker, {
+							initMarker: function(){
+								var icons = this.map.config.icons;
+								var icon = icons[this.parent.key];
+								this.marker = new google.maps.Marker(
+									$.extend({
+										draggable: false,
+										position: this.location,
+										animation: google.maps.Animation.DROP,
+										icon: icon
+									}, this.marker_opts)
+								);
+							}
+						});
+						return marker;
+					},
+					addLayer: function(key, data, index){
+						var layer = this.getLayer(key, data, index);
+						$.extend(layer, {
+							initColor: function(){
+								var colors = this.element.map.config.colors;
+								this.color = colors[this.key];
+							}
+						});
+						layer.init();
+					}
+				});
 			},
 			initChart: function(){
 				$.extend(this.chart, {

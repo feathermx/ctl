@@ -11,12 +11,111 @@
 				lat: null,
 				lng: null
 			},
+			layer_panel: null,
 			init: function(){
 				this.initView();
 				this.initRoot();
 				this.initConfig();
 				this.initContainer();
 				this.initGoogleMaps();
+				this.initLayerPanel();
+			},
+			initLayerPanel: function(){
+				this.layer_panel = {};
+				$.extend(this.layer_panel, {
+					parent: this,
+					root: null,
+					view: null,
+					map: this,
+					container: null,
+					wrapper: null,
+					clear_div: null,
+					actions: null,
+					init: function(){
+						this.initRoot();
+						this.initView();
+						this.initContainer();
+					},
+					initContainer: function(){
+						this.container = $('<div id="km_map_layer_panel"></div>');
+						this.initActions();
+						this.initWrapper();
+						this.container.addClass('km_panel');
+						this.container.appendTo(this.view.container);
+					},
+					addTrigger: function(trigger){
+						trigger.container.insertBefore(this.clear_div);
+					},
+					initWrapper: function(){
+						this.wrapper = $('<div id="km_map_layer_panel_wrapper"></div>');
+						this.initClearDiv();
+						this.wrapper.appendTo(this.container);
+					},
+					initClearDiv: function(){
+						this.clear_div = $('<div class="clear"></div>');
+						this.clear_div.appendTo(this.wrapper);
+					},
+					initActions: function(){
+						var actions = {};
+						$.extend(actions, {
+							parent: this,
+							root: null,
+							view: null,
+							map: null,
+							container: null,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initMap();
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container = $('<div class="km_panel_actions"></div>');
+								this.initCloseAction();
+								this.container.append('<div class="clear"></div>');
+								this.container.appendTo(this.parent.container);
+							},
+							initCloseAction: function(){
+								var _self = this;
+								var action = this.getAction('close');
+								this.root.click(action, function(e, element){
+									_self.closeActionOnClick(e, element);
+								});
+							},
+							closeActionOnClick: function(e, element){
+								this.view.elements.setActive(null);
+							},
+							getAction: function(key){
+								var icons = this.view.config.panel.actions;
+								var src = icons[key];
+								var action = $('<a href="#" class="km_panel_action"></a>');
+								var icon = $('<img />', {
+									src: src
+								});
+								icon.appendTo(action);
+								action.appendTo(this.container);
+								return action;
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							},
+							initMap: function(){
+								this.map = this.parent.map;
+							}
+						});
+						actions.init();
+					},
+					initRoot: function(){
+						this.root = this.parent.root;
+					},
+					initView: function(){
+						this.view = this.parent.view;
+					}
+				});
+				this.layer_panel.init();
 			},
 			initConfig: function(){
 				this.config = this.view.config.map;

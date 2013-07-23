@@ -14,19 +14,23 @@ $.extend(config, {
 			show_km: '<%= url_for controller: 'api/kms', action: :show %>',
 			elements: {
 				shops: {
-					chart: '<%= url_for controller: 'api/shops', action: :chart %>'
+					chart: '<%= url_for controller: 'api/shops', action: :chart %>',
+					map: '<%= url_for controller: 'api/shops', action: :map %>'
 				},
 				loading: {
-					chart: '<%= url_for controller: 'api/streets', action: :chart %>'
+					chart: '<%= url_for controller: 'api/streets', action: :chart %>',
+					map: '<%= url_for controller: 'api/streets', action: :map %>'
 				},
 				deliveries: {
-					chart: '<%= url_for controller: 'api/deliveries', action: :chart %>'
+					chart: '<%= url_for controller: 'api/deliveries', action: :chart %>',
+					map: '<%= url_for controller: 'api/deliveries', action: :map %>'
 				},
 				traffic_counts: {
-					chart: '<%= url_for controller: 'api/traffic_count_totals', action: :chart %>'
+					chart: '<%= url_for controller: 'api/traffic_counts', action: :chart %>'
 				},
 				traffic_disruptions: {
-					chart: '<%= url_for controller: 'api/traffic_disruptions', action: :chart %>'
+					chart: '<%= url_for controller: 'api/traffic_disruptions', action: :chart %>',
+					map: '<%= url_for controller: 'api/traffic_disruptions', action: :map %>'
 				}
 			}
 		}
@@ -45,9 +49,60 @@ $.extend(config, {
 					lat: 42.35704390000001,
 					lng: -71.09286029999998,
 					opts: {
-						zoom: 15,
+						zoom: 16,
 						scrollwheel: false,
 						mapTypeControl: false
+					}
+				},
+				elements: {
+					base: {
+						disabled: '#cccccc',
+						colors: ['#3078d7', '#0d223c', '#2f7ed8', '#8bbc21', '#1aadce', '#492970', '#f28f43', '#77a1e5', '#c42525', '#a6c96a']
+					},
+					shops: {
+						colors: ['#2f7ed8', '#0d233a', '#8bbc21', '#910000', '#1aadce', '#492970', '#f28f43', '#77a1e5', '#c42525', '#a6c96a'],
+						marker: {
+							length: 2.5,
+							opts: {
+								fillOpacity: 0.5,
+								strokeWeight: 0
+							}
+						}
+					},
+					loading: {
+						colors: {
+							public_data: '#57b5ff',
+							dedicated_data: '#0200ff'
+						},
+						icons: {
+							public_data: '<%= image_url 'app/icons/km/map/markers/loading/public_data.png' %>',
+							dedicated_data: '<%= image_url 'app/icons/km/map/markers/loading/dedicated_data.png' %>'
+						}
+					},
+					deliveries: {
+						colors: {
+							D: '#e2bd2f', 
+							P: '#a2523f', 
+							B: '#4ea532'
+						},
+						icons: {
+							D: '<%= image_url 'app/icons/km/map/markers/deliveries/D.png' %>',
+							P: '<%= image_url 'app/icons/km/map/markers/deliveries/P.png' %>',
+							B: '<%= image_url 'app/icons/km/map/markers/deliveries/B.png' %>'
+						}
+					},
+					traffic_counts: {},
+					traffic_disruptions: {
+						colors: {
+							'0': '#5da2ba',
+							'1': '#90d56a',
+							'2': '#496c43'
+						},
+						icons: {
+							'0': '<%= image_url 'app/icons/km/map/markers/traffic_disruptions/0.png' %>',
+							'1': '<%= image_url 'app/icons/km/map/markers/traffic_disruptions/1.png' %>',
+							'2': '<%= image_url 'app/icons/km/map/markers/traffic_disruptions/2.png' %>'
+						}
 					}
 				}
 			},
@@ -157,7 +212,8 @@ $.extend(config, {
 				},
 				actions: {
 					map: '<%= image_url 'app/icons/km/panel/actions/map.png' %>',
-					chart: '<%= image_url 'app/icons/km/panel/actions/chart.png' %>'
+					chart: '<%= image_url 'app/icons/km/panel/actions/chart.png' %>',
+					close: '<%= image_url 'app/icons/km/panel/actions/close.png' %>'
 				},
 				icons: {
 					main: {

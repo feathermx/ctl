@@ -192,6 +192,10 @@ CREATE TABLE public.streets (
                 public_meter_length DOUBLE PRECISION DEFAULT 0,
                 dedicated_meter_length DOUBLE PRECISION DEFAULT 0,
                 track_count INTEGER DEFAULT 0,
+                lat1 DOUBLE PRECISION,
+                lng1 DOUBLE PRECISION,
+                lat2 DOUBLE PRECISION,
+                lng2 DOUBLE PRECISION,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
                 CONSTRAINT streets_pk PRIMARY KEY (id)
