@@ -63,6 +63,10 @@ class Km < ActiveRecord::FmxBase
     @tracks ||= Track.base.filter_by_km(self.id)
   end
   
+  def traffic_counts
+    @traffic_counts ||= TrafficCount.base.filter_by_km(self.id)
+  end
+  
   def shops
     @shops ||= Shop.base.filter_by_km(self.id)
   end
