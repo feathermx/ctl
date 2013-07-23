@@ -79,6 +79,14 @@ class Km < ActiveRecord::FmxBase
     @traffic_disruptions ||= TrafficDisruption.base.filter_by_km(self.id)
   end
   
+  def street_data
+    @street_data ||= StreetData.base.filter_by_km(self.id)
+  end
+  
+  def parking_restrictions
+    @parking_restrictions ||= ParkingRestriction.base.filter_by_km(self.id)
+  end
+  
   def streets
     @streets ||= Street.base.filter_by_km(self.id)
   end
