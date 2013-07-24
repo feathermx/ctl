@@ -6,6 +6,7 @@
 			root: null,
 			container: null,
 			config: null,
+			csv_uploader: null,
 			init: function(){
 				this.initRoot();
 				this.initConfig();
@@ -18,7 +19,7 @@
 			},
 			initCsvUploader: function(){
 				var _self = this;
-				this.root.fmx.csv_uploader(
+				this.csv_uploader = this.root.fmx.csv_uploader(
 					$.extend({
 						url: '<%= url_for action: :create %>',
 						params: <%= opts[:params].to_json.html_safe %>,
