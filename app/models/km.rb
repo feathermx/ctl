@@ -11,7 +11,7 @@ class Km < ActiveRecord::FmxBase
   scope :descending, ->{ order('kms.created_at DESC') }
   
   attr_accessor :active_changed
-  attr_protected :is_active, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_delivery_hour, :peak_disruptions, :peak_disruption_hour, :peak_traffic, :peak_traffic_hour, :min_disruption_time, :max_disruption_time, :min_delivery_time, :max_delivery_time, :chart_start_time, :chart_end_time, :city_id, :track_count, :traffic_count_count, :traffic_disruption_count, :street_data_count, :parking_restriction_count, :shop_count, :delivery_count
+  attr_protected :is_active, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_delivery_hour, :peak_disruptions, :peak_disruption_hour, :peak_traffic, :peak_traffic_hour, :min_disruption_time, :max_disruption_time, :min_delivery_time, :max_delivery_time, :chart_start_time, :chart_end_time, :city_id, :track_count, :traffic_counts_count, :traffic_disruption_count, :street_data_count, :parking_restrictions_count, :shops_count, :delivery_count
   
   validates :street_lat, :street_lng, presence: true
   validates :is_active, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }
@@ -107,6 +107,10 @@ class Km < ActiveRecord::FmxBase
     @shop_totals ||= ShopTotal.base.filter_by_km(self.id)
   end
   
+  def blocks
+    @blocks ||= Block.base.filter_by_km(self.id)
+  end
+  
   def is_active=(val)
     curr_active = self.is_active.to_i
     val = val.to_i
@@ -119,7 +123,21 @@ class Km < ActiveRecord::FmxBase
     @bool_active ||= self.is_active.to_i == 1
   end
   
-  #protected
+  def purge_data
+    self.destroy_deliveries
+    self.destroy_shops
+    self.destroy_traffic_counts
+    self.destroy_traffic_disruptions
+    self.destroy_parking_restrictions
+    self.destroy_street_data
+    self.destroy_streets
+    self.destroy_blocks
+    self.deliveries_count = self.shops_count = self.traffic_counts_count = self.parking_restrictions_count = self.street_data_count = 0
+    self.is_active = 0
+    self.save
+  end
+  
+  protected
   
   def reset_active_fields
     self.public_meter_length = self.dedicated_meter_length = self.peak_deliveries = self.peak_disruptions = self.peak_traffic = 0
@@ -272,6 +290,62 @@ class Km < ActiveRecord::FmxBase
       results.push(cls.peak_for_hour(hour, self.id, base))
     end
     results.each_with_index.max
+  end
+  
+  def destroy_blocks
+    self.blocks.each do |el|
+      el.destroy
+    end
+    @blocks = nil
+  end
+  
+  def destroy_streets
+    self.streets.each do |el|
+      el.destroy
+    end
+    @streets = nil
+  end
+  
+  def destroy_shops
+    self.shops.each do |el|
+      el.destroy
+    end
+    @shops = nil
+  end
+  
+  def destroy_street_data
+    self.street_data.each do |el|
+      el.destroy
+    end
+    @street_data = nil
+  end
+  
+  def destroy_parking_restrictions
+    self.parking_restrictions.each do |el|
+      el.destroy
+    end
+    @parking_restrictions = nil
+  end
+  
+  def destroy_traffic_disruptions
+    self.traffic_disruptions.each do |el|
+      el.destroy
+    end
+    @traffic_disruptions = nil
+  end
+  
+  def destroy_traffic_counts
+    self.traffic_counts.each do |el|
+      el.destroy
+    end
+    @traffic_counts = nil
+  end
+  
+  def destroy_deliveries
+    self.deliveries.each do |el|
+      el.destroy
+    end
+    @deliveries = nil
   end
   
   def destroy_deliveries_disruptions

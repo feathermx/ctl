@@ -22,6 +22,7 @@ class Street < ActiveRecord::FmxBase
   validates :lng1, numericality: true, allow_nil: true
   validates :lat2, numericality: true, allow_nil: true
   validates :lng2, numericality: true, allow_nil: true
+  validates :research_id, uniqueness: { scope: :block_id }
   
   def set_location
     total = Track.base_count.filter_by_street(self.id).order(nil).first[:num].to_i

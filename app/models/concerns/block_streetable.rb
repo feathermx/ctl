@@ -26,6 +26,14 @@ module BlockStreetable
       end
     end
     
+    def street
+      @street ||= Street.base.find_by_id(self.street_id)
+    end
+    
+    def block
+      @block ||= Block.base.find_by_id(self.street.block_id)
+    end
+    
   end
   
   module ClassMethods
