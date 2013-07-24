@@ -10,7 +10,9 @@ $.extend(config, {
 	},
 	api: {
 		endpoint: '',
-		image_path: '/images',
+		images: {
+			base: '<%= image_url '%{image}', alt: 'base' %>'
+		},
 		paths: {
 			list_splash_cities: '<%= url_for controller: 'api/cities', action: :list %>',
 			list_countries: '<%= url_for controller: 'api/countries', action: :list %>',

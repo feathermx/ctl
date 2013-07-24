@@ -72,7 +72,9 @@
 				this.google_maps_loader.init();
 			},
 			getImagePath: function(src){
-				return config.api.image_path + '/' + src;
+				var base = config.images.base;
+				var img_src = base.replace('%{image}', src);
+				return img_src;
 			},
 			loadKm: function(data){
 				$.extend(this.selections, data);
