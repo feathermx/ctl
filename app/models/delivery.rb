@@ -40,7 +40,7 @@ class Delivery < ActiveRecord::FmxBase
   scope :filter_by_delivery_key, ->(delivery_key){ where(delivery_key: delivery_key) }
   scope :with_shop, ->{ joins('JOIN shops ON shops.id = deliveries.shop_id').select('shops.name as shop_name') }
   
-  validates :delivery_key, uniqueness: true
+  validates :delivery_key, presence: true, uniqueness: true
   validates :started_at, presence: true
   validates :ended_at, presence: true
   validates :vehicle_type, presence: true, length: { maximum: 30 }
