@@ -1,3 +1,6 @@
+<% content_for :header_actions do %>
+	
+<% end %>
 <%= javascript_include_tag url_for(opts[:params].merge(action: :new_action)) %>
 <div id="csv_new" class="backend_section_wrapper">
 	<%= render partial: 'admin/shared/section/header', locals: { opts: opts } %>
