@@ -35,6 +35,7 @@ class TrafficDisruption < ActiveRecord::FmxBase
     EmergencyVehicle = 'E'
     Crosswalk = 'C'
     VehicleManeuvers = 'M'
+    JayWalking = 'J'
     
     List = {
       PedestrianSidewalk => {
@@ -54,6 +55,9 @@ class TrafficDisruption < ActiveRecord::FmxBase
       },
       VehicleManeuvers => {
         name: I18n.t('app.model.traffic_disruption.disruption_type.vehicle_maneuvers')
+      },
+      JayWalking => {
+        name: I18n.t('app.model.traffic_disruption.disruption_type.jaywalking')
       }
     }
     

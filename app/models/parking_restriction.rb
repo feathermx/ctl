@@ -5,10 +5,31 @@ class ParkingRestriction < ActiveRecord::FmxBase
   include Kmable
   include Weekable
   
-  scope :base, ->{ select("parking_restrictions.id, parking_restrictions.km_id, parking_restrictions.street_id, parking_restrictions.day_of_week, parking_restrictions.starts_at, parking_restrictions.ends_at, parking_restrictions.parking_duration, parking_restrictions.notes") }
+  module ParkingRestrictionType
+    
+    PublicParking = 'P'
+    LoadingArea = 'L'
+    
+    List = {
+      PublicParking => {
+        name: I18n.t('app.model.parking_restriction.parking_restriction_type.public_parking')
+      },
+      LoadingArea => {
+        name: I18n.t('app.model.parking_restriction.parking_restriction_type.loading_area')
+      }
+    }
+    
+    def self.keys
+      @@keys ||= List.keys
+    end
+    
+  end
+  
+  scope :base, ->{ select("parking_restrictions.id, parking_restrictions.km_id, parking_restrictions.parking_restriction_type, parking_restrictions.street_id, parking_restrictions.day_of_week, parking_restrictions.starts_at, parking_restrictions.ends_at, parking_restrictions.parking_duration, parking_restrictions.notes") }
   scope :base_count, ->{ select("COUNT(parking_restrictions.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
   
+  validates :parking_restriction_type, presence: true, length: { is: 1 }, inclusion: { in: ParkingRestrictionType.keys }
   validates :starts_at, presence: true
   validates :ends_at, presence: true
   validates :day_of_week, presence: true, numericality: { only_integer: true }

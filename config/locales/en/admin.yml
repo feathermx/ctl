@@ -251,6 +251,9 @@ en:
             with_equipment: 'w/e'
             number_of_trips: 'Trips'
             delivery_key: 'D. Key'
+            distance_to_shop: 'D. Shop'
+            is_out_of_segment: 'O. Seg?'
+            shops_served: 'S. Ser.'
             notes: 'Notes'
           new:
             title: 'CSV Upload'
@@ -263,6 +266,7 @@ en:
             starts_at: 'Start'
             ends_at: 'End'
             parking_duration: 'Dur.'
+            parking_restriction_type: 'Type'
             notes: 'Notes'
           new:
             title: 'CSV Upload'

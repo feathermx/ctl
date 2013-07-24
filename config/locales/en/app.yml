@@ -53,6 +53,8 @@ en:
           deliveries:
             title: 'Deliveries'
             units: 'per hour'
+            chart:
+              y_label: 'Delivery time'
             fields:
               vehicle_type: 'Vehicle'
               delivering_company: 'Company'

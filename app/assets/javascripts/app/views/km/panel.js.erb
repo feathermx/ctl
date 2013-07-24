@@ -96,8 +96,10 @@
 								});
 							},
 							addElement: function(element){
-								var panel = element.small_panel;
-								panel.appendTo(this);
+								if(element.hasMapDisplay()){
+									var panel = element.small_panel;
+									panel.appendTo(this);
+								}
 							},
 							initRoot: function(){
 								this.root = this.parent.root;

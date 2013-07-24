@@ -1,3 +1,8 @@
+$.app_display_types = {};
+$.extend($.app_display_types, {
+	chart: 1,
+	map: 2
+});
 var config = {};
 $.extend(config, {
 	init: function(){
@@ -44,6 +49,18 @@ $.extend(config, {
 	},
 	views: {
 		km: {
+			elements: {
+				base: {
+					display_type: $.app_display_types.chart | $.app_display_types.map
+				},
+				shops: {},
+				loading: {},
+				deliveries: {},
+				traffic_counts: {
+					display_type: $.app_display_types.chart
+				},
+				traffic_disruptions: {}
+			},
 			map: {
 				map: {
 					lat: 42.35704390000001,
@@ -186,7 +203,15 @@ $.extend(config, {
 						}
 					},
 					deliveries: {
-						opts: {}
+						opts: {
+							chart: {
+								type: 'columnrange',
+								inverted: true
+							},
+							legend: {
+								enabled: false
+							}
+						}
 					},
 					traffic_counts: {
 						fields: <%= TrafficCountTotal.traffic_count_fields.to_json.html_safe %>,
@@ -239,7 +264,6 @@ $.extend(config, {
 						shops: '<%= image_url 'app/icons/km/panel/logo/small/shops.png' %>',
 						loading: '<%= image_url 'app/icons/km/panel/logo/small/loading.png' %>',
 						deliveries: '<%= image_url 'app/icons/km/panel/logo/small/deliveries.png' %>',
-						traffic_counts: '<%= image_url 'app/icons/km/panel/logo/small/traffic_counts.png' %>',
 						traffic_disruptions: '<%= image_url 'app/icons/km/panel/logo/small/traffic_disruptions.png' %>'
 					}
 				}

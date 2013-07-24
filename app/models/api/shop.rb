@@ -2,10 +2,6 @@ class Api::Shop < Shop
   
   module Json
     Default = {}
-    Chart = {
-      only: [:name],
-      methods: [:chart_deliveries]
-    }
     Map = {
       only: [:name, :has_loading_area, :deliveries_count, :lat, :lng],
       methods: [:f_length]
@@ -19,10 +15,10 @@ class Api::Shop < Shop
     self.api_map_base.filter_by_km(km_id).filter_by_type(shop_type)
   end
   
-  def chart_deliveries
-    Api::Delivery.json_display = Api::Delivery::Json::Chart
-    @chart_deliveries ||= Api::Delivery.api_chart_base.filter_by_shop(self.id)
-  end
+  #def chart_deliveries
+  #  Api::Delivery.json_display = Api::Delivery::Json::Chart
+  #  @chart_deliveries ||= Api::Delivery.api_chart_base.filter_by_shop(self.id)
+  #end
   
   def self.json_display
     @@json_display ||= Json::Default

@@ -33,12 +33,16 @@ class Km < ActiveRecord::FmxBase
   before_save :set_active_state
   before_destroy :remove_active_count
   
-  def min_delivery_time_i
-    @min_delivery_time_i ||= self.min_delivery_time.to_i
+  def min_delivery_time_at
+    @min_delivery_time_at ||= ->{
+      (self.min_delivery_time.to_i * 1000) unless self.min_delivery_time.nil? 
+    }.call
   end
   
-  def max_delivery_time_i
-    @max_delivery_time_i ||= self.max_delivery_time.to_i
+  def max_delivery_time_at
+    @max_delivery_time_at ||= ->{
+      (self.max_delivery_time.to_i * 1000) unless self.max_delivery_time.nil? 
+    }.call
   end
   
   def full_name

@@ -141,8 +141,8 @@ class Shop < ActiveRecord::FmxBase
   validates :front_length, numericality: true, allow_blank: true
   validates :starting_floor, numericality: true, allow_blank: true 
   validates :total_floors, numericality: true, allow_blank: true
-  validates :has_loading_area, presence: true, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }
-  validates :loading_area_type, presence: true, numericality: { only_integer: true }, inclusion: { in: LoadingAreaType.keys }
+  validates :has_loading_area, presence: true, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }, allow_nil: true
+  validates :loading_area_type, presence: true, numericality: { only_integer: true }, inclusion: { in: LoadingAreaType.keys }, allow_nil: true
   validates :notes, length: { maximum: 300 }, allow_blank: true
   
   def f_length
@@ -167,6 +167,14 @@ class Shop < ActiveRecord::FmxBase
     @r_at ||= ->{
       (self.registered_at.to_i * 1000) unless self.registered_at.nil?
     }.call
+  end
+  
+  def has_loading_area=(val)
+    write_attribute(:has_loading_area, val) unless val.blank?
+  end
+  
+  def loading_area_type=(val)
+    write_attribute(:loading_area_type, val) unless val.blank?
   end
   
   def registered_at=(val)

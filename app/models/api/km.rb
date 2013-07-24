@@ -61,7 +61,7 @@ class Api::Km < Km
   end
   
   def api_chart_deliveries
-    @api_chart_deliveries ||= Api::Shop.api_chart_base.filter_by_km(self.id)
+    @api_chart_deliveries ||= Api::Delivery.api_chart_base.filter_by_km(self.id)
   end
   
   def api_map_deliveries

@@ -8,10 +8,6 @@
 			lang: null,
 			list: {},
 			active: null,
-			views: {
-				chart: 1,
-				map: 2
-			},
 			init: function(){
 				this.initRoot();
 				this.initView();
@@ -46,12 +42,17 @@
 					chart: null,
 					map: null,
 					data_key: '',
-					_views: null,
+					config: null,
+					has: {
+						chart: null,
+						map: null
+					},
 					init: function(){
 						this.initRoot();
 						this.initView();
 						this.initElement();
 						this.initLang();
+						this.initConfig();
 						this.initList();
 						this.initPanel();
 						this.initSmallPanel();
@@ -72,6 +73,21 @@
 						this.small_panel.disable();
 						this.map.disable();
 						layer_panel.removeTriggers();
+					},
+					hasMapDisplay: function(){
+						if(this.has.map == null) this.has.map = this.hasDisplay($.app_display_types.map);
+						return this.has.map;
+					},
+					hasChartDisplay: function(){
+						if(this.has.chart == null) this.has.chart = this.hasDisplay($.app_display_types.chart);
+						return this.has.chart;
+					},
+					hasDisplay: function(type){
+						return ((this.config.display_type & type) == type);
+					},
+					initConfig: function(){
+						var config = this.view.config.elements;
+						this.config = $.extend({}, config.base, config[this.key]);
 					},
 					initList: function(){
 						this.parent.list[this.key] = this;
@@ -776,6 +792,9 @@
 						this.chart.init();
 					},
 					initSmallPanel: function(){
+						if(this.hasMapDisplay()) this.getSmallPanel();
+					},
+					getSmallPanel: function(){
 						this.small_panel = {};
 						$.extend(this.small_panel, {
 							parent: this,
@@ -911,7 +930,7 @@
 									},
 									initContainer: function(){
 										this.container = $('<div class="km_panel_element_actions"></div>');
-										this.initMapAction();
+										if(this.element.hasMapDisplay()) this.initMapAction();
 										this.initChartAction();
 										this.container.append('<div class="clear"></div>');
 										this.container.appendTo(this.parent.container);

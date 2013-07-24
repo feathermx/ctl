@@ -27,6 +27,7 @@ en:
           emergency_vehicle: 'Emergency Vehicle'
           crosswalk: 'Crosswalk'
           vehicle_maneuvers: 'Vehicle Maneuvers'
+          jaywalking: 'Jaywlking'
         source:
           freight: 'Freight'
           utility: 'Utility'
@@ -91,3 +92,7 @@ en:
           morning: 'Morning'
           evening: 'Evening'
           noon: 'Noon'
+      parking_restriction:
+        parking_restriction_type:
+          public_parking: 'Public Parking'
+          loading_area: 'Loading Area'

@@ -112,14 +112,6 @@
 							disruptions_data.data.push(element.data.val.disruption_count);
 						});
 						$.extend(series, [deliveries_data, disruptions_data]);
-						/**
-						tooltip: {
-							formatter: function(){ 
-								//return this.point.name + '<br /><b>' + this.point.y + ' shops</b> (' + this.percentage.toFixed(2) + '%)'; 
-								return this.point.name;
-							}
-						}
-						*/
 						this.wrapper.highcharts(
 							$.extend({
 								yAxis: yAxis,
@@ -191,11 +183,7 @@
 						});
 						element.init();
 						return element;
-					},
-					//get
-					/**getElement: function(val){
-						
-					}*/
+					}
 				});
 			},
 			initPanel: function(){
