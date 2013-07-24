@@ -48,9 +48,20 @@
 			icons: {
 				remove: ''
 			},
+			select_options: {
+				line: [
+					{
+						name: 'Ms Excel',
+						value: '\\r'
+					},
+					{
+						name: 'LibreOffice',
+						value: '\\n'
+					}
+				]
+			},
 			defaults: {
 				delimiter: ',',
-				line: 'r',
 				exclude_count: 0
 			},
 			validations: {
@@ -59,7 +70,8 @@
 			},
 			field_types: {
 				text: 0,
-				file: 1
+				file: 1,
+				select: 2
 			},
 			values: {
 				delimiter: null,
@@ -126,7 +138,7 @@
 					this.options.setValues();
 					this.table.empty();
 					try{
-						var line = "\\" + this.values.line;
+						var line =  this.values.line;
 						eval('line = "' + line + '";');
 						var lines = data.split(line);
 						for(var i=this.values.exclude_count; i<lines.length; ++i){
@@ -655,7 +667,7 @@
 								$.extend(this.view.values, {
 									delimiter: this.fields.delimiter.val || this.view.defaults.delimiter,
 									line: this.fields.line.val || this.view.defaults.line,
-									exclude_count: this.fields.exclude_count.val || this.view.defaults.exclude_count
+									exclude_count: this.fields.exclude_count.val
 								});
 							},
 							initFieldset: function(){
@@ -736,7 +748,7 @@
 								this.fields.line = this.getField({
 									parent_container: fieldset,
 									key: 'line',
-									validations: this.view.validations.presence
+									type: this.view.field_types.select
 								});
 							},
 							initExcludeCountField: function(fieldset){
@@ -841,6 +853,9 @@
 											case this.view.field_types.file:
 												this.initFileInput();
 											break;
+											case this.view.field_types.select:
+												this.initSelectInput();
+											break;
 										}
 										if(this.input != null){
 											this.input.appendTo(container);
@@ -863,6 +878,47 @@
 											type: 'text',
 											val: default_val
 										});
+									},
+									initSelectInput: function(){
+										this.input = {};
+										$.extend(this.input, {
+											parent: this,
+											view: null,
+											container: null,
+											init: function(){
+												this.initView();
+												this.initContainer();
+											},
+											initContainer: function(){
+												this.container = $('<select></select>');
+												this.initOptions();
+											},
+											initOptions: function(){
+												var options = this.view.select_options[this.parent.key];
+												if(options && options.length > 0){
+													var _self = this;
+													$.each(options, function(key, opt){
+														_self.addOption(opt);
+													});
+												}
+											},
+											addOption: function(data){
+												var option = $('<option></option>');
+												option.attr('value', data.value);
+												option.html(data.name);
+												option.appendTo(this.container);
+											},
+											val: function(){
+												return this.container.val();
+											},
+											appendTo: function(container){
+												return this.container.appendTo(container);
+											},
+											initView: function(){
+												this.view = this.parent.view;
+											}
+										});
+										this.input.init();
 									},
 									initLabel: function(){
 										var label = $('<label></label>');
