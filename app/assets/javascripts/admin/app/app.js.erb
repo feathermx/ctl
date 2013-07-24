@@ -354,8 +354,14 @@ $.extend(app, {
 			);
 		},
 		csv_uploader: function(opts){
+			var cnf = config.fmx.csv_uploader();
+			if(opts.defaults != null){
+				var defaults = cnf.defaults;
+				delete cnf.defaults;
+				$.extend(opts.defaults, defaults);
+			}
 			return $.fmx_csv_uploader(
-				$.extend(opts, config.fmx.csv_uploader())
+				$.extend(opts, cnf)
 			);
 		}
 	}

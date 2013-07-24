@@ -56,6 +56,7 @@ en:
           file_missing: 'Please select a csv file to continue'
           invalid_file: 'Invalid csv file'
           empty_file: 'CSV file is empty'
+          invalid_line: 'Invalid line delimiter'
           no_rows_found: 'No rows found'
           actions:
             remove: 'Remove row'
@@ -64,5 +65,6 @@ en:
             numericality: 'is not a number'
           fields:
             delimiter: 'Delimiter'
+            line: 'Line Delimiter'
             exclude_count: 'Exclude rows'
             file: 'CSV File'

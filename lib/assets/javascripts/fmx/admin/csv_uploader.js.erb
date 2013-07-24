@@ -29,6 +29,7 @@
 				file_missing: 'Please select a csv file to continue',
 				invalid_file: 'Invalid csv file',
 				empty_file: 'CSV file is empty',
+				invalid_line: 'Invalid line delimiter',
 				no_rows_found: 'No rows found.',
 				actions: {
 					remove: 'Remove row'
@@ -39,6 +40,7 @@
 				},
 				fields: {
 					delimiter: 'Delimiter',
+					line: 'Line Delimiter',
 	    			exclude_count: 'Exclude rows',
 					file: 'CSV File'
 				}
@@ -48,6 +50,7 @@
 			},
 			defaults: {
 				delimiter: ',',
+				line: 'r',
 				exclude_count: 0
 			},
 			validations: {
@@ -58,11 +61,9 @@
 				text: 0,
 				file: 1
 			},
-			delimiter: {
-				line: "\r"
-			},
 			values: {
 				delimiter: null,
+				line: null,
 				exclude_count: null
 			},
 			valid_mimes: ['text/comma-separated-values', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.ms-excel', 'application/vnd.msexcel', 'text/anytext'],
@@ -124,15 +125,26 @@
 				if(data){
 					this.options.setValues();
 					this.table.empty();
-					var lines = data.split(this.delimiter.line);
-					for(var i=this.values.exclude_count; i<lines.length; ++i){
-						var row = lines[i];
-						if(row != null && row.length > 0){
-							this.table.addRow(i, row);
-							++row_count;
+					try{
+						var line = "\\" + this.values.line;
+						eval('line = "' + line + '";');
+						var lines = data.split(line);
+						for(var i=this.values.exclude_count; i<lines.length; ++i){
+							var row = lines[i];
+							if(row != null && row.length > 0){
+								this.table.addRow(i, row);
+								++row_count;
+							}
 						}
+						this.table.render();
 					}
-					this.table.render();
+					catch(e){
+						this.row_count = null;
+						var error_msg = this.labels.invalid_line;
+						$.fmx_notification({
+							msg: error_msg
+						});
+					}
 				}
 				if(row_count == 0){
 					var error_msg = this.labels.empty_file;
@@ -630,6 +642,7 @@
 							container: null,
 							fields: {
 								delimiter: null,
+								line: null,
 								exclude_count: null
 							},
 							file_field: null,
@@ -641,12 +654,14 @@
 							setValues: function(){
 								$.extend(this.view.values, {
 									delimiter: this.fields.delimiter.val || this.view.defaults.delimiter,
+									line: this.fields.line.val || this.view.defaults.line,
 									exclude_count: this.fields.exclude_count.val || this.view.defaults.exclude_count
 								});
 							},
 							initFieldset: function(){
 								var fieldset = $('<fieldset></fieldset>');
 								this.initDelimiterField(fieldset);
+								this.initLineField(fieldset);
 								this.initExcludeCountField(fieldset);
 								this.initFileField(fieldset);
 								this.initFormActions(fieldset);
@@ -716,6 +731,13 @@
 							},
 							fileInputOnChange: function(e, element){
 								this.view.file = e.target.files[0];
+							},
+							initLineField: function(fieldset){
+								this.fields.line = this.getField({
+									parent_container: fieldset,
+									key: 'line',
+									validations: this.view.validations.presence
+								});
 							},
 							initExcludeCountField: function(fieldset){
 								this.fields.exclude_count = this.getField({
