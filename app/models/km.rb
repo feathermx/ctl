@@ -132,7 +132,6 @@ class Km < ActiveRecord::FmxBase
     self.destroy_street_data
     self.destroy_streets
     self.destroy_blocks
-    self.deliveries_count = self.shops_count = self.traffic_counts_count = self.traffic_disruptions_count = self.parking_restrictions_count = self.street_data_count = 0
     self.is_active = 0
     self.save
   end
@@ -310,6 +309,7 @@ class Km < ActiveRecord::FmxBase
     self.shops.each do |el|
       el.destroy
     end
+    self.shops_count = 0
     @shops = nil
   end
   
@@ -317,6 +317,7 @@ class Km < ActiveRecord::FmxBase
     self.street_data.each do |el|
       el.destroy
     end
+    self.street_data_count = 0
     @street_data = nil
   end
   
@@ -324,6 +325,7 @@ class Km < ActiveRecord::FmxBase
     self.parking_restrictions.each do |el|
       el.destroy
     end
+    self.parking_restrictions_count = 0
     @parking_restrictions = nil
   end
   
@@ -331,6 +333,7 @@ class Km < ActiveRecord::FmxBase
     self.traffic_disruptions.each do |el|
       el.destroy
     end
+    self.traffic_disruptions_count = 0
     @traffic_disruptions = nil
   end
   
@@ -338,6 +341,7 @@ class Km < ActiveRecord::FmxBase
     self.traffic_counts.each do |el|
       el.destroy
     end
+    self.traffic_counts_count = 0
     @traffic_counts = nil
   end
   
@@ -345,6 +349,7 @@ class Km < ActiveRecord::FmxBase
     self.deliveries.each do |el|
       el.destroy
     end
+    self.deliveries_count = 0
     @deliveries = nil
   end
   

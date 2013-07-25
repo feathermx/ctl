@@ -4,7 +4,6 @@ class Delivery < ActiveRecord::FmxBase
   include DateParsable
   include Kmable
   include Peakable
-  include Localizable
   include Durable
   
   module DeliveryType
@@ -59,6 +58,10 @@ class Delivery < ActiveRecord::FmxBase
   
   after_create :add_deliveries_count
   before_destroy :substract_deliveries_count
+  
+  def set_location
+    self.lat, self.lng = self.shop.lat, self.shop.lng
+  end
   
   def self.find_by_delivery_key(delivery_key)
     self.base.filter_by_delivery_key(delivery_key).first
@@ -133,10 +136,6 @@ class Delivery < ActiveRecord::FmxBase
   
   def self.peak_field
     "started_at"
-  end
-  
-  def location_field
-    @location_field ||= "started_at"
   end
   
   

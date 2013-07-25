@@ -21,6 +21,7 @@ en:
         create_success: 'Record created successfully'
         update_success: 'Record updated successfully'
         delete_success: 'Record deleted successfully'
+        delete_all_success: 'Records deleted successfully'
         import_success: 'Records inserted successfully'
       confirm_dialog:
         title: 'Confirm Action'
@@ -38,6 +39,7 @@ en:
         add: 'Add'
         edit: 'Edit'
         delete: 'Delete'
+        delete_all: 'Delete All'
         back: 'Back'
         add_title: 'New record'
         edit_title: 'Edit record'

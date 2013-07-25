@@ -7,10 +7,12 @@
 			container: null,
 			config: null,
 			csv_uploader: null,
+			dialog: null,
 			init: function(){
 				this.initRoot();
 				this.initConfig();
 				this.initCancelBtn();
+				this.initDeleteAllBtn();
 				this.initContainer();
 				this.initCsvUploader();
 			},
@@ -58,16 +60,94 @@
 			initContainer: function(){
 				this.container = this.root.dashboard.container.find('#csv_new');
 			},
+			initDeleteAllBtn: function(){
+				var delete_btn = {};
+				$.extend(delete_btn, {
+					parent: this,
+					root: null,
+					dialog: null,
+					init: function(){
+						this.initRoot();
+						this.initContainer();
+					},
+					initContainer: function(){
+						var _self = this;
+						var container = $('#csv_delete_all_btn').click(function(e){
+							e.preventDefault();
+							_self.click(e, $(this));
+						});
+						this.parent.addOverlay(container);
+					},
+					click: function(e, element){
+						var _self = this;
+						this.root.getConfirmationDialog(function(dialog){
+							_self.confirm(dialog);
+						});
+					},
+					confirm: function(dialog){
+						var _self = this;
+						this.dialog = dialog;
+						this.loading();
+						$.ajax({
+							type: 'post',
+							url: '<%= url_for action: :delete_all %>',
+							data: <%= opts[:params].to_json.html_safe %>,
+							success: function(data){
+								_self.success(data);
+							},
+							error: function(){
+								_self.error();
+							}
+						});
+					},
+					success: function(data){
+						this.loaded();
+						this.parent.parent.table.doRequest();
+						this.root.view_stack.popView();
+						this.root.fmx.notification({
+							msg: lang.messages.delete_all_success
+						});
+					},
+					error: function(){
+						this.loaded();
+						this.root.error();
+					},
+					loading: function(){
+						if(this.dialog != null) this.dialog.loading();
+						this.root.loading();
+					},
+					loaded: function(){
+						if(this.dialog != null){
+							this.dialog.loaded();
+							this.dialog = null;
+						}
+						this.root.loaded();
+					},
+					initRoot: function(){
+						this.root = this.parent.root;
+					}
+				});
+				delete_btn.init();
+			},
+			/**deleteBtnOnClick: function(e, element){
+				var _self = this;
+				this.root.getConfirmationDialog(function(dialog){
+					_self.deleteBtnOnConfirm(dialog);
+				});
+			},*/
 			initCancelBtn: function(){
 				var _self = this;
 				this.cancel_btn = $('#<%= opts[:cancel_btn_id] %>').click(function(e){
 					e.preventDefault();
 					_self.cancelBtnOnClick(e, $(this));
-				});
-				var overlay_msg = this.cancel_btn.attr('data-overlay');
+				});	
+				this.addOverlay(this.cancel_btn);
+			},
+			addOverlay: function(btn){
+				var overlay_msg = btn.attr('data-overlay');
 				if(overlay_msg){
 					this.root.fmx.overlay({
-						trigger: this.cancel_btn,
+						trigger: btn,
 						msg: overlay_msg,
 						position: $.fmx_overlay_positions.left
 					});
