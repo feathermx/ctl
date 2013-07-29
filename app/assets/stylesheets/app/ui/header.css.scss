@@ -44,7 +44,7 @@
 			background: none repeat scroll 0 0 #FFFFFF;
 			top: 28px;
 			left: 0px;
-			height: 200px;
+			height: 160px;
 			width: 268px;
 		}
 		.fmx_autocomplete_results_not_found{
@@ -61,12 +61,12 @@
 			padding: 7px 6px;
 			line-height: 1.3em;
 			cursor: pointer;
-			background: none repeat scroll 0 0 #72ADD3;
+			background: none repeat scroll 0 0 #FFFFFF;
 			border-bottom: 1px solid #DDDDDD;
 		}
 		.fmx_automplete_result{
 			&.even{
-				background: none repeat scroll 0 0 #F4F4F4;
+				background: none repeat scroll 0 0 #F9F9F9;
 			}
 			&:hover{
 				background: none repeat scroll 0 0 #1787D1;
