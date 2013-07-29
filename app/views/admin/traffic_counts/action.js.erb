@@ -29,4 +29,4 @@ this.table_formats = table_formats.list;
 	<%= render partial: 'admin/shared/section/actions/add', locals: { opts: @section.merge(perm: edit?) } %>
 	<%= render partial: 'admin/shared/section/actions/delete', locals: { opts: @section.merge(perm: edit?) } %>
 <% end %>
-<%= render partial: 'admin/shared/section/action', locals: { opts: @section } %>
+<%= render partial: 'admin/shared/section/csv/action', locals: { opts: @section } %>

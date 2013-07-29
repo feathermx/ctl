@@ -3,7 +3,7 @@ class Admin::DeliveriesController < Admin::AdminController
   include Admin::Kmable
   
   before_filter :assert_ajax_protected, except: [:action, :new_action]
-  before_filter :assert_edit, only: [:index, :list, :new, :create, :delete]
+  before_filter :assert_edit, only: [:index, :list, :new, :create, :delete, :delete_all]
   before_filter :assert_km
   before_filter :section
   
@@ -38,6 +38,11 @@ class Admin::DeliveriesController < Admin::AdminController
     unless element.nil?
       render json: { deleted: element.destroy }
     end
+  end
+  
+  def delete_all
+    self.km.destroy_deliveries
+    render json: { deleted: self.km.save }
   end
   
   protected

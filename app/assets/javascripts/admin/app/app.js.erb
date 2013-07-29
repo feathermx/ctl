@@ -126,6 +126,7 @@ $.extend(app, {
 			confirm_btn: null,
 			actions: [],
 			dialog: null,
+			is_loading: false,
 			init: function(){
 				this.initRoot();
 				this.initActions();
@@ -144,6 +145,18 @@ $.extend(app, {
 			initRoot: function(){
 				this.root = this.parent.root;
 			},
+			loading: function(){
+				this.is_loading = true;
+				$.each(this.actions, function(key, action){
+					action.loading();
+				});
+			},
+			loaded: function(){
+				this.is_loading = false;
+				$.each(this.actions, function(key, action){
+					action.loaded();
+				});
+			},
 			initActions: function(){
 				this.initConfirmBtn();
 				this.initCancelBtn();
@@ -156,10 +169,10 @@ $.extend(app, {
 			            _self.confirmBtnOnClick(e, element, instance);
 			        }
 			    });
-			    this.actions.push(this.confirm_btn);
+				this.actions.push(this.confirm_btn);
 			},
 			confirmBtnOnClick: function(e, element, instance){
-			    callback(this);
+				if(!this.is_loading) callback(this);
 			},
 			initCancelBtn: function(){
 			    var _self = this;
@@ -173,7 +186,10 @@ $.extend(app, {
 				this.actions.push(this.cancel_btn);
 			},
 			cancelBtnOnClick: function(e, element, instance){
-			    instance.dialog.close();
+				if(!this.is_loading) this.close();
+			},
+			close: function(){
+				this.dialog.close();
 			}
 		});
 		d.init();

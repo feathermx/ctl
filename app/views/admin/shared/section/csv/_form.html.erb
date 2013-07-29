@@ -1,8 +1,3 @@
-<% content_for :header_actions do %>
-	<a id="csv_delete_all_btn" href="#" class="section_action" data-overlay="<%= t "app.admin.actions.delete_all" %>">
-		<%= image_tag 'admin/icons/section_actions/delete_all.png', width: 24, height: 24 %>
-    </a>
-<% end %>
 <%= javascript_include_tag url_for(opts[:params].merge(action: :new_action)) %>
 <div id="csv_new" class="backend_section_wrapper">
 	<%= render partial: 'admin/shared/section/header', locals: { opts: opts } %>

@@ -11,4 +11,4 @@
 <% end %>
 <% action_url = @section[:params].merge(action: :action) %>
 <%= javascript_include_tag url_for(action_url) %>
-<%= render partial: 'admin/shared/section/section', locals: { opts: @section.merge(show_add_btn: edit?) } %>
+<%= render partial: 'admin/shared/section/csv/section', locals: { opts: @section.merge(show_add_btn: edit?) } %>

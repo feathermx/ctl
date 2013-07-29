@@ -2,12 +2,12 @@
 <div class="section_header">
     <div class="section_header_actions">
         <div class="section_actions_container">
-			<%= yield :header_actions %>
 			<% if opts[:show_cancel_btn] %>
 			<a id="<%= opts[:cancel_btn_id] %>" href="#" class="section_action" data-overlay="<%= t "app.admin.actions.back" %>">
 				<%= image_tag 'admin/icons/section_actions/back.png', width: 24, height: 24 %>
             </a>
 			<% end %>
+			<%= yield :header_actions %>
 			<% if opts[:show_add_btn]  %>
 			<a id="<%= opts[:add_btn_id] %>" href="#" class="section_action" data-overlay="<%= t "app.admin.actions.add" %>">
 				<%= image_tag 'admin/icons/section_actions/add.png', width: 24, height: 24 %>

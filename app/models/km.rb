@@ -136,6 +136,76 @@ class Km < ActiveRecord::FmxBase
     self.save
   end
   
+  def destroy_tracks
+    self.tracks.each do |el|
+      el.destroy
+    end
+    self.tracks_count = 0
+    @tracks = nil
+  end
+  
+  def destroy_blocks
+    self.blocks.each do |el|
+      el.destroy
+    end
+    @blocks = nil
+  end
+  
+  def destroy_streets
+    self.streets.each do |el|
+      el.destroy
+    end
+    @streets = nil
+  end
+  
+  def destroy_shops
+    self.shops.each do |el|
+      el.destroy
+    end
+    self.shops_count = 0
+    @shops = nil
+  end
+  
+  def destroy_street_data
+    self.street_data.each do |el|
+      el.destroy
+    end
+    self.street_data_count = 0
+    @street_data = nil
+  end
+  
+  def destroy_parking_restrictions
+    self.parking_restrictions.each do |el|
+      el.destroy
+    end
+    self.parking_restrictions_count = 0
+    @parking_restrictions = nil
+  end
+  
+  def destroy_traffic_disruptions
+    self.traffic_disruptions.each do |el|
+      el.destroy
+    end
+    self.traffic_disruptions_count = 0
+    @traffic_disruptions = nil
+  end
+  
+  def destroy_traffic_counts
+    self.traffic_counts.each do |el|
+      el.destroy
+    end
+    self.traffic_counts_count = 0
+    @traffic_counts = nil
+  end
+  
+  def destroy_deliveries
+    self.deliveries.each do |el|
+      el.destroy
+    end
+    self.deliveries_count = 0
+    @deliveries = nil
+  end
+  
   protected
   
   def reset_active_fields
@@ -289,68 +359,6 @@ class Km < ActiveRecord::FmxBase
       results.push(cls.peak_for_hour(hour, self.id, base))
     end
     results.each_with_index.max
-  end
-  
-  def destroy_blocks
-    self.blocks.each do |el|
-      el.destroy
-    end
-    @blocks = nil
-  end
-  
-  def destroy_streets
-    self.streets.each do |el|
-      el.destroy
-    end
-    @streets = nil
-  end
-  
-  def destroy_shops
-    self.shops.each do |el|
-      el.destroy
-    end
-    self.shops_count = 0
-    @shops = nil
-  end
-  
-  def destroy_street_data
-    self.street_data.each do |el|
-      el.destroy
-    end
-    self.street_data_count = 0
-    @street_data = nil
-  end
-  
-  def destroy_parking_restrictions
-    self.parking_restrictions.each do |el|
-      el.destroy
-    end
-    self.parking_restrictions_count = 0
-    @parking_restrictions = nil
-  end
-  
-  def destroy_traffic_disruptions
-    self.traffic_disruptions.each do |el|
-      el.destroy
-    end
-    self.traffic_disruptions_count = 0
-    @traffic_disruptions = nil
-  end
-  
-  def destroy_traffic_counts
-    self.traffic_counts.each do |el|
-      el.destroy
-    end
-    self.traffic_counts_count = 0
-    @traffic_counts = nil
-  end
-  
-  def destroy_deliveries
-    self.deliveries.each do |el|
-      el.destroy
-    end
-    self.deliveries_count = 0
-    @deliveries = nil
   end
   
   def destroy_deliveries_disruptions

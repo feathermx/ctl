@@ -174,4 +174,4 @@ this.table_formats = table_formats.list;
 <% content_for :subview_pop_callback do %>
 	this.parent.table.doRequest();
 <% end %>
-<%= render partial: 'admin/shared/section/action', locals: { opts: @section } %>
+<%= render partial: 'admin/shared/section/csv/action', locals: { opts: @section } %>

@@ -1,0 +1,97 @@
+<% if edit? %>
+<% content_for :view do %>
+this.csv_view = {};
+$.extend(this.csv_view, {
+	parent: this,
+	root: null,
+	init: function(){
+		this.initRoot();
+		this.initDeleteAllBtn();
+	},
+	initRoot: function(){
+		this.root = this.parent.root;
+	},
+	addOverlay: function(btn){
+		var overlay_msg = btn.attr('data-overlay');
+		if(overlay_msg){
+			this.root.fmx.overlay({
+				trigger: btn,
+				msg: overlay_msg,
+				position: $.fmx_overlay_positions.left
+			});
+		}
+	},
+	initDeleteAllBtn: function(){
+		var delete_btn = {};
+		$.extend(delete_btn, {
+			parent: this,
+			root: null,
+			dialog: null,
+			init: function(){
+				this.initRoot();
+				this.initContainer();
+			},
+			initContainer: function(){
+				var _self = this;
+				var container = $('#csv_delete_all_btn').click(function(e){
+					e.preventDefault();
+					_self.click(e, $(this));
+				});
+				this.parent.addOverlay(container);
+			},
+			click: function(e, element){
+				var _self = this;
+				this.root.getConfirmationDialog(function(dialog){
+					_self.confirm(dialog);
+				});
+			},
+			confirm: function(dialog){
+				var _self = this;
+				this.dialog = dialog;
+				this.loading();
+				$.ajax({
+					type: 'post',
+					url: '<%= url_for action: :delete_all %>',
+					data: <%= opts[:params].to_json.html_safe %>,
+					success: function(data){
+						_self.success(data);
+					},
+					error: function(){
+						_self.error();
+					}
+				});
+			},
+			success: function(data){
+				this.dialog.close();
+				this.parent.parent.table.doRequest();
+				this.loaded();
+				this.root.fmx.notification({
+					msg: lang.messages.delete_all_success
+				});
+			},
+			error: function(){
+				this.loaded();
+				this.root.error();
+			},
+			loading: function(){
+				if(this.dialog != null) this.dialog.loading();
+				this.root.loading();
+			},
+			loaded: function(){
+				if(this.dialog != null){
+					this.dialog.loaded();
+					this.dialog = null;
+				}
+				this.root.loaded();
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			}
+		});
+		delete_btn.init();
+	}
+});
+this.csv_view.init();
+<% end %>
+<% end %>
+<%= render partial: 'admin/shared/section/action', locals: { opts: opts } %>
