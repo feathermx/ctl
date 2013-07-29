@@ -18,6 +18,11 @@ $.extend(lang, {
 		},
 		km: {
 			header: {
+				search: {
+					labels: {
+						search: '<%= t 'app.views.km.header.search.labels.search' %>'
+					}
+				},
 				filters: {
 					labels: {
 						country: '<%= t 'app.views.km.header.filters.labels.country' %>',
@@ -158,6 +163,17 @@ $.extend(lang, {
 				labels: {
 					not_found: '<%= t 'fmx.app.dropdown.labels.not_found' %>',
 					error: '<%= t 'fmx.app.dropdown.labels.error' %>'
+				}
+			});
+			return opts;
+		},
+		autocomplete: function(){
+			var opts = {};
+			$.extend(opts, {
+				labels: {
+					search: '<%= t 'fmx.app.autocomplete.labels.search' %>',
+					error: '<%= t 'fmx.app.autocomplete.labels.error' %>',
+					not_found: '<%= t 'fmx.app.autocomplete.labels.not_found' %>'
 				}
 			});
 			return opts;

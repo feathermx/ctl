@@ -32,12 +32,12 @@
 					.focusout(function(){
 						_self.focusout();
 					})
-					.change(function(){
-						_self.change();
+					.keyup(function(){
+						_self.keyup();
 					})
 				;
 			},
-			change: function(){
+			keyup: function(){
 				this.val = this.container.val();
 			},
 			focusin: function(){

@@ -7,6 +7,9 @@
 	height: 40px;
 	@include background-gradient($from-base, $to-base);
 	z-index: 6001;
+	#header_left_container, #header_right_container{
+		margin: 4px 0 0 0;
+	}
 	#header_left_container{
 		display: block;
 		position: absolute;
@@ -14,8 +17,62 @@
 		top: 0px;
 		height: 100%;
 	}
-	.header_filters{
-		margin: 4px 0 0 0;
+	.header_search_bar{
+		@include border-radius(3px, 3px, 3px, 3px);
+		background: none repeat scroll 0 0 $header-base;
+		height: 29px;
+		.fmx_autocomplete_search_input{
+			border: 0 none;
+			outline: none;
+			color: #FFFFFF;
+			font-size: 11px;
+			background: none repeat scroll 0 0 $header-base;
+			width: 150px;
+			height: 15px;
+			margin: 5px 0 0 3px;
+		}
+		.fmx_autocomplete_icon{
+			width: 14px;
+			height: 14px;
+			margin: 8px 0 0 5px;
+		}
+		.fmx_autocomplete_search_sprite{
+			margin: 7px 0 0 0;
+		}
+		.fmx_autocomplete_results_container{
+			@include box-shadow(1px, 1px, 2px, #BBBBBB);
+			background: none repeat scroll 0 0 #FFFFFF;
+			top: 28px;
+			left: 0px;
+			height: 200px;
+			width: 268px;
+		}
+		.fmx_autocomplete_results_not_found{
+			font-size: 11px;
+			text-align: center;
+			color: #BEBEBE;
+			width: 180px;
+			height: 13px;
+			margin-top: -7px;
+			margin-left: -90px;
+		}
+		@include link('.fmx_automplete_result') {
+			font-size: 11px;
+			padding: 7px 6px;
+			line-height: 1.3em;
+			cursor: pointer;
+			background: none repeat scroll 0 0 #72ADD3;
+			border-bottom: 1px solid #DDDDDD;
+		}
+		.fmx_automplete_result{
+			&.even{
+				background: none repeat scroll 0 0 #F4F4F4;
+			}
+			&:hover{
+				background: none repeat scroll 0 0 #1787D1;
+				color: #FFFFFF;
+			}
+		}
 	}
 	#header_right_container{
 		display: block;
@@ -23,9 +80,20 @@
 		/** TODO */
 		right: 75px;
 		top: 0px;
-		@include link('.fmx_dropdown') {
+		.header_filters{
 			float: right;
+		}
+		.fmx_dropdown, .header_search_bar{
 			margin: 0 0 0 9px;
+		}
+		@include link('.fmx_dropdown') {
+			float: left;
+		}
+		.header_search_bar, .fmx_autocomplete_results_container{
+			width: 200px;
+		}
+		.header_search_bar{
+			float: left;
 		}
 	}
 	#header_logo_container{

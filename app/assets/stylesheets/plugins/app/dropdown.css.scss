@@ -4,13 +4,13 @@
 	height: 20px;
 	padding: 5px 7px;
 	@include border-radius(3px, 3px, 3px, 3px);
-	background: none repeat scroll 0 0 #1B5A94;
+	background: none repeat scroll 0 0 $header-base;
 	margin: 0 9px 0 0;
 	cursor: pointer;
 }
 .fmx_dropdown{
 	&:hover, .active{
-		background: none repeat scroll 0 0 #124A75;
+		background: none repeat scroll 0 0 $header-base-hover;
 	}
 	.fmx_dropdown_icon{
 		width: 14px;

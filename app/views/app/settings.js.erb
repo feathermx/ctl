@@ -17,6 +17,7 @@ $.extend(config, {
 			list_splash_cities: '<%= url_for controller: 'api/cities', action: :list %>',
 			list_countries: '<%= url_for controller: 'api/countries', action: :list %>',
 			list_cities: '<%= url_for controller: 'api/countries', action: :list_cities %>',
+			search_cities: '<%= url_for controller: 'api/cities', action: :search %>',
 			list_kms: '<%= url_for controller: 'api/cities', action: :list_kms %>',
 			show_km: '<%= url_for controller: 'api/kms', action: :show %>',
 			elements: {
@@ -47,6 +48,26 @@ $.extend(config, {
 		paths: {
 			home: '<%= url_for controller: :home, action: :index %>',
 			km: '<%= url_for controller: :kms, action: :index %>'
+		}
+	},
+	ui: {
+		header: {
+			icons: {
+				search: '<%= image_url 'app/icons/header/search.png' %>'
+			},
+			loaders: {
+				search: {
+					src: '<%= image_url 'app/loaders/loader15x15.png' %>',
+					width: 270,
+					opts: {
+						fps: 12,
+						dimensions: {
+							width: 15,
+							height: 15
+						}	
+					}
+				}
+			}
 		}
 	},
 	views: {
@@ -317,6 +338,13 @@ $.extend(config, {
 					active: '<%= image_url 'app/ui/arrows/dropdown/active.png' %>'
 				}
 			}, lang.fmx.dropdown());
+			return opts;
+		},
+		autocomplete: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.autocomplete());
 			return opts;
 		}
 	}

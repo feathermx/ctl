@@ -11,6 +11,11 @@ class Api::CitiesController < Api::ApiController
     render json: { contents: Api::City.list }
   end
   
+  def search
+    Api::City.json_display = Api::City::Json::List
+    render json: { contents: Api::City.search(params[:q], params[:km_id]) }
+  end
+  
   # POST /api/cities/list_kms
   def list_kms
     Api::Km.json_display = Api::Km::Json::Default

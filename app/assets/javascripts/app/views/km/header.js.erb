@@ -170,8 +170,72 @@
 					},
 					initContainer: function(){
 						this.container = $('<div id="header_right_container"></div>');
+						this.initSearchBar();
 						this.initFilters();
+						this.container.append('<div class="clear"></div>');
 						this.container.appendTo(this.parent.container);
+					},
+					initSearchBar: function(){
+						var search_bar = {};
+						$.extend(search_bar, {
+							parent: this,
+							root: null,
+							view: null,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container = $('<div class="header_search_bar"></div>');
+								this.initAutocomplete();
+								this.container.appendTo(this.parent.container);
+							},
+							initAutocomplete: function(){
+								var _self = this;
+								var cnf = config.ui.header;
+								var icons = cnf.icons;
+								var loaders = cnf.loaders;
+								var lang = this.view.lang.header.search.labels;
+								this.root.fmx.autocomplete({
+									api_client: this.root.api_client,
+									key: 'search_cities',
+									container: this.container,
+									icons: {
+										search: icons.search
+									},
+									labels: {
+										search: lang.search
+									},
+									sprite: {
+										loading: loaders.search
+									},
+									getData: function(){
+										return _self.getAutocompleteData();
+									},
+									change: function(which){
+										_self.change(which);
+									}
+								});
+							},
+							change: function(which){
+								this.view.loadKm(which.last_active_km_id);
+							},
+							getAutocompleteData: function(){
+								var data = {};
+								$.extend(data, {
+									km_id: this.view.km.id
+								});
+								return data;
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							}
+						});
+						search_bar.init();
 					},
 					initFilters: function(){
 						this.filters = {};

@@ -20,6 +20,9 @@ en:
           bigmac: 'Big Mac Index'
       km:
         header:
+          search:
+            labels:
+              search: 'search city...'
           filters:
             labels:
               country: 'Country'

@@ -4,10 +4,12 @@
 //= require highcharts.more-3.0.2.min
 //= require fmx/notification
 //= require fmx/sprite
+//= require fmx/placeholder
 //= require fmx/app/fullscreen
 //= require fmx/app/view_loader
 //= require fmx/app/api_client
 //= require fmx/app/dropdown
+//= require fmx/app/autocomplete
 //= require app/lang
 //= require app/app
 //= require app/ui/dashboard

@@ -1,0 +1,37 @@
+.fmx_autocomplete_search_container{
+	position: relative;
+}
+.fmx_autocomplete_search_input{
+	float: left;
+}
+.fmx_autocomplete_icon{
+	float: left;
+	border: 0 none;
+	outline: none;
+}
+.fmx_autocomplete_search_sprite{
+	overflow: hidden;
+	float: left;
+	display: none;
+}
+.fmx_autocomplete_results_container{
+	position: absolute;
+	display: none;
+}
+.fmx_autocomplete_results_not_found{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	display: none;
+}
+.fmx_autocomplete_result_container{
+	display: none;
+}
+.fmx_autocomplete_result_label{
+	float: left;
+}
+.fmx_autocomplete_result_cancel_btn{
+	display: block;
+	float: left;
+	cursor: pointer;
+}

@@ -139,6 +139,16 @@ $.extend(app, {
 			return $.fmx_dropdown(
 				$.extend(opts, config.fmx.dropdown(), this.root.getTouchOpts())
 			);
+		},
+		autocomplete: function(opts){
+			var cnf = config.fmx.autocomplete();
+			if(opts.labels != null){
+				$.extend(cnf.labels, opts.labels);
+				delete opts.labels;
+			}
+			return $.fmx_autocomplete(
+				$.extend(opts, cnf, this.root.getTouchOpts())
+			);
 		}
 	}
 });

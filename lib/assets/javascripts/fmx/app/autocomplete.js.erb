@@ -1,0 +1,337 @@
+(function(){
+	var nil = $();
+	$.fmx_autocomplete = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			container: nil,
+			parent: this,
+			search: null,
+			icons: {
+				search: ''
+			},
+			max_length: {
+				result: 30
+			},
+			sprite: {
+				loading: {
+					src: '',
+					width: 20,
+					opts: {}
+				}
+			},
+			api_client: null,
+			params: {},
+			url: '',
+			value: null,
+			result: null,
+			key: '',
+			labels: {
+				search: 'search...',
+				error: 'An error occurred. Please try again later.',
+				not_found: 'No records found'
+			},
+			has_touch: false,
+			_window: null,
+			init: function(){
+				this.initSearch();
+			},
+			getData: function(){
+				return {};
+			},
+			setValue: function(value){
+				this.value = value;
+				this.search.reset();
+				this.change(this.value);
+			},
+			setSearchView: function(){
+				this.result.hide();
+				this.search.show();
+			},
+			reset: function(clear){
+				clear = clear == null ? true : clear;
+				this.value = null;
+				if(clear){
+					this.search.reset();
+				}
+				this.setSearchView();
+				this.change();
+			},
+			change: function(){},
+			initSearch: function(){
+				this.search = {};
+				$.extend(this.search, {
+					parent: this,
+					root: null,
+					container: null,
+					input: null,
+					active: true,
+					timeout: 200,
+					search_timeout: 500,
+					val: null,
+					search_count: -1,
+					limit: 1,
+					req: null,
+					loader: null,
+					results: null,
+					init: function(){
+						this.initRoot();
+						this.initContainer();
+						this.initInterval();
+						this.initSearchInterval();
+					},
+					initRoot: function(){
+						this.root = this.parent;
+					},
+					reset: function(){
+						this.results.hide();
+						this.input.container.val('');
+						this.input.keyup();
+						this.input.focusout();
+					},
+					initSearchInterval: function(){
+						var _self = this;
+						setInterval(function(){
+							_self.searchIntervalCallback();
+						}, this.search_timeout);
+					},
+					searchIntervalCallback: function(){
+						if(this.search_count > -1){
+							if(this.search_count == this.limit){
+								this.abortSearch();
+								this.doRequest();
+							}
+							else{
+								++this.search_count;
+							}
+						}
+					},
+					doRequest: function(){
+						var _self = this;
+						var data = {};
+						$.extend(data, {
+							q: this.val
+						}, this.parent.params, this.root.getData());
+						this.req = this.root.api_client.load({
+							key: this.root.key,
+							data: data,
+							success: function(data){
+								_self.success(data);
+							},
+							error: function(){
+								_self.error();
+							}
+						});
+					},
+					success: function(data){
+						this.loaded();
+						this.results.update(data.contents);
+					},
+					error: function(){
+						this.loaded();
+					},
+					abort: function(){  
+						if(this.req != null) this.req.abort();
+					},
+					loading: function(){
+						this.abort();
+						this.loader.css('display', 'block');
+						this.results.hide();
+					},
+					loaded: function(){
+						this.loader.css('display', 'none');
+						this.req = null;
+					},
+					initInterval: function(){
+						var _self = this;
+						setInterval(function(){
+							_self.intervalCallback();
+						}, this.timeout);
+					},
+					abortSearch: function(){
+						this.search_count = -1;
+						this.abort();
+					},
+					intervalCallback: function(){
+						var val = this.input.val;
+						if(val){
+							if(this.val != val){
+								this.val = val;
+								this.search_count = 0;
+								this.loading();
+							}
+						}
+						else{
+							this.results.hide();
+							this.abortSearch();
+							this.loaded();
+						}
+						this.val = val;
+					},
+					initContainer: function(){
+						this.container = $('<div class="fmx_autocomplete_search_container"></div>');
+						this.initResults();
+						this.initIcon();
+						this.initInput();
+						this.initLoader();
+						this.container.append('<div class="clear"></div>');
+						this.container.appendTo(this.parent.container);
+					},
+					initIcon: function(){
+						var icon = $('<img />', {
+							src: this.root.icons.search
+						});
+						icon.addClass('fmx_autocomplete_icon');
+						icon.appendTo(this.container);
+					},
+					initResults: function(){
+						this.results = {};
+						$.extend(this.results, {
+							parent: this,
+							root: null,
+							container: null,
+							wrapper: null,
+							not_found: null,
+							init: function(){
+								this.initRoot();
+								this.initContainer();
+								this.initWrapper();
+								this.initNotFound();
+							},
+							initWrapper: function(){
+								this.wrapper = $('<div class="fmx_autocomplete_results_wrapper"></div>');
+								this.wrapper.appendTo(this.container);
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initNotFound: function(){
+								this.not_found = $('<div class="fmx_autocomplete_results_not_found"></div>');
+								this.not_found.html(this.root.labels.not_found);
+								this.not_found.appendTo(this.container);
+							},
+							initContainer: function(){
+								this.container = $('<div class="fmx_autocomplete_results_container"></div>');
+								//TODO
+								//this.container.css('overflow-y', 'scroll');
+								this.container.appendTo(this.parent.container);
+							},
+							update: function(data){
+								this.show();
+								this.wrapper.empty();
+								this.not_found.css('display', 'none');
+								if(data.length == 0){
+									this.not_found.css('display', 'block');
+								}
+								else{
+									var _self = this;
+									$.each(data, function(key, row){
+										_self.addResult(row, key);
+									});
+								}
+							},
+							addResult: function(data, index){
+								var result = {};
+								$.extend(result, {
+									parent: this,
+									root: null,
+									index: null,
+									data: data,
+									container: null,
+									init: function(){
+										this.initRoot();
+										this.initContainer();
+									},
+									initRoot: function(){
+										this.root = this.parent.root;
+									},
+									initContainer: function(){
+										var _self = this;
+										this.container = $('<div class="fmx_automplete_result"></div>');
+										this.initName();
+										this.setListeners();
+										if(index % 2 == 0){
+											this.container.addClass('even');
+										}
+										this.container.appendTo(this.parent.wrapper);
+									},
+									setListeners: function(){
+										var _self = this;
+										if(this.root.has_touch){
+											var container = this.container.get(0);
+											container.addEventListener('touchstart', function(e){
+												e.preventDefault();
+												_self.containerOnClick(e, _self.container);
+											}, false);
+										}
+										else{
+											this.container.click(function(e){
+												e.preventDefault();
+												_self.containerOnClick(e, $(this));
+											});
+										}
+									},
+									initName: function(){
+										var name = '';
+										if(this.data.name){
+											name = this.data.name;
+											var max_length = this.root.max_length.result;
+											if(name > max_length){
+												name = (name.substring(max_length - 3) + '...');
+											}
+										}
+										this.container.html(name);
+									},
+									containerOnClick: function(e, element){
+										this.root.setValue(this.data);
+									}
+								});
+								result.init();
+							},
+							show: function(){
+								this.container.css('display', 'block');
+							},
+							hide: function(){
+								this.container.css('display', 'none');
+							}
+						});
+						this.results.init();
+					},
+					initLoader: function(){
+						this.loader = $('<div class="fmx_autocomplete_search_sprite"></div>');
+						var sprite = this.root.sprite.loading;
+						this.loader.attr({
+							'data-src': sprite.src,
+							'data-width': sprite.width
+						});
+						$.fmx_sprite(
+							$.extend({
+								container: this.loader
+							}, sprite.opts)
+						);
+						this.loader.appendTo(this.container);
+					},
+					initInput: function(){
+						var _self = this;
+						var input = $('<input />', {
+							type: 'text',
+							placeholder: this.parent.labels.search
+						}).addClass('fmx_autocomplete_search_input');
+						this.input = $.fmx_placeholder({
+							container: input
+						});
+						input.appendTo(this.container);
+					},
+					show: function(){
+						this.container.css('display', 'block');
+					},
+					hide: function(){
+						this.container.css('display', 'none');
+					}
+				});
+				this.search.init();
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	}
+})(jQuery);
