@@ -67,6 +67,7 @@
 			},
 			initChart: function(){
 				$.extend(this.chart, {
+					_colors: null,
 					render: function(){
 						var _self = this;
 						var series = [];
@@ -98,13 +99,29 @@
 						$.extend(series, [public_data, dedicated_data]);
 						this.wrapper.highcharts(
 							$.extend({
+								colors: this.getColors(),
 								yAxis: yAxis,
 								xAxis: {
-									categories: categories
+									categories: categories,
+									labels: {
+										enabled: false
+									}
 								},
 								series: series
 							}, this.chart_opts)
 						);
+					},
+					getColors: function(){
+						if(this._colors == null){
+							this._colors = [];
+							var _self = this;
+							var config = this.view.config.map.elements[this.element.key];
+							var colors = config.colors;
+							$.each(colors, function(key, color){
+								_self._colors.push(color);
+							});
+						}
+						return this._colors;
 					}
 				});
 			},
