@@ -62,13 +62,20 @@
 						$.extend(marker, {
 							initMarker: function(){
 								var config = this.map.config.marker;
+								var length = this.data.f_length;
 								this.marker = new google.maps.Circle(
 									$.extend({
 										fillColor: this.parent.color,
 										center: this.location,
-										radius: this.data.f_length * config.length
+										radius: this.getLength(length)
 									}, config.opts, this.marker_opts)
 								);
+							},
+							getLength: function(val){
+								var config = this.map.config.marker;
+								if(val < config.min) val = config.min;
+								else if(val > config.max) val = config.max;
+								return val;
 							}
 						});
 						return marker;
