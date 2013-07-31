@@ -4,6 +4,9 @@ globals:
   salt: yjlm
   paths:
     upload: 'uploads'
+  backup:
+    dir: 'backup'
+    file_format: '%m_%d_%Y_%H_%M_%S'
   csv:
     date_format: '%m/%d/%Y %H:%M %z'
     date_full_format: '%m/%d/%Y %H:%M:%S %z'
