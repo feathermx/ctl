@@ -12,4 +12,5 @@
 //= require fmx/app/autocomplete
 //= require app/lang
 //= require app/app
+//= require app/util/format
 //= require app/ui/dashboard

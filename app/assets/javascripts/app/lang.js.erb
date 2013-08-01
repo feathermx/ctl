@@ -3,6 +3,13 @@ $.extend(lang, {
 	init: function(){
 		this.fmx.parent = this.views.parent = this;
 	},
+	format: {
+		number: {
+			billion: '<%= t 'app.format.number.billion' %>',
+			million: '<%= t 'app.format.number.million' %>',
+			thousand: '<%= t 'app.format.number.thousand' %>'
+		}
+	},
 	messages: {
 		error: '<%= t 'app.messages.error' %>'
 	},

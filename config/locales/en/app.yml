@@ -1,6 +1,11 @@
 en:
   app:
     title: 'km2'
+    format:
+      number:
+        billion: 'B'
+        million: 'M'
+        thousand: 'K'
     messages:
       loading: 'Loading'
       error: 'There was an error. Please try again later.'

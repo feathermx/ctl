@@ -883,7 +883,7 @@
 								this.stat.html(this.getStat(data));
 							},
 							getStat: function(data){
-								if(data == null) data = '-';
+								data = data == null ? '-' : this.root.format.shortNumber(data);
 								return data;
 							},
 							initContainer: function(){

@@ -112,7 +112,7 @@
 								this.root.loadKm(data);
 							},
 							addCol: function(val){
-								var label = (val == null) ? '-' : val;
+								var label = (val == null) ? '-' : this.root.format.shortNumber(val);
 								var container = $('<td></td>');
 								container.html(label);
 								container.appendTo(this.container);

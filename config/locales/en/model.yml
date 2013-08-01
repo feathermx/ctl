@@ -60,7 +60,7 @@ en:
       shop:
         shop_type:
           grocery: 'Grocery'
-          convinience: 'Convinience'
+          convinience: 'Convenience'
           gasoline: 'Gasoline'
           clothing: 'Clothing'
           accomodation: 'Accomodation'
@@ -70,7 +70,7 @@ en:
           other: 'Other'
           unknown: 'Unknown'
           kiosk_grocery: 'Kiosk Grocery'
-          kiosk_convinience: 'Kiosk Convinience'
+          kiosk_convinience: 'Kiosk Convenience'
           kiosk_gasoline: 'Kiosk Gasoline'
           kiosk_clothing: 'Kiosk Clothing'
           kiosk_accomodation: 'Kiosk Accomodation'

@@ -1,0 +1,49 @@
+(function(){
+	$(function(){
+		var el = app.format = {};
+		$.extend(el, {
+			parent: this,
+			root: null,
+			init: function(){
+				this.initRoot();
+				this.initLang();
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			},
+			initLang: function(){
+				this.lang = lang.format;
+			},
+			shortNumber: function(val, dec){
+				if(dec == null) dec = 2;
+				if(val != null){
+					var lang = this.lang.number;
+					var key = null;
+					var thousand = 1000;
+					var million = thousand * thousand;
+					var billion = million * thousand;
+					if(val >= billion){
+						key = 'billion';
+						val /= billion;
+					}
+					else if(val >= million){
+						key = 'million';
+						val /= million;
+					}
+					else if(val >= thousand){
+						key = 'thousand';
+						val /= thousand;
+					}
+					val = val.toFixed(dec);
+					val = parseFloat(val);
+					if(key != null){
+						var prefix = lang[key];
+						val = val + prefix;
+					}
+				}
+				return val;
+			}
+		});
+		el.init();
+	});
+})(jQuery);

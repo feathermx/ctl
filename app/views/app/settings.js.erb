@@ -241,13 +241,8 @@ $.extend(config, {
 						fields: <%= TrafficCountTotal.traffic_count_fields.to_json.html_safe %>,
 						opts: {
 							chart: {
-								type: 'column'
-							},
-							plotOptions: {
-								column: {
-									stacking: 'normal'
-				                }
-				            }
+								type: 'area'
+							}
 						}
 					},
 					traffic_disruptions: {
