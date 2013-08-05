@@ -38,7 +38,7 @@ module Backup
     end
     
     def destroy_kms
-      self.km_cls.base.each do |el|
+      Backup.km_cls.base.each do |el|
         el.destroy
       end
       true
@@ -59,16 +59,12 @@ module Backup
             success = false
           end
           unless data.nil?
-            success = self.km_cls.restore(data)
+            success = Backup.km_cls.restore(data)
           end
         end
         break unless success
       end
       success
-    end
-    
-    def km_cls
-      @km_cls ||= Backup::Km
     end
     
     def dir_path

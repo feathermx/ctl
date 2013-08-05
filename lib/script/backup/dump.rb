@@ -19,7 +19,7 @@ module Backup
     end
     
     def dump_kms
-      Backup::Km.backup_base.each do |km|
+      Backup.km_cls.backup_base.each do |km|
         km.dump_to(self.dir_path)
       end
     end

@@ -16,6 +16,11 @@ module Backup
       @file_format ||= self.config["file_format"]
     end
     
+    def self.km_cls
+      @@km_cls ||= Backup::Km
+    end
+    
+    
   end
   
 end
