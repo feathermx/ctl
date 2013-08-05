@@ -1,4 +1,4 @@
-module Backup
+module BackupTask
   
   class Dump
     
@@ -42,7 +42,7 @@ module Backup
     
     def backup
       @backup ||= ->{
-        Settings.load_file('/lib/script/backup/backup.rb')
+        Settings.load_file('/lib/script/backup_task/backup.rb')
         Backup.new
       }.call
     end

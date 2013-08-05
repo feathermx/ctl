@@ -1,4 +1,4 @@
-module Backup
+module BackupTask
   
   class Backup
     
@@ -17,7 +17,7 @@ module Backup
     end
     
     def self.km_cls
-      @@km_cls ||= Backup::Km
+      "Backup::Km".constantize
     end
     
     
