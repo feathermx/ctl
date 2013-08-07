@@ -1,6 +1,8 @@
 class City < ActiveRecord::FmxBase
   
-  scope :base, ->{ select("cities.id, cities.active_count, cities.country_id, cities.language_id, cities.name, cities.city_time_zone, cities.population, cities.population_density, cities.area, cities.us_exchange_rate, cities.gdp, cities.big_mac_index, cities.lat, cities.lng") }
+  include Slugable
+  
+  scope :base, ->{ select("cities.id, cities.active_count, cities.country_id, cities.language_id, cities.name, cities.slug, cities.city_time_zone, cities.population, cities.population_density, cities.area, cities.us_exchange_rate, cities.gdp, cities.big_mac_index, cities.lat, cities.lng") }
   scope :base_count, ->{ select("COUNT(cities.id) as num") }
   scope :with_country, ->{ select("countries.id as country_id, countries.name as country_name").joins("JOIN countries ON countries.id = cities.country_id") }
   scope :filter_by_country, ->(country_id){ where(country_id: country_id) }
@@ -20,6 +22,7 @@ class City < ActiveRecord::FmxBase
   validates :big_mac_index, numericality: true, allow_nil: true
   validates :lat, numericality: true
   validates :lng, numericality: true
+  validates :slug, uniqueness: { scope: :country_id }, allow_nil: true
   
   after_create :add_country_count
   before_destroy :substract_country_count

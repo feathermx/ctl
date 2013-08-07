@@ -1,6 +1,8 @@
 class Km < ActiveRecord::FmxBase
-
-  scope :base, ->{ select("kms.id, kms.is_active, kms.tracks_count, kms.traffic_counts_count, kms.traffic_disruptions_count, kms.street_data_count, kms.parking_restrictions_count, kms.shops_count, kms.public_meter_length, kms.dedicated_meter_length, kms.peak_deliveries, kms.peak_delivery_hour, kms.peak_disruptions, kms.peak_disruption_hour, kms.peak_traffic, kms.peak_traffic_hour, kms.min_disruption_time, kms.max_disruption_time, kms.min_delivery_time, kms.max_delivery_time, kms.chart_start_time, kms.chart_end_time, kms.deliveries_count, kms.city_id, kms.name, kms.description, kms.comments, kms.lat, kms.lng, kms.street_lat, kms.street_lng") }
+  
+  include Slugable
+  
+  scope :base, ->{ select("kms.id, kms.is_active, kms.tracks_count, kms.traffic_counts_count, kms.traffic_disruptions_count, kms.street_data_count, kms.parking_restrictions_count, kms.shops_count, kms.public_meter_length, kms.dedicated_meter_length, kms.peak_deliveries, kms.peak_delivery_hour, kms.peak_disruptions, kms.peak_disruption_hour, kms.peak_traffic, kms.peak_traffic_hour, kms.min_disruption_time, kms.max_disruption_time, kms.min_delivery_time, kms.max_delivery_time, kms.chart_start_time, kms.chart_end_time, kms.deliveries_count, kms.city_id, kms.name, kms.slug, kms.description, kms.comments, kms.lat, kms.lng, kms.street_lat, kms.street_lng") }
   scope :base_count, ->{ select("COUNT(kms.id) as num") }
   scope :base_id, ->{ select("kms.id") }
   scope :with_city, ->{ select('cities.name as city_name').joins('JOIN cities ON cities.id = kms.city_id') }
@@ -29,6 +31,7 @@ class Km < ActiveRecord::FmxBase
   validates :lng, numericality: true
   validates :street_lat, numericality: true
   validates :street_lng, numericality: true
+  validates :slug, uniqueness: { scope: :city_id }, allow_nil: true
   
   before_save :set_active_state
   before_destroy :remove_active_count
