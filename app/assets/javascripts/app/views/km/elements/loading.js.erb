@@ -137,17 +137,6 @@
 						this.updateStat();
 						this.updateSecondStat();
 					},
-					getStat: function(data){
-						if(data == null) data = '-';
-						else{
-							var val = parseFloat(data);
-							if(!isNaN(val) && isFinite(val)){
-								data = val.toFixed(2);
-								data = parseFloat(data);
-							}
-						}
-						return data;
-					},
 					updateSecondStat: function(){
 						var data = this.view.km[this.element.second_data_key];
 						this.second_stat.html(this.getStat(data));
