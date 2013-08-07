@@ -21,6 +21,10 @@ module Slugable
   
   module ClassMethods
     
+    def slug_base
+      self.select("#{self.table_name}.id,  #{self.table_name}.slug")
+    end
+    
     def find_by_slug(slug)
       self.base.filter_by_slug(slug).first
     end

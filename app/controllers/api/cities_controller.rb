@@ -7,11 +7,13 @@ class Api::CitiesController < Api::ApiController
   
   # POST /api/cities/list
   def list
+    Api::Km.json_display = Api::Km::Json::List
     Api::City.json_display = Api::City::Json::List
     render json: { contents: Api::City.list }
   end
   
   def search
+    Api::Km.json_display = Api::Km::Json::List
     Api::City.json_display = Api::City::Json::List
     render json: { contents: Api::City.search(params[:q], params[:km_id]) }
   end

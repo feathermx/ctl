@@ -33,7 +33,8 @@
 				this.view = this;
 			},
 			ready: function(){
-				this.loadKm(this.root.selections.km);
+				var km = this.root.selections.km;
+				this.loadKm(km);
 			},
 			abort: function(){
 				if(this.req != null) this.req.abort(); 
@@ -51,7 +52,7 @@
 				var _self = this;
 				this.kmChange();
 				this.abort();
-				$.extend(this.km, { id: which });
+				$.extend(this.km, which);
 				this.req = this.root.api_client.load({
 					key: 'show_km',
 					data: {

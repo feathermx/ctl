@@ -6,4 +6,9 @@ class KmsController < FrontController
     
   end
   
+  def show
+    render text: '//TODO'
+  end
+  
+  
 end

@@ -53,6 +53,9 @@ Ctl::Application.routes.draw do
       root to: 'splash#index'
     end
     
+    # app routes
+    get 'show/(:country)/(:city)/(:km)' => 'kms#show', as: :show
+    
     # wildcard routes
     get ':controller(/:action(/:id))'
     post ':controller(/:action(/:id))'

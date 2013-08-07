@@ -4,7 +4,7 @@ class Api::City < City
   
   module Json
     List = {
-      methods: [:image_path, :last_active_km_id]
+      methods: [:image_path, :last_active_km]
     }
     Filter = {}
   end
@@ -31,6 +31,12 @@ class Api::City < City
       end
     end
     results
+  end
+  
+  def last_active_km
+    @last_active_km ||= ->{
+      Api::Km.list_base.filter_active.filter_by_city(self.id).descending.first
+    }.call
   end
   
   def active_kms_filter

@@ -31,13 +31,6 @@ class City < ActiveRecord::FmxBase
     self.base.filter_active.filter_by_id(id).first
   end
   
-  def last_active_km_id
-    @last_active_km_id ||= ->{
-      el = Km.base_id.filter_active.filter_by_city(self.id).descending.first
-      el.id unless el.nil?
-    }.call
-  end
-  
   def image_path
     @image_path ||= self.country.image_path
   end

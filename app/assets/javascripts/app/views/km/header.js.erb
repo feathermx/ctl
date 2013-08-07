@@ -124,7 +124,7 @@
 								});
 							},
 							km2DropdownOnChange: function(which){
-								if(which != null) this.view.loadKm(which.data.id);
+								if(which != null) this.view.loadKm(which.data);
 							},
 							cityDropdownOnChange: function(which){
 								this.filters.km2.clear();
@@ -219,7 +219,7 @@
 								});
 							},
 							change: function(which){
-								this.view.loadKm(which.last_active_km_id);
+								this.view.loadKm(which.last_active_km);
 							},
 							getAutocompleteData: function(){
 								var data = {};
