@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><%= t 'app.title' %></title>
+		<title><%= @title.html_safe %></title>
 		<%= render partial: 'shared/ui/meta' %>
+		<%= render partial: 'front/ui/meta' %>
 		<%= render partial: 'shared/ui/stylesheets' %>
 		<%= render partial: 'shared/ui/javascripts' %>
 		<%= yield :head %>
 	</head>
 	<body>
+		<div id="fb-root"></div>
 		<%= render partial: 'shared/ui/main_loader' %>
 		<div id="container">
 			<%= render partial: 'shared/ui/header/header' %>
-			<div id="wrapper"></div>
+			<div id="wrapper">
+				<%= yield %>
+			</div>
 		</div>
 	</body>
 </html>

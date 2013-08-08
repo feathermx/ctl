@@ -7,12 +7,9 @@
 			view: $(),
 			api_client: null,
 			google_maps_loader: null,
-			selections: {
-				country: null,
-				city: null,
-				km: null
-			},
+			facebook: null,
 			init: function(){
+				this.initSelections();
 				this.initApiClient();
 				this.initStaticElements();
 				this.initWrapper();
@@ -20,7 +17,30 @@
 				this.windowOnResize();
 				this.initViewLoader();
 				this.initGoogleMapsLoader();
-				this.loadView('home');
+				this.initFacebook();
+				this.initView();
+			},
+			initFacebook: function(){
+				var cnf = config.facebook;
+				FB.init({
+					appId: cnf.app_id,
+					cookie: true,
+					status: true
+				});
+				this.facebook = this.fmx.facebook({});
+			},
+			initSelections: function(){
+				if(this.selections == null){
+					this.selections = {};
+					$.extend(this.selections, {
+						country: null,
+						city: null,
+						km: null
+					});
+				}
+			},
+			initView: function(){
+				if(!this.render_layout) this.loadView('home');
 			},
 			initGoogleMapsLoader: function(){
 				this.google_maps_loader = {};

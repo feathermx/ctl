@@ -10,6 +10,7 @@
 //= require fmx/app/api_client
 //= require fmx/app/dropdown
 //= require fmx/app/autocomplete
+//= require fmx/app/facebook
 //= require app/lang
 //= require app/app
 //= require app/util/format

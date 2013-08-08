@@ -1,0 +1,10 @@
+(function(){
+	$.extend(app, {
+		render_layout: true,
+		selections: {
+			country: <%= @km[:country_id] %>,
+			city: <%= @km[:city_id] %>,
+			km: <%= @km.to_json.html_safe %>
+		}
+	});
+})(jQuery);

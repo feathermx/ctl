@@ -1,0 +1,77 @@
+(function(){
+	$.fmx_facebook = function(opts){
+		var _self = {};
+		$.extend(_self, {
+			scope: null,
+			token: null,
+			uid: null,
+			data: null,
+			endpoint: 'http://graph.facebook.com',
+			loginSuccess: function(instance){},
+			loginError: function(){},
+			logout_callback: function(){},
+			init: function(){
+				this.initLoginStatus();
+			},
+			initLoginStatus: function(){
+				var _self = this;
+				FB.getLoginStatus(function(response){
+					_self.loginStatusCallback(response);
+				});
+			},
+			loginStatusCallback: function(response){
+				if(response.status == "connected"){
+					this.token = response.authResponse.accessToken;
+					this.uid = response.authResponse.userID;
+				}
+			},
+			getLoginOpts: function(){
+				var opts = {};
+				if(this.scope != null){
+					opts.scope = this.scope;
+				}
+				return opts;
+			},
+			login: function(success, error){
+				this.loginSuccess = success;
+				this.loginError = error;
+				var _self = this;
+				if(this.token == null){
+					var opts = this.getLoginOpts();
+					FB.login(function(response){
+						_self.loginCallback(response);
+					}, opts);
+				}
+				else{
+					this.loginSuccess(this);
+				}
+			},
+			loginCallback: function(response){
+				if(response.authResponse){
+					this.token = response.authResponse.accessToken;
+					this.uid = response.authResponse.userID;
+					this.loginSuccess(this);
+				}
+				else{
+					this.loginError();
+				}
+			},
+			logout: function(callback){
+				this.logout_callback = callback;
+				FB.logout(function(response){
+					_self.logoutCallback();
+				});
+			},
+			logoutCallback: function(){
+				this.token = null;
+				this.uid = null;
+				this.logout_callback();
+			},
+			getUserThumb: function(uid){
+				return this.endpoint + "/" + uid + '/picture';
+			}
+		}, opts);
+		_self.init();
+		return _self;
+	};
+})(jQuery);

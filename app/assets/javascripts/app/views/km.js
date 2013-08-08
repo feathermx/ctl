@@ -6,6 +6,7 @@
 //= require app/views/km/elements/traffic_counts
 //= require app/views/km/elements/traffic_disruptions
 //= require app/views/km/header
+//= require app/views/km/share
 //= require app/views/km/map/styles
 //= require app/views/km/map/map
 //= require app/views/km/panel

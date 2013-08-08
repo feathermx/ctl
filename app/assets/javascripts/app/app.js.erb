@@ -6,6 +6,7 @@ $.extend(app, {
 	loading_count: 0,
 	container: null,
 	fullscreen: null,
+	render_layout: false,
 	init: function(){
 		this.initRoot();
 		this.initFmx();
@@ -149,6 +150,12 @@ $.extend(app, {
 			return $.fmx_autocomplete(
 				$.extend(opts, cnf, this.root.getTouchOpts())
 			);
+		},
+		facebook: function(opts){
+			var scope = config.facebook.scope;
+			return $.fmx_facebook({
+				scope: scope
+			});
 		}
 	}
 });

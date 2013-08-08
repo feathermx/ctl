@@ -1,0 +1,497 @@
+(function(){
+	$(function(){
+		var el = app.km.share = {};
+		$.extend(el, {
+			parent: app.km,
+			root: null,
+			view: null,
+			list: {},
+			lang: null,
+			config: null,
+			permalink: null,
+			init: function(){
+				this.initRoot();
+				this.initView();
+				this.initLang();
+				this.initConfig();
+				this.initList();
+			},
+			initConfig: function(){
+				this.config = this.view.config.share;
+			},
+			initLang: function(){
+				this.lang = this.view.lang.header.share;
+			},
+			initList: function(){
+				var dropdown = this.view.header.right_container.filters.dropdowns.share;
+				this.initPermaLinkOption();
+				this.initFacebookOption();
+				this.initTwitterOption();
+				dropdown.setElements(this.list);
+			},
+			initTwitterOption: function(){
+				var option = this.getOption('twitter');
+				$.extend(option, {
+					onSelect: function(){
+						var url = this.getUrl();
+						window.open(url, null, config.twitter.window_opts);
+					},
+					getUrl: function(){
+						var cnf = config.twitter;
+						var link = cnf.endpoint + cnf.urls.tweet;
+						var url = this.view.getKmLink();
+						link += '?text=' + escape(url);
+						return link;
+					}
+				});
+			},
+			initFacebookOption: function(){
+				var option = this.getOption('facebook');
+				$.extend(option, {
+					onSelect: function(){
+						var _self = this;
+						var facebook = this.root.facebook;
+						facebook.login(
+							function(instance){
+								_self.facebookLoginOnSuccess(instance);
+							},
+							function(){}
+						);
+					},
+					facebookLoginOnSuccess: function(instance){
+						var _self = this;
+						FB.ui(this.getShareObj(), function(response){
+							_self.facebookShareSuccess(response);
+						});
+					},
+					facebookShareSuccess: function(response){
+						if(response && response.post_id){
+							var label = lang.messages.share_success;
+							this.root.fmx.notification({
+								msg: label
+							});
+						}
+					},
+					getShareObj: function(){
+						var obj = {};
+						$.extend(obj, {
+							method: 'feed',
+							name: this.getName(),
+							link: this.view.getKmLink(),
+							display: 'iframe'
+						});
+						return obj;
+					},
+					getName: function(){
+						var name = lang.title + ' | ' + this.view.km.full_name;
+						return name;
+					}
+				});
+			},
+			update: function(){
+				this.render();
+			},
+			render: function(){
+				this.permalink.render();
+			},
+			initPermaLinkOption: function(){
+				this.permalink = this.getPanelOption('permalink');
+				$.extend(this.permalink, {
+					init: function(){
+						this.initPanel();
+					},
+					render: function(){
+						this.panel.render();
+					},
+					initPanel: function(){
+						$.extend(this.panel, {
+							init: function(){
+								this.initContent();
+							},
+							render: function(){
+								this.content.render();
+							},
+							initContent: function(){
+								$.extend(this.content, {
+									link_input: null,
+									embed_textarea: null,
+									init: function(){
+										this.initElements();
+									},
+									render: function(){
+										var url = this.view.getKmLink();
+										var embed_base = this.share.config.embed.base;
+										var embed = embed_base.replace('%{url}', url);
+										this.link_input.val(url);
+										this.embed_textarea.val(embed);
+									},
+									initElements: function(){
+										this.initLinkElement();
+										this.initEmbedElement();
+									},
+									initEmbedElement: function(){
+										var elements = $();
+										var title = this.getTitle('embed');
+										this.initEmbedTextArea();
+										elements = elements.add(title).add(this.embed_textarea);
+										var container = this.addElement(elements);
+										container.addClass('last');
+									},
+									initLinkElement: function(){
+										var elements = $();
+										var title = this.getTitle('link');
+										this.initLinkInput();
+										elements = elements.add(title).add(this.link_input);
+										this.addElement(elements);
+									},
+									initEmbedTextArea: function(){
+										this.embed_textarea = $('<textarea></textarea>');
+										this.embed_textarea.addClass('km_panel_content_link_input');
+										this.setFocus(this.embed_textarea);
+									},
+									initLinkInput: function(){
+										this.link_input = $('<input />', {
+											type: 'text'
+										});
+										this.link_input.addClass('km_panel_content_link_input');
+										this.setFocus(this.link_input);
+									},
+									setFocus: function(container){
+										var focus = {};
+										$.extend(focus, {
+											parent: this,
+											root: null,
+											view: null,
+											share: null,
+											container: container,
+											init: function(){
+												this.initRoot();
+												this.initView();
+												this.initShare();
+												this.initContainer();
+											},
+											initContainer: function(){
+												var _self = this;
+												this.container.attr('readonly', true);
+												this.container.focusin(function(){
+													_self.containerOnFocusIn();
+												});
+											},
+											containerOnFocusIn: function(){
+												this.container.select();
+											},
+											initRoot: function(){
+												this.root = this.parent.root;
+											},
+											initView: function(){
+												this.view = this.parent.view;
+											},
+											initShare: function(){
+												this.share = this.parent.share;
+											}
+										});
+										focus.init();
+									},
+									getTitle: function(key){
+										var label = this.share.lang.permalink[key].title;
+										var icons = this.share.config.icons;
+										var src = icons[key];
+										var container = $('<h1 class="km_panel_content_title"></h1>');
+										var title = $('<span class="km_panel_content_title_label"></span>');
+										var icon = $('<img />', {
+											src: src
+										});
+										icon.addClass('km_panel_content_title_icon');
+										title.html(label);
+										icon.appendTo(container);
+										title.appendTo(container);
+										container.append('<span class="clear"></span>');
+										return container;
+									},
+									addElement: function(elements){
+										var container = $('<div class="km_panel_content_element"></div>');
+										elements.each(function(){
+											$(this).appendTo(container);
+										});
+										container.appendTo(this.container);
+										return container;
+									}
+								});
+								this.content.init();
+							}
+						});
+						this.panel.init();
+					}
+				});
+				this.permalink.init();
+			},
+			getPanelOption: function(key){
+				var option = this.getOption(key);
+				$.extend(option, {
+					panel: null,
+					init: function(){
+						this.initPanel();
+					},
+					onSelect: function(){
+						this.panel.show();
+					},
+					initPanel: function(){
+						this.panel = {};
+						$.extend(this.panel, {
+							parent: this,
+							root: null,
+							view: null,
+							share: null,
+							container: null,
+							content: null,
+							in_dom: false,
+							init: function(){
+								this.initRoot();
+								this.initView();
+								this.initShare();
+								this.initContainer();
+							},
+							initContainer: function(){
+								this.container = $('<div class="km_panel"></div>');
+								this.initHeader();
+								this.initContent();
+								this.container.addClass('km_left_panel');
+								//this.container.appendTo(this.view.container);
+							},
+							initContent: function(){
+								this.content = {};
+								$.extend(this.content, {
+									parent: this,
+									root: null,
+									view: null,
+									share: null,
+									container: null,
+									init: function(){
+										this.initRoot();
+										this.initView();
+										this.initShare();
+										this.initContainer();
+									},
+									initContainer: function(){
+										this.container = $('<div class="km_panel_content"></div>');
+										this.container.appendTo(this.parent.container);
+									},
+									initRoot: function(){
+										this.root = this.parent.root;
+									},
+									initView: function(){
+										this.view = this.parent.view;
+									},
+									initShare: function(){
+										this.share = this.parent.share;
+									}
+								});
+								this.content.init();
+							},
+							initHeader: function(){
+								this.header = {};
+								$.extend(this.header, {
+									parent: this,
+									root: null,
+									view: null,
+									share: null,
+									container: null,
+									title: null,
+									actions: null,
+									init: function(){
+										this.initRoot();
+										this.initView();
+										this.initShare();
+										this.initContainer();
+									},
+									initContainer: function(){
+										this.container = $('<div class="km_panel_header"></div>');
+										this.initTitle();
+										this.initActions();
+										this.container.append('<div class="clear"></div>');
+										this.container.appendTo(this.parent.container);
+									},
+									initActions: function(){
+										this.actions = {};
+										$.extend(this.actions, {
+											parent: this,
+											root: null,
+											view: null,
+											share: null,
+											init: function(){
+												this.initRoot();
+												this.initView();
+												this.initShare();
+												this.initContainer();
+											},
+											initContainer: function(){
+												this.container = $('<div class="km_panel_header_actions"></div>');
+												this.initActions();
+												this.container.append('<div class="clear"></div>');
+												this.container.appendTo(this.parent.container);
+											},
+											initActions: function(){
+												this.initCloseAction();
+											},
+											initCloseAction: function(){
+												var _self = this;
+												var action = this.getAction('close');
+												$.extend(action, {
+													containerOnClick: function(e, element){
+														_self.closeActionOnClick(e, element);
+													}
+												});
+											},
+											closeActionOnClick: function(e, element){
+												var panel = this.parent.parent;
+												panel.hide();
+											},
+											getAction: function(key){
+												var action = {};
+												$.extend(action, {
+													parent: this,
+													root: null,
+													view: null,
+													share: null,
+													key: key,
+													container: null,
+													init: function(){
+														this.initRoot();
+														this.initView();
+														this.initShare();
+														this.initContainer();
+													},
+													initContainer: function(){
+														var _self = this;
+														this.container = $('<a href="#" class="km_panel_header_action"></a>');
+														this.initIcon();
+														this.root.click(this.container, function(e, element){
+															_self.containerOnClick(e, element);
+														});
+														this.container.appendTo(this.parent.container);
+													},
+													containerOnClick: function(e, element){},
+													initIcon: function(){
+														var icons = this.view.config.panel.header.icons;
+														var src = icons[this.key];
+														var icon = $('<img />', {
+															src: src
+														});
+														icon.addClass('km_panel_header_action_img');
+														icon.appendTo(this.container);
+													},
+													initRoot: function(){
+														this.root = this.parent.root;
+													},
+													initView: function(){
+														this.view = this.parent.view;
+													},
+													initShare: function(){
+														this.share = this.parent.share;
+													}
+												});
+												action.init();
+												return action;
+											},
+											initRoot: function(){
+												this.root = this.parent.root;
+											},
+											initView: function(){
+												this.view = this.parent.view;
+											},
+											initShare: function(){
+												this.share = this.parent.share;
+											}
+										});
+										this.actions.init();
+									},
+									initTitle: function(){
+										var option = this.parent.parent;
+										this.title = $('<div class="km_panel_header_title"></div>');
+										this.title.html(option.name);
+										this.title.appendTo(this.container);
+									},
+									initRoot: function(){
+										this.root = this.parent.root;
+									},
+									initView: function(){
+										this.view = this.parent.view;
+									},
+									initShare: function(){
+										this.share = this.parent.share;
+									}
+								});
+								this.header.init();
+							},
+							initRoot: function(){
+								this.root = this.parent.root;
+							},
+							initView: function(){
+								this.view = this.parent.view;
+							},
+							initShare: function(){
+								this.share = this.parent.share;
+							},
+							show: function(){
+								this.append();
+								this.container.css('display', 'block');
+							},
+							hide: function(){
+								this.container.css('display', 'none');
+							},
+							append: function(){
+								if(!this.in_dom){
+									this.in_dom = true;
+									this.container.appendTo(this.view.container);
+								}
+							}
+						});
+						this.panel.init();
+					}
+				});
+				option.init();
+				return option;
+			},
+			getOption: function(key){
+				var option = {};
+				$.extend(option, {
+					parent: this,
+					root: null,
+					share: this,
+					view: null,
+					name: null,
+					key: key,
+					init: function(){
+						this.initRoot();
+						this.initView();
+						this.initName();
+						this.initList();
+					},
+					onSelect: function(){},
+					initList: function(){
+						this.share.list[this.key] = this;
+					},
+					initName: function(){
+						var labels = this.share.lang.labels;
+						this.name = labels[this.key];
+					},
+					initRoot: function(){
+						this.root = this.parent.root;
+					},
+					initView: function(){
+						this.view = this.parent.view;
+					}
+				});
+				option.init();
+				return option;
+			},
+			initView: function(){
+				this.view = this.parent;
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			}
+		});
+		el.init();
+	});
+})(jQuery);

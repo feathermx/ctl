@@ -12,7 +12,15 @@ globals:
     date_full_format: '%m/%d/%Y %H:%M:%S %z'
     time_format: '%H:%M %z'
     time_full_format: '%H:%M:%S %z'
+  facebook:
+    scope: 'publish_actions'
 development:
   scope: ''
+  facebook:
+    app_id: '186275988212233'
+    app_secret: 'b8e78642f5ed80e9bb15a438c96d2a64'
 production:
   scope: '/km2'
+  facebook:
+    app_id: '542124615835598'
+    app_secret: '1270965444f79feae5ff74af986e8c3a'

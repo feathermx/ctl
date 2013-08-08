@@ -1,6 +1,7 @@
 en:
   app:
     title: 'km2'
+    description: 'km2 has information from megacities in the world based on single square kilometer areas. As a part of an urban logistics atlas of different cities, it visualizes detailed logistics, retail and urban form information of chosen square kilometers. These visualizations inform factors that affect urban last-mile delivery performance in these regions.'
     format:
       number:
         billion: 'B'
@@ -9,6 +10,7 @@ en:
     messages:
       loading: 'Loading'
       error: 'There was an error. Please try again later.'
+      share_success: 'Post was published'
     views:
       home:
         title: 'Welcome to km2!'
@@ -34,6 +36,17 @@ en:
               city: 'City'
               km2: 'km2'
               style: 'Map Style'
+              share: 'Share'
+          share:
+            labels:
+              permalink: 'Link / Embed'
+              facebook: 'Facebook'
+              twitter: 'Twitter'
+            permalink:
+              link:
+                title: 'Share this km2'
+              embed:
+                title: 'Embed / HTML'
         map:
           styles:
             _default: 'Default'

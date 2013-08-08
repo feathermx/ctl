@@ -8,6 +8,18 @@ $.extend(config, {
 	init: function(){
 		this.fmx.parent = this;
 	},
+	twitter: {
+		window_opts: 'location=0,status=0,width=550,height=420',
+		endpoint: 'https://twitter.com',
+		urls: {
+			tweet: '/intent/tweet'
+		}
+	},
+	facebook: {
+		app_id: '<%= Settings.get('facebook.app_id') %>',
+		app_secret: '<%= Settings.get('facebook.app_secret') %>',
+		scope: '<%= Settings.get('facebook.scope') %>'
+	},
 	api: {
 		endpoint: '',
 		images: {
@@ -48,7 +60,7 @@ $.extend(config, {
 		paths: {
 			home: '<%= url_for controller: :home, action: :index %>',
 			km: '<%= url_for controller: :kms, action: :index %>',
-			show: '<%= url_for controller: :kms, action: :show, country: 'country', city: 'city', km: 'km' %>'
+			show: '<%= url_for controller: :kms, action: :show, country: 'country', city: 'city', km: 'km', only_path: false %>'
 		}
 	},
 	ui: {
@@ -73,6 +85,15 @@ $.extend(config, {
 	},
 	views: {
 		km: {
+			share: {
+				embed: {
+					base: '<iframe width="960" height="600" src="%{url}" frameborder="0" allowfullscreen></iframe>'
+				},
+				icons: {
+					link: '<%= image_url 'app/icons/km/share/link.png' %>',
+					embed: '<%= image_url 'app/icons/km/share/embed.png' %>'
+				}
+			},
 			elements: {
 				base: {
 					display_type: $.app_display_types.chart | $.app_display_types.map
@@ -165,7 +186,8 @@ $.extend(config, {
 					country: '<%= image_url 'app/icons/dropdown/country.png' %>',
 					city: '<%= image_url 'app/icons/dropdown/city.png' %>',
 					km2: '<%= image_url 'app/icons/dropdown/km2.png' %>',
-					style: '<%= image_url 'app/icons/dropdown/style.png' %>'
+					style: '<%= image_url 'app/icons/dropdown/style.png' %>',
+					share: '<%= image_url 'app/icons/dropdown/share.png' %>'
 				}
 			},
 			chart: {
@@ -342,6 +364,13 @@ $.extend(config, {
 			$.extend(opts, {
 				
 			}, lang.fmx.autocomplete());
+			return opts;
+		},
+		facebook: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			}, lang.fmx.facebook());
 			return opts;
 		}
 	}

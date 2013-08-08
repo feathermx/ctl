@@ -1,5 +1,6 @@
 var lang = {};
 $.extend(lang, {
+	title: '<%= t 'app.title' %>',
 	init: function(){
 		this.fmx.parent = this.views.parent = this;
 	},
@@ -11,7 +12,8 @@ $.extend(lang, {
 		}
 	},
 	messages: {
-		error: '<%= t 'app.messages.error' %>'
+		error: '<%= t 'app.messages.error' %>',
+		share_success: '<%= t 'app.messages.share_success' %>'
 	},
 	views: {
 		parent: null,
@@ -35,7 +37,23 @@ $.extend(lang, {
 						country: '<%= t 'app.views.km.header.filters.labels.country' %>',
 						city: '<%= t 'app.views.km.header.filters.labels.city' %>',
 						km2: '<%= t 'app.views.km.header.filters.labels.km2' %>',
-						style: '<%= t 'app.views.km.header.filters.labels.style' %>'
+						style: '<%= t 'app.views.km.header.filters.labels.style' %>',
+						share: '<%= t 'app.views.km.header.filters.labels.share' %>'
+					}
+				},
+				share: {
+					labels: {
+						permalink: '<%= t 'app.views.km.header.share.labels.permalink' %>',
+						facebook: '<%= t 'app.views.km.header.share.labels.facebook' %>',
+						twitter: '<%= t 'app.views.km.header.share.labels.twitter' %>'
+					},
+					permalink: {
+						link: {
+							title: '<%= t 'app.views.km.header.share.permalink.link.title' %>'
+						},
+						embed: {
+							title: '<%= t 'app.views.km.header.share.permalink.embed.title' %>'
+						}
 					}
 				}
 			},
@@ -182,6 +200,13 @@ $.extend(lang, {
 					error: '<%= t 'fmx.app.autocomplete.labels.error' %>',
 					not_found: '<%= t 'fmx.app.autocomplete.labels.not_found' %>'
 				}
+			});
+			return opts;
+		},
+		facebook: function(){
+			var opts = {};
+			$.extend(opts, {
+				
 			});
 			return opts;
 		}

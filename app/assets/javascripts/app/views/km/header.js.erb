@@ -243,7 +243,10 @@
 							parent: this,
 							root: null,
 							view: null,
-							style_dropdown: null,
+							dropdowns: {
+								style: null,
+								share: null
+							},
 							init: function(){
 								this.initRoot();
 								this.initView();
@@ -256,19 +259,33 @@
 							},
 							initContainer: function(){
 								this.container = $('<div class="header_filters"></div>');
-								this.initStyleDropdown();
+								this.initDropdowns();
 								this.container.append('<div class="clear"></div>');
 								this.container.appendTo(this.parent.container);
 							},
+							initDropdowns: function(){
+								this.initStyleDropdown();
+								this.initShareDropdown();
+							},
+							initShareDropdown: function(){
+								var _self = this;
+								this.dropdowns.share = this.getDropdown('share');
+								$.extend(this.dropdowns.share, {
+									change: function(which){
+										_self.shareDropdownOnChange(which);
+									}
+								});
+							},
+							shareDropdownOnChange: function(which){
+								if(which != null){
+									which.data.onSelect();
+									this.dropdowns.share.setActive(null);
+								}
+							},
 							initStyleDropdown: function(){
 								var _self = this;
-								var view = this.parent.parent;
-								var label = this.lang.labels.style;
-								var icon = view.config.icons.style;
-								this.style_dropdown = this.root.fmx.dropdown({
-									icon: icon,
-									label: label,
-									parent_container: this.container,
+								this.dropdowns.style = this.getDropdown('style');
+								$.extend(this.dropdowns.style, {
 									change: function(which){
 										_self.styleDropdownOnChange(which);
 									}
@@ -277,6 +294,17 @@
 							styleDropdownOnChange: function(which){
 								var map = this.view.map;
 								map.setStyle(which.data);
+							},
+							getDropdown: function(key){
+								var view = this.parent.parent;
+								var label = this.lang.labels[key];
+								var icon = view.config.icons[key];
+								var dropdown = this.root.fmx.dropdown({
+									icon: icon,
+									label: label,
+									parent_container: this.container
+								});
+								return dropdown;
 							},
 							initRoot: function(){
 								this.root = this.parent.root;
