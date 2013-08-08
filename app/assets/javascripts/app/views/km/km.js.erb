@@ -65,13 +65,13 @@
 			},
 			getKmLink: function(){
 				var link = null;
-				var link_base = config.server.paths.show;
+				var link_base = unescape(config.server.paths.show);
 				var parts = this.km.full_slug.split('/');
 				if(parts.length == 3){
 					link = link_base
-						.replace('%country%', parts[0])
-						.replace('%city%', parts[1])
-						.replace('%km%', parts[2])
+						.replace('%{country}', parts[0])
+						.replace('%{city}', parts[1])
+						.replace('%{km}', parts[2])
 					;
 				}
 				return link;

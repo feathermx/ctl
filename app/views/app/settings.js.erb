@@ -60,7 +60,7 @@ $.extend(config, {
 		paths: {
 			home: '<%= url_for controller: :home, action: :index %>',
 			km: '<%= url_for controller: :kms, action: :index %>',
-			show: '<%= url_for controller: :kms, action: :show, country: '%country%', city: '%city%', km: '%km%', only_path: false %>'
+			show: '<%= url_for controller: :kms, action: :show, country: '%{country}', city: '%{city}', km: '%{km}', only_path: false %>'
 		}
 	},
 	ui: {
