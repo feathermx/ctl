@@ -18,7 +18,11 @@ $.extend(config, {
 	facebook: {
 		app_id: '<%= Settings.get('facebook.app_id') %>',
 		app_secret: '<%= Settings.get('facebook.app_secret') %>',
-		scope: '<%= Settings.get('facebook.scope') %>'
+		scope: '<%= Settings.get('facebook.scope') %>',
+		share_obj: {
+			picture: '<%= image_url 'social/social.png' %>',
+			description: '<%= t 'app.description' %>'
+		}
 	},
 	api: {
 		endpoint: '',

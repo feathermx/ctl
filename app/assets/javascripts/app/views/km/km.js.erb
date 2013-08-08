@@ -77,7 +77,6 @@
 				return link;
 			},
 			success: function(data){
-				//TODO
 				if(data && data.km){
 					$.extend(this.km, data.km);
 					this.map.setLocation({ lat: this.km.lat, lng: this.km.lng });

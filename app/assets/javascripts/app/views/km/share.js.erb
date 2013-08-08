@@ -74,11 +74,17 @@
 					},
 					getShareObj: function(){
 						var obj = {};
-						$.extend(obj, {
+						var share_obj = config.facebook.share_obj;
+						var description = config.facebook.share_obj.description;
+						if(this.view.km.description){
+							description = this.view.km.description;
+						}
+						$.extend(obj, share_obj, {
 							method: 'feed',
 							name: this.getName(),
 							link: this.view.getKmLink(),
-							display: 'iframe'
+							display: 'iframe',
+							description: description
 						});
 						return obj;
 					},
