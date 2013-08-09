@@ -1,0 +1,16 @@
+(function(){
+	$(function(){
+		var el = app.about = {};
+		$.extend(el, {
+			parent: app,
+			root: null,
+			init: function(){
+				this.initRoot();
+			},
+			initRoot: function(){
+				this.root = this.parent.root;
+			}
+		});
+		el.init();
+	});
+})(jQuery);

@@ -9,7 +9,7 @@
 				<div class="panel_title_wrapper">
 					<h1 class="panel_title"><%= t 'app.views.splash.title' %></h1>
 					<div class="panel_title_actions">
-						<a class="panel_action button" href="#"><%= t 'app.views.splash.actions.learn_more' %></a>
+						<a class="panel_action button" href="<%= url_for controller: :about, action: :index %>"><%= t 'app.views.splash.actions.learn_more' %></a>
 						<div class="clear"></div>
 					</div>
 					<div class="clear"></div>

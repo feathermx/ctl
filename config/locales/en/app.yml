@@ -27,6 +27,9 @@ en:
           bigmac: 'Big Mac Index'
       about:
         title: 'About'
+        map:
+          title: 'Global logistics data'
+          legend: 'km2 was created as an urban logistics atlas with information collected in megacities around the world. It consists on rich datasets of relevant and detailed logistics information to show the factors that affect delivery performance.'
       km:
         header:
           search:

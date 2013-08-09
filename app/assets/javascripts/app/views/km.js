@@ -1,3 +1,7 @@
+//= require jquery.nicescroll
+//= require highcharts-3.0.2.min
+//= require highcharts-map
+//= require highcharts-heatmap
 //= require app/views/km/km
 //= require app/views/km/elements/elements
 //= require app/views/km/elements/shops
