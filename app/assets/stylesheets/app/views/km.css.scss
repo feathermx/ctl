@@ -235,21 +235,22 @@
 		}
 		.km_panel_header_actions{
 			float: right;
-			margin: 9px 10px 0 0;
+			margin: 8px 7px 0 0;
 		}
 		@include link('a.km_panel_header_action') {
 			border: 0 none;
 			outline: none;
-			width: 10px;
-			height: 10px;
+			width: 14px;
+			height: 14px;
 			display: block;
 			cursor: pointer;
 			float: left;
+			margin: 0 0 0 6px;
 		}
 		a.km_panel_header_action{
 			img.km_panel_header_action_img{
-				width: 10px;
-				height: 10px;
+				width: 14px;
+				height: 14px;
 				display: block;
 				border: 0 none;
 				outline: none;

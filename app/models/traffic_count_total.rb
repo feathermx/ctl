@@ -43,7 +43,7 @@ class TrafficCountTotal < ActiveRecord::FmxBase
   validates :km_id, :morning_cars, :evening_cars, :noon_cars, :morning_taxis, :evening_taxis, :noon_taxis, :morning_pickup_trucks, :evening_pickup_trucks, :noon_pickup_trucks, :morning_articulated_trucks, :evening_articulated_trucks, :noon_articulated_trucks, :morning_rigid_trucks, :evening_rigid_trucks, :noon_rigid_trucks, :morning_vans, :evening_vans, :noon_vans, :morning_buses, :evening_buses, :noon_buses, :morning_bikes, :evening_bikes, :noon_bikes, :morning_motorbikes, :evening_motorbikes, :noon_motorbikes, :morning_pedestrians, :evening_pedestrians, :noon_pedestrians, presence: true, numericality: { only_integer: true }
   
   def self.traffic_count_fields
-    @@traffic_count_fields ||= %w{cars taxis pickup_trucks articulated_trucks rigid_trucks vans buses bikes motorbikes pedestrians}
+    @@traffic_count_fields ||= %w{pedestrians cars motorbikes taxis pickup_trucks articulated_trucks rigid_trucks vans buses bikes}
   end
   
   def self.find_by_km(km_id)

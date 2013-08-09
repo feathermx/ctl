@@ -182,6 +182,12 @@
 				});
 				if(style != null) this.setStyle(style);
 			},
+			center: function(){
+				var location = new google.maps.LatLng(this.location.lat, this.location.lng);
+				var zoom = this.config.map.opts.zoom;
+				this.map.panTo(location);
+				this.map.setZoom(zoom);
+			},
 			setLocation: function(opts){
 				if(opts.lat != this.location.lat && opts.lng != this.location.lng){
 					$.extend(this.location, opts);

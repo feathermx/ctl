@@ -369,9 +369,21 @@
 									},
 									initContainer: function(){
 										this.container = $('<div class="km_panel_header_actions"></div>');
+										this.initCenterAction();
 										this.initCollapseAction();
 										this.container.append('<div class="clear"></div>');
 										this.container.appendTo(this.parent.container);
+									},
+									initCenterAction: function(){
+										var _self = this;
+										var action = this.obj.getPanelHeaderAction('center');
+										this.root.click(action, function(e, element){
+											_self.centerActionOnClick(e, element);
+										});
+										action.appendTo(this.container);
+									},
+									centerActionOnClick: function(e, element){
+										this.view.map.center();
 									},
 									initCollapseAction: function(){
 										var _self = this;
