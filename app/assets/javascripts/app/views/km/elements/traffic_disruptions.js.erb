@@ -78,6 +78,7 @@
 						var lang = this.element.lang.chart;
 						var deliveries_data = {};
 						var yAxis = {};
+						var config = this.view.config.chart.charts[this.element.key];
 						$.extend(yAxis, {
 							title: {
 								text: lang.y_label
@@ -122,11 +123,11 @@
 								},
 								xAxis: {
 									categories: categories,
-									labels: {
+									labels: $.extend({
 										formatter: function(){
 											return this.value.getLabel();
 										}
-									}
+									}, config.labels)
 								},
 								series: series
 							}, this.chart_opts)

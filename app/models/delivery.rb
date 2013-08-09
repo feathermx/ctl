@@ -59,6 +59,16 @@ class Delivery < ActiveRecord::FmxBase
   after_create :add_deliveries_count
   before_destroy :substract_deliveries_count
   
+  # TODO optimize for generic DBMS
+  def self.count_for_day_hour(day, hour, km)
+    starts = "TIME '#{hour}:00:00'"
+    ends = "TIME '#{hour}:59:59'"
+    field = "#{self.table_name}.started_at"
+    time_field = "#{field}::time"
+    date_field = "EXTRACT(DOW FROM(#{field} + INTERVAL '#{km.utc_offset} seconds'))"
+    self.base_count.filter_by_km(km.id).where("#{time_field} >= #{starts} AND #{time_field} <= #{ends}").where("#{date_field} = #{day}").order(nil).first[:num].to_i
+  end
+  
   def set_location
     self.lat, self.lng = self.shop.lat, self.shop.lng
   end

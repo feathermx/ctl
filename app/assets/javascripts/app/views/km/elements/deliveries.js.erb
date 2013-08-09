@@ -66,116 +66,156 @@
 			},
 			initChart: function(){
 				$.extend(this.chart, {
-					start_time: null,
-					start_utc: null,
-					start: null,
+					days: null,
 					render: function(){
 						var _self = this;
+						var data = this.data;
+						var days_categories = [];
 						var categories = [];
-						var data = [];
-						var lang = this.element.lang.chart;
-						this.initStartTime();
-						var elements = this.data.elements;
-						$.each(elements, function(key, val){
-							categories.push(val.shop_name);
-							var el = _self.getElement(val);
-							data.push(el.getData());
+						var series = [];
+						var xAxis = {};
+						var yAxis = {};
+						var colors = this.getColors();
+						var now = new Date();
+						var utc = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+						var offset = this.view.km.utc_offset;
+						var base = {};
+						var config = this.view.config.chart.charts[this.element.key];
+						var days = this.days = config.days;
+						$.extend(base, {
+							utc: utc,
+							offset: offset
+						});
+						$.each(days, function(key, day){
+							days_categories.push(day.name);
+						});
+						$.each(data, function(i, el){
+							var el_data = {};
+							$.extend(el_data, {
+								hour: el.hour_i
+							}, base);
+							var element = _self.getElement(el_data);
+							categories.push(element);
+							$.each(days, function(j, day){
+								var row = {};
+								var field_name = 'total_' + day.namespace;
+								$.extend(row, {
+									col: i,
+									row: parseInt(j),
+									y: el[field_name]
+								});
+								series.push(row);
+							});
+						});
+						var max_x = 0;
+						if(categories.length > 0) max_x = categories.length - 1;
+						$.extend(xAxis, {
+							categories: categories,
+							min: 0,
+							max: max_x,
+							labels: $.extend({
+								formatter: function(){
+									return this.value.getLabel();
+								}
+							}, config.labels)
+						});
+						var max_y = 0;
+						if(days_categories.length > 0) max_y = days_categories.length - 0.5;
+						$.extend(yAxis, {
+							categories: days_categories,
+							min: -0.50,
+							max: max_y,
+							minPadding: 0,
+							maxPadding: 0,
+							startOnTick: false,
+							endOnTick: false,
+							title: {
+								text: null
+							}
 						});
 						this.wrapper.highcharts(
 							$.extend({
-								yAxis: {
-									title: {
-										text: lang.y_label
-									},
-									tickInterval: 1,
-									min: 0,
-									labels: {
-										formatter: function(){
-											return _self.getHourFormat(this.value);
-										}
-									}
-								},
+								xAxis: xAxis,
+								yAxis: yAxis,
+								series: [{
+									borderWidth: 0,
+									data: series,
+									valueRanges: colors
+								}],
 								tooltip: {
 									formatter: function(){
-										return _self.getTooltip(this);
+										var x = categories[this.point.col];
+										return x.getTooltip(this);
 									}
-								},
-								xAxis: {
-									categories: categories
-								},
-								series: [{
-									data: data
-								}]
+								}
 							}, this.chart_opts)
 						);
-					},
-					getTooltip: function(obj){
-						var duration = Math.abs(obj.point.high - obj.point.low);
-						return obj.key + '<br /><b>Delivery Time: </b>' + this.getLocalTime(obj.point.low) + ' - ' + this.getLocalTime(obj.point.high) + '<br /><b>Duration: </b>' + this.getDuration(duration) + ' mins';
-					},
-					getDuration: function(hours){
-						var val = (hours * 60).toFixed(2);
-						return parseFloat(val);
-					},
-					getLocalTime: function(val){
-						var date = new Date(this.start);
-						var hour = Math.floor(val);
-						var mins = Math.round((val - hour) * 60);
-						date.setHours(date.getHours() + hour);
-						hour = date.getHours();
-						if(hour < 10) hour = ("0" + hour);
-						if(mins < 10) mins = ("0" + mins);
-						return hour + ':' + mins;
-					},
-					getHourFormat: function(hour){
-						var date = new Date(this.start);
-						date.setHours(date.getHours() + hour);
-						var start_hour = date.getHours();
-						date.setHours(date.getHours() + 1);
-						var end_hour = date.getHours();
-						return start_hour + ':00 - ' + end_hour + ':00';
-					},
-					initStartTime: function(){
-						this.start_time = new Date(this.data.starts_at);
-						this.start_utc = this.start_time.getUTCHours();
-						var offset = this.view.km.utc_offset;
-						var now = new Date();
-						var utc = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-						var date = new Date(utc);
-						date.setHours(this.start_time.getUTCHours());
-						date.setSeconds(offset);
-						this.start = date;
 					},
 					getElement: function(data){
 						var element = {};
 						$.extend(element, {
 							parent: this,
 							data: data,
-							start: null,
-							end: null,
+							hours: null,
+							_label: null,
 							init: function(){
-								this.initData();
+								this.initHours();
 							},
-							initData: function(){
-								this.initStart();
-								this.initEnd();
+							getTooltip: function(obj){
+								var label = this.getLabel();
+								var days = this.parent.days;
+								var day = days[obj.point.row];
+								return day.name + ' (' + label + ')<br /><b>' + obj.y + '</b> deliveries';
 							},
-							initEnd: function(){
-								var duration = (this.data.duration / 3600);
-								this.end = this.start + duration;
+							getLabel: function(){
+								if(this._label == null){
+									this._label = this.hours.start + ':00 - ' + this.hours.end + ':00';
+								}
+								return this._label;
 							},
-							getData: function(){
-								return [this.start, this.end];
-							},
-							initStart: function(){
-								var start = new Date(this.data.s_at);
-								var hour = start.getUTCHours();
-								var mins = start.getMinutes();
-								this.start = Math.abs(hour - this.parent.start_utc) + (mins / 60);
+							initHours: function(){
+								var _self = this;
+								var start = new Date(this.data.utc);
+								start.setHours(this.data.hour);
+								start.setSeconds(this.data.offset);
+								var end = new Date(start.getTime());
+								end.setHours(end.getHours() + 1);
+								this.hours = {};
+								$.extend(this.hours, {
+									start: start.getHours(),
+									end: end.getHours()
+								});
+								$.each(this.hours, function(key, val){
+									if(val < 10) _self.hours[key] = ("0" + val);
+								});
 							}
 						});
 						element.init();
 						return element;
+					},
+					getColors: function(){
+						var data = []; 
+						var config = this.view.config.chart.charts[this.element.key];
+						var colors = config.colors;
+						var max = this.view.km.max_deliveries;
+						var increment = Math.floor(max / colors.length);
+						var i = 0;
+						data.push({ to: 0, color: config.no_data });
+						$.each(colors, function(key, color){
+							++i;
+							var from = i;
+							i += (increment);
+							var to = i;
+							if(to > max) to = max;
+							var el = {};
+							$.extend(el, {
+								from: from,
+								to: to,
+								color: color
+							});
+							data.push(el);
+						});
+						return data;
 					}
 				});
 			},

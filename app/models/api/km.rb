@@ -7,7 +7,7 @@ class Api::Km < Km
       methods: [:full_slug]
     }
     Show = {
-      only: [:id, :name, :description, :shops_count, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_disruptions, :peak_traffic, :lat, :lng, :street_lat, :street_lng],
+      only: [:id, :name, :description, :shops_count, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_disruptions, :peak_traffic, :max_deliveries, :lat, :lng, :street_lat, :street_lng],
       methods: [:full_name, :full_slug, :utc_offset]
     }
   end
@@ -15,7 +15,7 @@ class Api::Km < Km
   scope :filter_base, ->{ select('kms.id, kms.name') }
   scope :filter_by_country_slug, ->(slug){ where('countries.slug = ?', slug) }
   scope :filter_by_city_slug, ->(slug){ where('cities.slug = ?', slug) }
-  scope :api_base, ->{ select('kms.id, kms.slug, kms.city_id, kms.name, kms.description, kms.shops_count, kms.public_meter_length, kms.dedicated_meter_length, kms.peak_deliveries, kms.peak_disruptions, kms.peak_traffic, kms.lat, kms.lng, kms.street_lat, kms.street_lng').with_city.with_city_slug.with_country }
+  scope :api_base, ->{ select('kms.id, kms.slug, kms.city_id, kms.name, kms.description, kms.shops_count, kms.public_meter_length, kms.dedicated_meter_length, kms.peak_deliveries, kms.peak_disruptions, kms.peak_traffic, kms.max_deliveries, kms.lat, kms.lng, kms.street_lat, kms.street_lng').with_city.with_city_slug.with_country }
   scope :list_base, ->{ select('kms.id, kms.slug, kms.name, kms.description').with_city.with_city_slug.with_country }
   scope :with_city_slug, ->{ select('cities.slug as city_slug, kms.city_id') }
   scope :with_city, ->{ select('cities.name as city_name').joins('JOIN cities ON cities.id = kms.city_id') }
@@ -79,7 +79,7 @@ class Api::Km < Km
   end
   
   def api_chart_deliveries
-    @api_chart_deliveries ||= Api::Delivery.api_chart_base.filter_by_km(self.id)
+    @api_chart_deliveries ||= Api::DeliveryTotal.api_chart_base.filter_by_km(self.id)
   end
   
   def api_map_deliveries

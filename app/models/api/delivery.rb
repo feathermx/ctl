@@ -2,17 +2,12 @@ class Api::Delivery < Delivery
   
   module Json
     Default = {}
-    Chart = {
-      only: [],
-      methods: [:s_at, :duration, :shop_name]
-    }
     Map = {
       only: [:vehicle_type, :delivering_company, :lat, :lng],
       methods: [:duration]
     }
   end
   
-  scope :api_chart_base, ->{ select('deliveries.started_at, deliveries.ended_at').with_shop.api_chart_ascending }
   scope :api_chart_ascending, ->{ order('shops.name ASC') }
   scope :api_map_base, ->{ select('deliveries.vehicle_type, deliveries.delivering_company, deliveries.started_at, deliveries.ended_at, deliveries.lat, deliveries.lng') }
   

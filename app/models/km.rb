@@ -2,7 +2,7 @@ class Km < ActiveRecord::FmxBase
   
   include Slugable
   
-  scope :base, ->{ select("kms.id, kms.is_active, kms.tracks_count, kms.traffic_counts_count, kms.traffic_disruptions_count, kms.street_data_count, kms.parking_restrictions_count, kms.shops_count, kms.public_meter_length, kms.dedicated_meter_length, kms.peak_deliveries, kms.peak_delivery_hour, kms.peak_disruptions, kms.peak_disruption_hour, kms.peak_traffic, kms.peak_traffic_hour, kms.min_disruption_time, kms.max_disruption_time, kms.min_delivery_time, kms.max_delivery_time, kms.chart_start_time, kms.chart_end_time, kms.deliveries_count, kms.city_id, kms.name, kms.slug, kms.description, kms.comments, kms.lat, kms.lng, kms.street_lat, kms.street_lng") }
+  scope :base, ->{ select("kms.id, kms.is_active, kms.tracks_count, kms.traffic_counts_count, kms.traffic_disruptions_count, kms.street_data_count, kms.parking_restrictions_count, kms.shops_count, kms.public_meter_length, kms.dedicated_meter_length, kms.peak_deliveries, kms.peak_delivery_hour, kms.peak_disruptions, kms.peak_disruption_hour, kms.peak_traffic, kms.peak_traffic_hour, kms.min_disruption_time, kms.max_disruption_time, kms.min_delivery_time, kms.max_delivery_time, kms.chart_start_time, kms.chart_end_time, kms.max_deliveries, kms.deliveries_count, kms.city_id, kms.name, kms.slug, kms.description, kms.comments, kms.lat, kms.lng, kms.street_lat, kms.street_lng") }
   scope :base_count, ->{ select("COUNT(kms.id) as num") }
   scope :base_id, ->{ select("kms.id") }
   scope :with_city, ->{ select('cities.name as city_name').joins('JOIN cities ON cities.id = kms.city_id') }
@@ -13,7 +13,7 @@ class Km < ActiveRecord::FmxBase
   scope :descending, ->{ order('kms.created_at DESC') }
   
   attr_accessor :active_changed
-  attr_protected :is_active, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_delivery_hour, :peak_disruptions, :peak_disruption_hour, :peak_traffic, :peak_traffic_hour, :min_disruption_time, :max_disruption_time, :min_delivery_time, :max_delivery_time, :chart_start_time, :chart_end_time, :city_id, :track_count, :traffic_counts_count, :traffic_disruptions_count, :street_data_count, :parking_restrictions_count, :shops_count, :delivery_count
+  attr_protected :is_active, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_delivery_hour, :peak_disruptions, :peak_disruption_hour, :peak_traffic, :peak_traffic_hour, :min_disruption_time, :max_disruption_time, :min_delivery_time, :max_delivery_time, :chart_start_time, :chart_end_time, :max_deliveries, :city_id, :track_count, :traffic_counts_count, :traffic_disruptions_count, :street_data_count, :parking_restrictions_count, :shops_count, :delivery_count
   
   validates :street_lat, :street_lng, presence: true
   validates :is_active, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }
@@ -108,6 +108,10 @@ class Km < ActiveRecord::FmxBase
   
   def shop_totals
     @shop_totals ||= ShopTotal.base.filter_by_km(self.id)
+  end
+  
+  def delivery_totals
+    @delivery_totals ||= DeliveryTotal.base.filter_by_km(self.id)
   end
   
   def blocks
@@ -213,7 +217,7 @@ class Km < ActiveRecord::FmxBase
   
   def reset_active_fields
     self.public_meter_length = self.dedicated_meter_length = self.peak_deliveries = self.peak_disruptions = self.peak_traffic = 0
-    self.peak_delivery_hour = self.peak_disruption_hour = self.peak_traffic_hour = self.min_disruption_time = self.max_disruption_time = self.min_delivery_time = self.max_delivery_time = self.chart_start_time = self.chart_end_time = nil
+    self.peak_delivery_hour = self.peak_disruption_hour = self.peak_traffic_hour = self.min_disruption_time = self.max_disruption_time = self.min_delivery_time = self.max_delivery_time = self.chart_start_time = self.chart_end_time = self.max_delivery_time = nil
   end
   
   def set_active_state
@@ -235,6 +239,7 @@ class Km < ActiveRecord::FmxBase
         self.set_deliveries_disruptions
         self.set_traffic_count_totals
         self.set_shop_totals
+        self.set_delivery_totals
         self.add_active_count
       else
         self.substract_active_count
@@ -264,6 +269,19 @@ class Km < ActiveRecord::FmxBase
       el = ShopTotal.generate(key, self.id)
       el.save
     end
+  end
+  
+  def set_delivery_totals
+    self.destroy_delivery_totals
+    max = 0
+    unless self.min_delivery_time.nil? || self.max_delivery_time.nil?
+      ((self.min_delivery_time.hour)..(self.max_delivery_time.hour)).each do |hour|
+        el = DeliveryTotal.generate(hour, self)
+        max = el[:max] if el[:max] > max
+        el[:el].save
+      end
+    end
+    self.max_deliveries = max
   end
   
   def set_deliveries_disruptions
@@ -383,6 +401,13 @@ class Km < ActiveRecord::FmxBase
       el.destroy
     end
     @shop_totals = nil
+  end
+  
+  def destroy_delivery_totals
+    self.delivery_totals.each do |el|
+      el.destroy
+    end
+    @delivery_totals = nil
   end
   
   def remove_active_count

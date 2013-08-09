@@ -96,3 +96,13 @@ en:
         parking_restriction_type:
           public_parking: 'Public Parking'
           loading_area: 'Loading Area'
+      delivery_total:
+        day:
+          sunday: 'Sunday'
+          monday: 'Monday'
+          tuesday: 'Tuesday'
+          wednesday: 'Wednesday'
+          thursday: 'Thursday'
+          friday: 'Friday'
+          saturday: 'Saturday'
+          

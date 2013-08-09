@@ -254,13 +254,19 @@ $.extend(config, {
 						}
 					},
 					deliveries: {
+						days: <%= DeliveryTotal::Day::List.to_json.html_safe %>,
+						labels: {
+							rotation: -45,
+							align: 'right'
+						},
+						no_data: '#FFFFCF',
+						colors: ['#FDDA83', '#FA9A00', '#A02700'],
 						opts: {
 							chart: {
-								type: 'columnrange',
-								inverted: true
+								type: 'heatmap'
 							},
 							legend: {
-								enabled: false
+								valueDecimals: 0
 							}
 						}
 					},
@@ -273,6 +279,10 @@ $.extend(config, {
 						}
 					},
 					traffic_disruptions: {
+						labels: {
+							rotation: -45,
+							align: 'right'
+						},
 						opts: {
 							chart: {
 								type: 'area'
