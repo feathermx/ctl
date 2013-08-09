@@ -1,0 +1,24 @@
+<% content_for :head do %>
+	<%= stylesheet_link_tag 'app/views/splash' %>
+	<%= javascript_include_tag 'app/views/splash' %>
+<% end %>
+<div id="splash">
+	<div class="panel view">
+		<div class="panel_wrapper">
+			<div class="panel_header">
+				<div class="panel_title_wrapper">
+					<h1 class="panel_title"><%= t 'app.views.splash.title' %></h1>
+					<div class="panel_title_actions">
+						<a class="panel_action button" href="#"><%= t 'app.views.splash.actions.learn_more' %></a>
+						<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<p class="panel_subtitle"><%= t 'app.views.splash.subtitle' %></p>
+			</div>
+			<div class="panel_content">
+				<%= render partial: 'splash/table/table' %>
+			</div>
+		</div>
+	</div>
+</div>

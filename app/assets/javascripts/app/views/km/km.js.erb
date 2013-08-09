@@ -64,17 +64,7 @@
 				});
 			},
 			getKmLink: function(){
-				var link = null;
-				var link_base = unescape(config.server.paths.show);
-				var parts = this.km.full_slug.split('/');
-				if(parts.length == 3){
-					link = link_base
-						.replace('%{country}', parts[0])
-						.replace('%{city}', parts[1])
-						.replace('%{km}', parts[2])
-					;
-				}
-				return link;
+				return this.root.getKmLink(this.km);
 			},
 			success: function(data){
 				if(data && data.km){

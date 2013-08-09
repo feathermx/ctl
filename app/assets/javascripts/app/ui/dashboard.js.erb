@@ -14,11 +14,9 @@
 				this.initStaticElements();
 				this.initWrapper();
 				this.initWindow();
-				this.windowOnResize();
-				this.initViewLoader();
 				this.initGoogleMapsLoader();
 				this.initFacebook();
-				this.initView();
+				this.ready();
 			},
 			initFacebook: function(){
 				var cnf = config.facebook;
@@ -38,9 +36,6 @@
 						km: null
 					});
 				}
-			},
-			initView: function(){
-				if(!this.render_layout) this.loadView('home');
 			},
 			initGoogleMapsLoader: function(){
 				this.google_maps_loader = {};
@@ -96,9 +91,22 @@
 				var img_src = base.replace('%{image}', src);
 				return img_src;
 			},
-			loadKm: function(data){
+			/**loadKm: function(data){
 				$.extend(this.selections, data);
 				this.loadView('km');
+			},*/
+			getKmLink: function(km){
+				var link = null;
+				var link_base = unescape(config.server.paths.show);
+				var parts = km.full_slug.split('/');
+				if(parts.length == 3){
+					link = link_base
+						.replace('%{country}', parts[0])
+						.replace('%{city}', parts[1])
+						.replace('%{km}', parts[2])
+					;
+				}
+				return link;
 			},
 			initApiClient: function(){
 				var _self = this;
@@ -151,34 +159,16 @@
 			initWrapper: function(){
 				this.wrapper = this.container.find('#wrapper');
 			},
-			initViewLoader: function(){
-				var _self = this;
-				this.view_loader = this.root.fmx.view_loader({
-					container: this.wrapper,
-					loading: function(){
-						_self.loading();
-					},
-					loaded: function(){
-						_self.viewLoaderLoaded();
-					},
-					error: function(){
-						_self.error();
-					}
-				});
-			},
-			viewLoaderLoaded: function(){
-				this.loaded();
+			ready: function(){
 				this.view = this.wrapper.find('.view');
-				this.windowOnResize();
-			},
-			loadView: function(key, opts){
-				if(opts == null) opts = {};
-				var path = config.server.paths[key];
-				var url = config.server.endpoint + path;
-				$.extend(opts, {
-					url: url
+				this.view.css({
+					display: 'block',
+					opacity: 0
 				});
-				this.view_loader.load(opts);
+				this.view.animate({
+					opacity: 1
+				}, 1000);
+				this.windowOnResize();
 			}
 		});
 		app.init();

@@ -30,6 +30,9 @@ body{
 	top: 0px;
 	z-index: 6000;
 	margin: 40px 0 0 0;
+	.view{
+		display: none;
+	}
 	.panel{
 		background: none repeat scroll 0 0 #FFFFFF;
 		height: 100%;

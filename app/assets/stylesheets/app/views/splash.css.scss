@@ -1,8 +1,8 @@
 @import 'app/shared.css.scss';
-#home{
+#splash{
 	padding: 0 50px;
 	height: 100%;
-	#home_table_not_found{
+	#splash_table_not_found{
 		display: block;
 		text-align: center;
 		margin: 100px 0 0 0;
@@ -10,19 +10,19 @@
 		font-size: 15px;
 		display: none;
 	}
-	table#home_table{
+	table#splash_table{
 		display: none;
 		width: 100%;
 		border-left: 1px solid #E9E9E9;
 		border-top: 1px solid #E9E9E9;
 		border-right: 1px solid #E9E9E9;
-		.home_table_col{
+		.splash_table_col{
 			display: block;
-			img.home_table_col_icon{
+			img.splash_table_col_icon{
 				display: block;
 				margin: 0 auto;
 			}
-			.home_table_col_name{
+			.splash_table_col_name{
 				width: 100%;
 				margin: 2px 0 0 0;
 				color: #919191;
@@ -40,13 +40,13 @@
 				font-size: 15px;
 				text-align: center;
 				color: #555555;
-				&.home_table_country{
-					.home_table_country_icon{
+				&.splash_table_country{
+					.splash_table_country_icon{
 						display: block;
 						float: left;
 						margin: 0 5px 0 0;
 					}
-					.home_table_country_name{
+					.splash_table_country_name{
 						float: left;
 						display: block;
 						font-weight: $bold;
@@ -63,7 +63,7 @@
 		th{
 			width: 18%;
 			background: none repeat scroll 0 0 #F7F8F9;
-			&.home_table_actions{
+			&.splash_table_actions{
 				width: auto;
 			}
 		}

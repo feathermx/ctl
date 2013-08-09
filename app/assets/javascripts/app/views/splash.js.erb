@@ -1,7 +1,7 @@
 (function(){
 	$(function(){
-		app.home = {};
-		$.extend(app.home, {
+		var el = app.splash = {};
+		$.extend(el, {
 			parent: app,
 			root: null,
 			lang: null,
@@ -31,12 +31,12 @@
 					},
 					initNotFoundContainer: function(){
 						var label = this.view.lang.labels.not_found;
-						this.not_found_container = $('<div id="home_table_not_found"></div>');
+						this.not_found_container = $('<div id="splash_table_not_found"></div>');
 						this.not_found_container.html(label);
 						this.not_found_container.insertBefore(this.container);
 					},
 					initContainer: function(){
-						this.container = this.parent.container.find('#home_table');
+						this.container = this.parent.container.find('#splash_table');
 						this.initTbody();
 					},
 					initTbody: function(){
@@ -95,21 +95,11 @@
 							initGoAction: function(container){
 								var _self = this;
 								var label = this.view.lang.actions.go;
-								var action = $('<a href="#" class="button table_action"></a>');
+								var url = this.root.getKmLink(this.data.last_active_km);
+								var action = $('<a class="button table_action"></a>');
+								action.attr('href', url);
 								action.html(label);
-								this.root.click(action, function(e, element){
-									_self.goActionOnClick(e, element);
-								});
 								action.appendTo(container);
-							},
-							goActionOnClick: function(e, element){
-								var data = {};
-								$.extend(data, {
-									country: this.data.country_id,
-									city: this.data.id,
-									km: this.data.last_active_km
-								});
-								this.root.loadKm(data);
 							},
 							addCol: function(val){
 								var label = (val == null) ? '-' : this.root.format.shortNumber(val);
@@ -118,12 +108,12 @@
 								container.appendTo(this.container);
 							},
 							initNameCol: function(){
-								var container = $('<td></td>').addClass('home_table_country');
-								var label = $('<span class="home_table_country_name"></span>');
+								var container = $('<td></td>').addClass('splash_table_country');
+								var label = $('<span class="splash_table_country_name"></span>');
 								label.html(this.data.name);
 								var icon = $('<img />', {
 									src: this.root.getImagePath(this.data.image_path)
-								}).addClass('home_table_country_icon');
+								}).addClass('splash_table_country_icon');
 								icon.appendTo(container);
 								label.appendTo(container);
 								container.append('<span class="clear"></span>');
@@ -153,12 +143,12 @@
 				table.init();
 			},
 			initContainer: function(){
-				this.container = this.root.wrapper.find('#home');
+				this.container = this.root.wrapper.find('#splash');
 			},
 			initRoot: function(){
 				this.root = this.parent.root;
 			}
 		});
-		app.home.init();
+		el.init();
 	});
 })(jQuery);

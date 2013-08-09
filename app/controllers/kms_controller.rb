@@ -1,15 +1,7 @@
 class KmsController < FrontController
   
-  alias :base_title :title
-  alias :base_description :description
-  
-  before_filter :assert_ajax_post, only: [:index]
   before_filter :assert_km, only: [:show, :show_action]
   before_filter :page_elements, only: [:show]
-  
-  def index
-    
-  end
   
   def show
     render layout: 'application'
@@ -22,15 +14,11 @@ class KmsController < FrontController
   protected
   
   def title
-    @title ||= "#{self.base_title} | #{@km.full_name}"
+    @title ||= self.get_title(@km.full_name)
   end
   
   def description
-    @description ||= ->{
-      description = self.base_description
-      description = self.km.description unless self.km.description.blank?
-      description
-    }.call
+    @description ||= self.get_description(self.km.description)
   end
   
   def assert_km

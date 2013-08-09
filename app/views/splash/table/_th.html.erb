@@ -1,0 +1,8 @@
+<% lang_key = "app.views.splash.fields.#{key}" %>
+<% img_src = "app/icons/splash/#{key}.png" %>
+<th class="splash_table_data">
+	<div class="splash_table_col">
+		<%= image_tag img_src, width: 31, height: 28, class: 'splash_table_col_icon' %>
+		<h1 class="splash_table_col_name"><%= t lang_key %></h1>
+	</div>
+</th>

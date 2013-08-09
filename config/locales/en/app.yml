@@ -12,7 +12,7 @@ en:
       error: 'There was an error. Please try again later.'
       share_success: 'Post was published'
     views:
-      home:
+      splash:
         title: 'Welcome to km2!'
         subtitle: "We've collected data from all around the world. Please select a city to continue."
         labels:
@@ -25,6 +25,8 @@ en:
           area: 'Area'
           density: 'Density'
           bigmac: 'Big Mac Index'
+      about:
+        title: 'About'
       km:
         header:
           search:

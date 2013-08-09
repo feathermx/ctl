@@ -14,13 +14,13 @@ class TrafficCountTotal < ActiveRecord::FmxBase
         ends_at: '10:59:59'
       },
       Noon => {
-        name: I18n.t('app.model.traffic_count_total.day_time.evening'),
+        name: I18n.t('app.model.traffic_count_total.day_time.noon'),
         namespace: 'noon',
         starts_at: '11:00:00',
         ends_at: '13:59:59'
       },
       Evening => {
-        name: I18n.t('app.model.traffic_count_total.day_time.noon'),
+        name: I18n.t('app.model.traffic_count_total.day_time.evening'),
         namespace: 'evening',
         starts_at: '14:00:00',
         ends_at: '23:59:59'

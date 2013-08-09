@@ -1,3 +1,6 @@
-<%= javascript_include_tag(url_for action: :show_action, country: @km[:country_slug], city: @km[:city_slug], km: @km.slug) %>
-<%= javascript_include_tag 'app/views/km' %>
+<% content_for :head do %>
+	<%= stylesheet_link_tag 'app/views/km' %>
+	<%= javascript_include_tag(url_for action: :show_action, country: @km[:country_slug], city: @km[:city_slug], km: @km.slug) %>
+	<%= javascript_include_tag 'app/views/km' %>
+<% end %>
 <div id="km"></div>
