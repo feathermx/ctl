@@ -1,6 +1,7 @@
+<% img_src = "app/icons/about/#{key}.png" %>
 <div class="about_element">
 	<div class="about_element_header">
-		
+		<%= image_tag img_src, width: 70, height: 70, class: 'about_element_header_icon' %>
 	</div>
 	<div class="about_element_title_container">
 		<h1 class="about_element_title"><%= el[:title].html_safe %></h1>

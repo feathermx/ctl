@@ -22,6 +22,16 @@
 			height: 150px;
 			position: relative;
 		}
+		.about_element_header_icon{
+			display: block;
+			position: absolute;
+			width: 70px;
+			height: 70px;
+			left: 50%;
+			top: 50%;
+			margin-top: -35px;
+			margin-left: -35px;
+		}
 		.about_element_title_container{
 			height: 60px;
 			background: none repeat scroll 0 0 #DDDDDD;

@@ -7,6 +7,7 @@ class FrontController < ApplicationController
   def page_elements
     self.title
     self.description
+    self.tags
   end
   
   def title
@@ -15,6 +16,10 @@ class FrontController < ApplicationController
   
   def get_title(el)
     "#{self.base_title} | #{el}"
+  end
+  
+  def tags
+    @tags ||= I18n.t('app.tags')
   end
   
   def get_description(el)

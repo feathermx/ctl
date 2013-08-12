@@ -2,6 +2,7 @@ en:
   app:
     title: 'km2'
     description: 'km2 has information from megacities in the world based on single square kilometer areas. As a part of an urban logistics atlas of different cities, it visualizes detailed logistics, retail and urban form information of chosen square kilometers. These visualizations inform factors that affect urban last-mile delivery performance in these regions.'
+    tags: 'km2,urban logistics,megacities,logistic atlas,visualization,square kilometer,urban factors,shops,shop inventory,loading/unloading,deliveries,traffic counts,disruptions'
     format:
       number:
         billion: 'B'
