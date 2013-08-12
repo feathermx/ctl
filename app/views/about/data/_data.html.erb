@@ -1,0 +1,15 @@
+<div class="panel_wrapper no_padding">
+	<div class="panel_header with_padding">
+		<div class="panel_title_wrapper">
+			<h1 class="panel_title"><%= t 'app.views.about.data.title' %></h1>
+			<div class="clear"></div>
+		</div>
+		<p class="panel_subtitle"><%= t 'app.views.about.data.legend' %></p>
+	</div>
+	<div id="about_elements">
+	<% _t('app.views.about.data.elements').each do |key, el| %>
+		<%= render partial: 'about/data/element', locals: { key: key, el: el } %>
+	<% end %>
+		<div class="clear"></div>
+	</div>
+</div>

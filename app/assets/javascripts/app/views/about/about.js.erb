@@ -4,11 +4,155 @@
 		$.extend(el, {
 			parent: app,
 			root: null,
+			view: null,
+			container: null,
+			config: null,
+			lang: null,
 			init: function(){
 				this.initRoot();
+				this.initView();
+				this.initConfig();
+				this.initLang();
+				this.initContainer();
+				this.initMap();
+			},
+			initLang: function(){
+				this.lang = lang.views.about;
+			},
+			initConfig: function(){
+				this.config = config.views.about;
+			},
+			initMap: function(){
+				var map = {};
+				$.extend(map, {
+					parent: this,
+					root: null,
+					view: null,
+					container: null,
+					config: null,
+					lang: null,
+					data: null,
+					init: function(){
+						this.initRoot();
+						this.initView();
+						this.initConfig();
+						this.initLang();
+						this.initLang();
+						this.initContainer();
+						this.load();
+					},
+					initLang: function(){
+						this.lang = this.view.lang.map;
+					},
+					initConfig: function(){
+						this.config = this.view.config.map;
+					},
+					initContainer: function(){
+						this.container = this.view.container.find('#about_map');
+					},
+					load: function(){
+						var _self = this;
+						this.root.api_client.load({
+							key: 'list_map_countries',
+							success: function(data){
+								_self.success(data);
+							}
+						});
+					},
+					success: function(data){
+						var _self = this;
+						this.data = {};
+						$.each(data.contents, function(key, el){
+							_self.data[el.slug] = el;
+						});
+						this.render();
+					},
+					render: function(){
+						var _self = this;
+						var data = [];
+						$.each($.highcharts_countries, function(key, el){
+							var element = _self.getElement(key, el);
+							if(element.country != null) data.push(element);
+						});
+						this.container.highcharts(
+							$.extend({
+								title: {
+									text: this.lang.title
+								},
+								tooltip: {
+									formatter: function(){
+										return this.point.getTooltip();
+									}
+								},
+								series: [{
+									data: data,
+									valueRanges: this.config.valueRanges
+								}]
+							}, this.config.opts)
+						);
+					},
+					getElement: function(key, path){
+						var element = {};
+						$.extend(element, {
+							parent: this,
+							key: key,
+							path: path,
+							country: null,
+							y: null,
+							name: null,
+							_tooltip: null,
+							init: function(){
+								this.initCountry();
+							},
+							initCountry: function(){
+								var countries = this.parent.data;
+								this.country = countries[this.key];
+								if(this.country != null){
+									this.initY();
+									this.initName();
+									this.initPath();
+								}
+							},
+							getTooltip: function(){
+								if(this._tooltip == null){
+									var s = '<b>' + this.name + '</b>(' + this.y + ')';
+									$.each(this.country.map_cities, function(key, city){
+										s += '<br />' + city.name;
+									});
+									this._tooltip = s;
+								}
+								return this._tooltip;
+							},
+							initPath: function(){
+								this.path = Highcharts.pathToArray(this.path);
+							},
+							initName: function(){
+								this.name = this.country.name;
+							},
+							initY: function(){
+								this.y = this.country.map_cities.length;
+							}
+						});
+						element.init();
+						return element;
+					},
+					initRoot: function(){
+						this.root = this.parent.root;
+					},
+					initView: function(){
+						this.view = this.parent.view;
+					}
+				});
+				map.init();
+			},
+			initContainer: function(){
+				this.container = this.root.wrapper.find('#about');
 			},
 			initRoot: function(){
 				this.root = this.parent.root;
+			},
+			initView: function(){
+				this.view = this;
 			}
 		});
 		el.init();

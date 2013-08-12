@@ -21,15 +21,44 @@ en:
           go: 'Go!'
           learn_more: 'Learn more'
         fields:
-          population: 'Population'
-          area: 'Area'
-          density: 'Density'
-          bigmac: 'Big Mac Index'
+          population: 
+            title: 'Population'
+            units: 'millions'
+          area: 
+            title: 'Area'
+            units: 'km2'
+          density: 
+            title: 'Density'
+            units: '/km2'
+          bigmac: 
+            title: 'Big Mac Index'
+            units: 'US Dollar'
       about:
         title: 'About'
         map:
           title: 'Global logistics data'
           legend: 'km2 was created as an urban logistics atlas with information collected in megacities around the world. It consists on rich datasets of relevant and detailed logistics information to show the factors that affect delivery performance.'
+          map:
+            title: 'Current cities with km2 data'
+        data:
+          title: 'Data collection'
+          legend: 'Initial data was collected by MIT Students. Formats for collecting relevant logistics information were created by the km2 team to find patterns and representations of key indicators.'
+          elements:
+            shops:
+              title: 'Shops'
+              content: 'Shop inventory captures all the shops in the selected square kilometer of a given city. The inventory display stores that require good delivery practices.'
+            loading:
+              title: 'Loading'
+              content: 'Transit infrastructure and regulations in the city and their relation to logistics systems. Information includes freight vehicle parking area and loading/unloading zones.'
+            deliveries:
+              title: 'Deliveries'
+              content: 'Delivery tracking captures the actual delivery operation, including locations, distance traveled, type of products, and equipment used.'
+            traffic_counts:
+              title: 'Traffic'
+              content: 'Traffic count sample data describes the flow of vehicles within a focus street of the square kilometer.'
+            traffic_disruptions:
+              title: 'Disruptions'
+              content: 'Describes disruptions in the traffic flow by both freight vehicles and other sources, including a measure of the severity.'
       km:
         header:
           search:

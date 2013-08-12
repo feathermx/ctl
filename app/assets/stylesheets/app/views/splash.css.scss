@@ -22,11 +22,11 @@
 				display: block;
 				margin: 0 auto;
 			}
-			.splash_table_col_name{
-				width: 100%;
+			h1.splash_table_col_name, h2.splash_table_col_units{
 				margin: 2px 0 0 0;
 				color: #919191;
 				font-size: 12px;
+				display: block;
 			}
 		}
 		th, td{

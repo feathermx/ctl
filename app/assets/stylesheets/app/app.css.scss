@@ -40,9 +40,18 @@ body{
 		border-right: 1px solid #DBDBDB;
 		.panel_wrapper{
 			padding: 30px 50px;
+			&.first{
+				padding: 30px 50px 0 50px;
+			}
+			&.no_padding{
+				padding: 0 0 50px 0;
+			}
 		}
 		.panel_header{
 			margin: 0 0 40px 0;
+			&.with_padding{
+				padding: 30px 50px 0 50px;
+			}
 			.panel_title_wrapper{
 				margin: 0 0 15px 0;
 			}

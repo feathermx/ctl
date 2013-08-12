@@ -7,7 +7,14 @@ class Api::CountriesController < Api::ApiController
   
   # POST /api/countries/list
   def list
+    Api::Country.json_display = Api::Country::Json::List
     render json: { contents: Api::Country.list }
+  end
+  
+  # POST /api/countries/map
+  def map
+    Api::Country.json_display = Api::Country::Json::Map
+    render json: { contents: Api::Country.map_list }
   end
   
   # POST /api/countries/list_cities

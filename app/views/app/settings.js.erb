@@ -32,6 +32,7 @@ $.extend(config, {
 		paths: {
 			list_splash_cities: '<%= url_for controller: 'api/cities', action: :list %>',
 			list_countries: '<%= url_for controller: 'api/countries', action: :list %>',
+			list_map_countries: '<%= url_for controller: 'api/countries', action: :map %>',
 			list_cities: '<%= url_for controller: 'api/countries', action: :list_cities %>',
 			search_cities: '<%= url_for controller: 'api/cities', action: :search %>',
 			list_kms: '<%= url_for controller: 'api/cities', action: :list_kms %>',
@@ -322,6 +323,58 @@ $.extend(config, {
 						loading: '<%= image_url 'app/icons/km/panel/logo/small/loading.png' %>',
 						deliveries: '<%= image_url 'app/icons/km/panel/logo/small/deliveries.png' %>',
 						traffic_disruptions: '<%= image_url 'app/icons/km/panel/logo/small/traffic_disruptions.png' %>'
+					}
+				}
+			}
+		},
+		about: {
+			map: {
+				valueRanges: [
+					{
+						to: 0,
+						color: '#EFEFEF'
+					},
+					{
+						from: 1,
+						to: 1,
+						color: '#8492A5'
+					},
+					{
+						from: 2,
+						to: 2,
+						color: '#617794'
+					},
+					{
+						from: 3,
+						color: '#103362'
+					}
+				],
+				opts: {
+					chart: {
+						type: 'map',
+						zoomType: 'xy'
+					},
+					credits: {
+						enabled: false
+					},
+					legend: {
+						enabled: false
+					},
+					xAxis: {
+						lineWidth: 0,
+						labels: {
+							enabled: false
+						}
+					},
+					yAxis: {
+						reversed: true,
+						gridLineWidth: 0,
+						labels: {
+							enabled: false
+						},
+						title: {
+							text: null
+						}
 					}
 				}
 			}

@@ -3,6 +3,7 @@
 <th class="splash_table_data">
 	<div class="splash_table_col">
 		<%= image_tag img_src, width: 31, height: 28, class: 'splash_table_col_icon' %>
-		<h1 class="splash_table_col_name"><%= t lang_key %></h1>
+		<h1 class="splash_table_col_name"><%= t "#{lang_key}.title" %></h1>
+		<h2 class="splash_table_col_units">(<%= t "#{lang_key}.units" %>)</h2>
 	</div>
 </th>

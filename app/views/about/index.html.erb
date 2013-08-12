@@ -4,17 +4,7 @@
 <% end %>
 <div id="about">
 	<div class="panel view">
-		<div class="panel_wrapper">
-			<div class="panel_header">
-				<div class="panel_title_wrapper">
-					<h1 class="panel_title"><%= t 'app.views.about.map.title' %></h1>
-					<div class="clear"></div>
-				</div>
-				<p class="panel_subtitle"><%= t 'app.views.about.map.legend' %></p>
-			</div>
-			<div class="panel_content">
-				
-			</div>
-		</div>
+		<%= render partial: 'about/map/map' %>
+		<%= render partial: 'about/data/data' %>
 	</div>
 </div>
