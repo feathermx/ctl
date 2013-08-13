@@ -21,13 +21,5 @@ class Admin::City < City
     end
   end
   
-  def list_elements(base)
-    base.filter_by_city(self.id)
-  end
-  
-  def find_km_by_id(id)
-    Admin::Km.base.filter_by_city(self.id).filter_by_id(id).first
-  end
-  
   
 end

@@ -64,16 +64,11 @@ en:
               title: 'Change Password'
               labels:
                 update_success: 'Password updated successfully'
-            city:
-              title: 'City info'
-              labels:
-                update_success: 'City info updated successfully'
-                not_found: 'A city has not being assigned yet. Please update your personal info first.'
         users:
           title: 'Users'
           fields:
             name: 'Name'
-            city_id: 'City'
+            kms: 'kms'
             last_names: 'Last Names'
             mail: 'E-mail'
             old_password: 'Old Password'
@@ -114,7 +109,7 @@ en:
             gdp: 'GDP(USD)'
             big_mac_index: 'Big Mac Index'
         kms:
-          title: '%{city} - km2'
+          title: 'kms'
           labels:
             city_not_found: 'Please select a city before capturing data.'
           actions:
@@ -127,6 +122,7 @@ en:
             deliveries: 'Deliveries'
           fields:
             name: 'Name'
+            city_id: 'City'
             tracks_count: 'Tracks'
             traffic_counts_count: 'Traffic'
             traffic_disruptions_count: 'T. Dis'

@@ -23,13 +23,6 @@
 				</div>
 				<div class="clear"></div>
 			</div>
-			<div class="field">
-				<label><%= t('app.admin.views.users.fields.city_id')  %></label>
-				<div class="field_container">
-					<%= f.select :city_id, Admin::City.select_list, prompt: true %>
-				</div>
-				<div class="clear"></div>
-			</div>
 			<div class="form_actions">
 				<%= submit_tag t('app.admin.actions.submit'), class: 'button' %>
 				<div class="clear"></div>

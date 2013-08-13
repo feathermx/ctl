@@ -2,6 +2,7 @@ class User < ActiveRecord::FmxBase
   
   include Permissible
   include Authenticable
+  include Multiselectable
   
   module Perm
     Users = 1
@@ -28,13 +29,10 @@ class User < ActiveRecord::FmxBase
     }
   end
   
-  scope :base, ->{ select("users.id, users.name, users.last_names, users.city_id, users.mail, users.password, users.list_perms, users.add_perms, users.edit_perms, users.delete_perms") }
+  scope :base, ->{ select("users.id, users.name, users.last_names, users.mail, users.password, users.list_perms, users.add_perms, users.edit_perms, users.delete_perms") }
   scope :base_count, ->{ select("COUNT(users.id) as num") }
   scope :filter_by_id, ->(id){ where(id: id) }
-  scope :with_city, ->{ select("cities.name as city_name").joins("LEFT JOIN cities ON cities.id = users.city_id") }
-  scope :with_country, ->{ select("countries.name as country_name").joins("LEFT JOIN countries ON countries.id = cities.country_id") }
   
-  validates :city_id, numericality: { only_integer: true }, allow_nil: true
   validates :name, :last_names, :mail, presence: true
   validates :name, length: { in: 2..100 }
   validates :last_names, length: { in: 2..100 }
@@ -46,8 +44,8 @@ class User < ActiveRecord::FmxBase
   
   attr_protected :list_perms, :add_perms, :edit_perms, :delete_perms
   
-  def city_id=(val)
-    write_attribute(:city_id, val) unless val.blank?
+  def user_kms
+    @user_kms ||= UserKm.base.filter_by_user(self.id)
   end
   
   def list?(perm)
@@ -93,5 +91,12 @@ class User < ActiveRecord::FmxBase
       "list", "add", "edit", "delete"
     ]
   end
+  
+  def multiselect_fields
+    @multiselect_fields ||= [
+      MultiSelectField.generate(name: :km, model: UserKm, list_with: :user_kms)
+    ]
+  end
+  
   
 end

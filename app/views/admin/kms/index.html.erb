@@ -1,10 +1,5 @@
-<% if @city.nil? %>
-<div class="fmx_table_not_found_container visible">
-	<%= t 'app.admin.views.kms.labels.city_not_found' %>
-</div>
-<% else %>
 <% content_for :table_fields do %>
-	<th data-name="name"><%= t 'app.admin.views.kms.fields.name' %></th>
+	<th data-name="full_name" data-sort="kms.name"><%= t 'app.admin.views.kms.fields.name' %></th>
 	<th data-name="tracks_count"><%= t 'app.admin.views.kms.fields.tracks_count' %></th>
 	<th data-name="traffic_counts_count"><%= t 'app.admin.views.kms.fields.traffic_counts_count' %></th>
 	<th data-name="traffic_disruptions_count"><%= t 'app.admin.views.kms.fields.traffic_disruptions_count' %></th>
@@ -17,4 +12,3 @@
 <%= render partial: 'admin/shared/plugins/coordinates_selector' %>
 <%= javascript_include_tag url_for(action: :action) %>
 <%= render partial: 'admin/shared/section/section', locals: { opts: @section.merge(show_add_btn: add?) } %>
-<% end %>

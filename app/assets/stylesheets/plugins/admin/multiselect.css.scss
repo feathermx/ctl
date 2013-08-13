@@ -1,0 +1,55 @@
+@import "fmx/mixins.css.scss";
+.fmx_multiselect_search_container{
+	font-size: 12px;
+}
+.fmx_multiselect_not_found_container{
+	display: none;
+	color: #424242;
+    font-size: 13px;
+    margin: 15px 0;
+    text-align: center;
+}
+.fmx_multiselect_results_container{
+	border-left: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+}
+.fmx_multiselect_status_container{
+	background: none repeat scroll 0 0 #EEEEEE;
+	border-bottom: 1px solid #CCCCCC;
+	padding: 6px 7px;
+	width: 448px;
+}
+@include link('.fmx_multiselect_result_container') {
+	background: none repeat scroll 0 0 #EEEEEE;
+	border-bottom: 1px solid #CCCCCC;
+	padding: 6px 7px;
+	width: 448px;
+}
+.fmx_multiselect_result_container:hover{
+	background: none repeat scroll 0 0 #FFFFFF;
+}
+.fmx_multiselect_values_container{
+	font-size: 12px;
+	margin: 15px 0 0 0;
+	background: none repeat scroll 0 0 #F6F7F9;
+    border-right: 1px solid #D6D8D8;
+    border-left: 1px solid #D6D8D8;
+    border-top: 1px solid #D6D8D8;
+    color: #2C71A5;
+}
+.fmx_multiselect_value_container{
+	padding: 6px 7px;
+	border-bottom: 1px solid #D6D8D8;
+}
+.fmx_multiselect_value_text{
+	width: 415px;
+}
+@include link('.fmx_multiselect_value_delete_btn') {
+	margin: -1px 0 0 10px;
+	float: left;
+	font-weight: bold;
+	cursor: pointer;
+}
+.fmx_multiselect_value_delete_btn:hover{
+	color: #596677;
+}

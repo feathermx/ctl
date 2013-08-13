@@ -1,1 +1,24 @@
+<% content_for :form_view do %>
+	this.view = {};
+	$.extend(this.view, {
+		parent: this,
+		root: null,
+		init: function(){
+			this.initRoot();
+			this.initKmsMultiselect();
+		},
+		initKmsMultiselect: function(){
+			this.root.fmx.multiselect({
+				url: '<%= url_for controller: :kms, action: :search %>',
+				field_name: 'admin_user[km_list]',
+				init_values: <%= @element.km_multiselect_values.to_json.html_safe %>,
+				container: this.parent.form.container.find('#user_kms')
+			});
+		},
+		initRoot: function(){
+			this.root = this.parent.root;
+		}
+	});
+	this.view.init();
+<% end %>
 <%= render partial: 'admin/shared/section/form_action', locals: { opts: @section } %>

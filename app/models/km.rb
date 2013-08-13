@@ -6,14 +6,16 @@ class Km < ActiveRecord::FmxBase
   scope :base_count, ->{ select("COUNT(kms.id) as num") }
   scope :base_id, ->{ select("kms.id") }
   scope :with_city, ->{ select('cities.name as city_name').joins('JOIN cities ON cities.id = kms.city_id') }
+  scope :with_user_kms, ->{ joins('JOIN user_kms ON user_kms.km_id = kms.id') }
   scope :filter_by_id, ->(id){ where(id: id) }
   scope :filter_by_city, ->(city_id){ where(city_id: city_id) }
+  scope :filter_by_user, ->(user_id){ with_user_kms.where('user_kms.user_id = ?', user_id) }
   scope :filter_active, ->{ where(is_active: 1) }
   scope :ascending, ->{ order('kms.name ASC') }
   scope :descending, ->{ order('kms.created_at DESC') }
   
   attr_accessor :active_changed
-  attr_protected :is_active, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_delivery_hour, :peak_disruptions, :peak_disruption_hour, :peak_traffic, :peak_traffic_hour, :min_disruption_time, :max_disruption_time, :min_delivery_time, :max_delivery_time, :chart_start_time, :chart_end_time, :max_deliveries, :city_id, :track_count, :traffic_counts_count, :traffic_disruptions_count, :street_data_count, :parking_restrictions_count, :shops_count, :delivery_count
+  attr_protected :is_active, :public_meter_length, :dedicated_meter_length, :peak_deliveries, :peak_delivery_hour, :peak_disruptions, :peak_disruption_hour, :peak_traffic, :peak_traffic_hour, :min_disruption_time, :max_disruption_time, :min_delivery_time, :max_delivery_time, :chart_start_time, :chart_end_time, :max_deliveries, :track_count, :traffic_counts_count, :traffic_disruptions_count, :street_data_count, :parking_restrictions_count, :shops_count, :delivery_count
   
   validates :street_lat, :street_lng, presence: true
   validates :is_active, numericality: { only_integer: true }, inclusion: { in: self.boolean_int }

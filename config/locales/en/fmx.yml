@@ -73,3 +73,11 @@ en:
             line: 'Line Delimiter'
             exclude_count: 'Exclude rows'
             file: 'CSV File'
+      multiselect:
+        labels:
+          idle_status: 'Start typing...'
+          typing_status: 'Searching #{val}...'
+          no_results: 'No results found for #{val}'
+          value_already_exists: 'Value #{val} already exists.'
+          not_found: 'No records found.'
+          search: 'Search...'

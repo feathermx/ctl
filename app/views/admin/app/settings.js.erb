@@ -276,6 +276,13 @@ $.extend(config, {
 				}
 			}, lang.fmx.csv_uploader());
 			return opts;
+		},
+		multiselect: function(){
+			var opts = {};
+			$.extend(opts, {
+				results_max_length: 74
+			}, lang.fmx.multiselect());
+			return opts;
 		}
 	}
 });

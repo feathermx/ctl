@@ -354,16 +354,6 @@ $.extend(app, {
 				})
 			);
 		},
-		multiselect: function(opts){
-			var _self = this;
-			return $.fmx_multiselect(
-				$.extend(opts, config.fmx.multiselect(), {
-					error: function(){
-						_self.root.error();
-					}
-				})
-			);
-		},
 		date_picker: function(opts){
 			return $.fmx_date_picker(
 				$.extend(opts, config.fmx.date_picker())
@@ -378,6 +368,16 @@ $.extend(app, {
 			}
 			return $.fmx_csv_uploader(
 				$.extend(opts, cnf)
+			);
+		},
+		multiselect: function(opts){
+			var _self = this;
+			return $.fmx_multiselect(
+				$.extend(opts, config.fmx.multiselect(), {
+					error: function(){
+						_self.root.error();
+					}
+				})
 			);
 		}
 	}

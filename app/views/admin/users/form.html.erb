@@ -1,5 +1,9 @@
 <% opts = section_form_defaults(@element, @section) %>
-<%= javascript_include_tag url_for(action: :form_action, new_record: opts[:new_record]) %>
+<% form_action_url = {action: :form_action, new_record: opts[:new_record]} %>
+<% unless @element.new_record? %>
+	<% form_action_url.merge!(id: @element.id) %>
+<% end %>
+<%= javascript_include_tag url_for(form_action_url) %>
 <%= render partial: 'admin/shared/section/header', locals: { opts: opts } %>
 <%= form_for @element, url: url_for(opts[:form_url]), html: { class: 'fmx_form', id: opts[:form_id], method: 'post' } do |f| %>
 	<fieldset>
@@ -25,10 +29,8 @@
 			<div class="clear"></div>
 		</div>
 		<div class="field">
-			<label><%= t('app.admin.views.users.fields.city_id')  %></label>
-			<div class="field_container">
-				<%= f.select :city_id, Admin::City.select_list, prompt: true %>
-			</div>
+			<label><%= t('app.admin.views.users.fields.kms')  %></label>
+			<div id="user_kms" class="field_container"></div>
 			<div class="clear"></div>
 		</div>
 		<% if @element.new_record? %>

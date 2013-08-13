@@ -15,6 +15,14 @@ class Admin::UsersController < Admin::AdminController
     
   end
   
+  def form_action
+    @element = ->{
+      cls = Admin::User
+      params[:id].nil? ? cls.new : cls.find_by_id(params[:id])
+    }.call
+    render_404 if @element.nil?
+  end
+  
   def list
     contents = Admin::User.filter(Admin::User.list, self.app_session).apply_limit_order(params, SHOW)
     num = Admin::User.filter(Admin::User.base_count, self.app_session)
@@ -36,6 +44,7 @@ class Admin::UsersController < Admin::AdminController
   
   def create
     element = Admin::User.new(params[:admin_user])
+    element.setting_km = true
     element.set_password(params[:admin_user][:password], params[:admin_user][:password_confirmation])
     element.perms = params[:perms]
     element.save
@@ -52,6 +61,7 @@ class Admin::UsersController < Admin::AdminController
   def update
     element = Admin::User.admin_find_by_id(params[:id], self.app_session)
     unless element.nil?
+      element.setting_km = true
       element.perms = params[:perms]
       element.update_attributes(params[:admin_user])
       render json: { errors: element.errors }

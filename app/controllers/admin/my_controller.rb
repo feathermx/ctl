@@ -1,4 +1,3 @@
-
 class Admin::MyController < Admin::AdminController
   
   before_filter :assert_ajax_protected, except: [:profile_action, :info_action, :password_action, :city_action]
@@ -87,10 +86,6 @@ class Admin::MyController < Admin::AdminController
       {
         key: 'password',
         url: { controller: :my, action: :password }
-      },
-      {
-        key: 'city',
-        url: { controller: :my, action: :city }
       }
     ]
   end

@@ -1,0 +1,24 @@
+@import "fmx/mixins.css.scss";
+.fmx_multiselect_search_container{
+	position: relative;
+}
+.fmx_multiselect_not_found_container{
+	display: none;
+}
+.fmx_multiselect_results_container{
+	position: absolute;
+	z-index: 1;
+	left: 0;
+}
+.fmx_multiselect_status_container{
+	display: none;
+}
+@include link('.fmx_multiselect_result_container') {
+	cursor: pointer;
+}
+.fmx_multiselect_value_text{
+	float: left;
+}
+@include link('.fmx_multiselect_value_delete_btn') {
+	cursor: pointer;
+}

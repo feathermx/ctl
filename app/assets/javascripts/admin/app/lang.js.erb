@@ -248,6 +248,20 @@ $.extend(lang, {
 				}
 			});
 			return opts;
+		},
+		multiselect: function(){
+			var opts = {};
+			$.extend(opts, {
+				labels: {
+					idle_status: '<%= t 'fmx.admin.multiselect.labels.idle_status' %>',
+					typing_status: '<%= t 'fmx.admin.multiselect.labels.typing_status' %>',
+					no_results: '<%= t 'fmx.admin.multiselect.labels.no_results' %>',
+					value_already_exists: '<%= t 'fmx.admin.multiselect.labels.value_already_exists' %>',
+					not_found: '<%= t 'fmx.admin.multiselect.labels.not_found' %>',
+					search: '<%= t 'fmx.admin.multiselect.labels.search' %>'
+				}
+			});
+			return opts;
 		}
 	},
 	app: {

@@ -429,7 +429,6 @@ CREATE SEQUENCE public.users_id_seq;
 
 CREATE TABLE public.users (
                 id BIGINT NOT NULL DEFAULT nextval('public.users_id_seq'),
-                city_id BIGINT,
                 name VARCHAR(100) NOT NULL,
                 last_names VARCHAR(100) NOT NULL,
                 mail VARCHAR(50) NOT NULL,
@@ -445,6 +444,20 @@ CREATE TABLE public.users (
 
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+CREATE SEQUENCE public.user_kms_id_seq;
+
+CREATE TABLE public.user_kms (
+                id BIGINT NOT NULL DEFAULT nextval('public.user_kms_id_seq'),
+                user_id BIGINT NOT NULL,
+                km_id BIGINT NOT NULL,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL,
+                CONSTRAINT user_kms_pk PRIMARY KEY (id)
+);
+
+
+ALTER SEQUENCE public.user_kms_id_seq OWNED BY public.user_kms.id;
 
 CREATE SEQUENCE public.uploads_id_seq;
 
@@ -493,13 +506,6 @@ FOREIGN KEY (country_id)
 REFERENCES public.countries (id)
 ON DELETE CASCADE
 ON UPDATE CASCADE
-NOT DEFERRABLE;
-
-ALTER TABLE public.users ADD CONSTRAINT cities_users_fk
-FOREIGN KEY (city_id)
-REFERENCES public.cities (id)
-ON DELETE SET NULL
-ON UPDATE SET NULL
 NOT DEFERRABLE;
 
 ALTER TABLE public.kms ADD CONSTRAINT cities_blocks_fk
@@ -600,6 +606,13 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 NOT DEFERRABLE;
 
+ALTER TABLE public.user_kms ADD CONSTRAINT kms_user_kms_fk
+FOREIGN KEY (km_id)
+REFERENCES public.kms (id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
 ALTER TABLE public.streets ADD CONSTRAINT blocks_streets_fk
 FOREIGN KEY (block_id)
 REFERENCES public.blocks (id)
@@ -678,6 +691,13 @@ ON UPDATE CASCADE
 NOT DEFERRABLE;
 
 ALTER TABLE public.uploads ADD CONSTRAINT users_uploads_fk
+FOREIGN KEY (user_id)
+REFERENCES public.users (id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
+ALTER TABLE public.user_kms ADD CONSTRAINT users_user_kms_fk
 FOREIGN KEY (user_id)
 REFERENCES public.users (id)
 ON DELETE CASCADE

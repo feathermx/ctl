@@ -13,6 +13,13 @@
 			<div class="clear"></div>
 		</div>
 		<div class="field">
+			<label><%= t('app.admin.views.kms.fields.city_id')  %></label>
+			<div class="field_container">
+				<%= f.select :city_id, Admin::City.select_list, prompt: true %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="field">
 			<label><%= t('app.admin.views.kms.fields.location')  %></label>
 			<div id="kms_coordinates_selector" class="field_container"></div>
 			<div class="clear"></div>

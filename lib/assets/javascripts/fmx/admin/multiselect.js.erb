@@ -1,0 +1,306 @@
+(function(){
+	var nil = $();
+	$.fmx_multiselect = function(opts){
+		var _self = {
+			url: '',
+			params: {},
+			field_name: 'values',
+			values_container: null,
+			search_container: null,
+			status_container: null,
+			labels: {
+				idle_status: 'Start typing...',
+				typing_status: 'Searching #{val}...',
+				no_results: 'No results found for #{val}',
+				value_already_exists: 'Value #{val} already exists.',
+				not_found: 'No records found.',
+				search: 'Search...'
+			},
+			results_max_length: 75,
+			search_field: null,
+			results_container: null,
+			not_found_container: null,
+			container: nil,
+			init_values: [],
+			results: {},
+			values: {},
+			values_count: 0,
+			typing: false,
+			ajax_request: null,
+			aborted: false,
+			search_interval: null,
+			search_interval_timeout: 500,
+			search_interval_count: 0,
+			search_interval_limit: 1,
+			val: null,
+			init: function(){
+				this.initSearchContainer();
+				this.initSearchField();
+				this.initResultsContainer();
+				this.initResultsWrapper();
+				this.initStatusContainer();
+				this.initNotFoundContainer();
+				this.initValuesContainer();
+				this.initValues();
+				this.render();
+				this.initSearchInterval();
+			},
+			initResultsContainer: function(){
+				this.results_container = $('<div class="fmx_multiselect_results_container"></div>');
+				this.results_container.appendTo(this.search_container);
+			},
+			initResultsWrapper: function(){
+				this.results_wrapper = $('<div class="fmx_multiselect_results_wrapper"></div>');
+				this.results_wrapper.appendTo(this.results_container);
+			},
+			initStatusContainer: function(){
+				this.status_container = $('<div class="fmx_multiselect_status_container"></div>');
+				this.status_container.appendTo(this.results_container);
+			},
+			initSearchInterval: function(){
+				this.search_interval = setInterval(function(){
+					_self.searchIntervalCallback();
+				}, this.search_interval_timeout);
+			},
+			searchIntervalCallback: function(){
+				if(this.typing){
+					if(this.search_interval_count == this.search_interval_limit){
+						this.typing = false;
+						this.doSearch();
+					}
+					else{
+						++this.search_interval_count;
+					}
+				}
+			},
+			doSearch: function(){
+				$.ajax({
+					type: 'post',
+					url: this.url,
+					data: $.extend({
+						q: this.val
+					}, this.params),
+					error: function(){
+						_self.doSearchOnError();
+					},
+					success: function(data){
+						_self.doSearchOnSuccess(data);
+					}
+				});
+			},
+			doSearchOnSuccess: function(data){
+				this.truncateResults();
+				if(data.contents.length == 0){
+					this.status_container.html(this.labels.no_results.replace('#{val}', this.val)).show();
+					this.results_wrapper.html('');
+				}
+				else{
+					this.value = null;
+					this.searchFieldOnFocusIn();
+					this.status_container.hide();
+					$.each(data.contents, function(key, result_data){
+						_self.addResult(result_data);
+					});
+				}
+			},
+			deleteValue: function(id){
+				delete this.values[id];
+				--this.values_count;
+				this.render();
+			},
+			addValue: function(value, do_render){
+				do_render = do_render == null ? false : do_render;
+				this.truncateResults();
+				this.search_field.val('');				
+				value.id = parseInt(value.id);
+				if(this.values[value.id] == null){
+					this.values[value.id] = value;
+					$.extend(value, {
+						parent: this,
+						container: null,
+						text_container: null,
+						delete_btn: null,
+						hidden_field: null,
+						init: function(){
+							this.initContainer();
+							this.initTextContainer();
+							this.initDeleteBtn();
+							this.initHiddenField();
+							this.container.append('<div class="clear"></div>');
+						},
+						initHiddenField: function(){
+							this.hidden_field = $('<input />', {
+								type: 'hidden',
+								name: this.parent.field_name + "[]",
+								value: this.id
+							});
+							this.hidden_field.appendTo(this.container);
+						},
+						initDeleteBtn: function(){
+							var _self = this;
+							this.delete_btn = $('<span class="fmx_multiselect_value_delete_btn">x</span>').click(function(e){
+								e.preventDefault();
+								_self.deleteBtnOnClick(e, $(this));
+							});
+							this.delete_btn.appendTo(this.container);
+						},
+						deleteBtnOnClick: function(){
+							this.container.remove();
+							this.parent.deleteValue(this.id);
+						},
+						initContainer: function(){
+							this.container = $('<div class="fmx_multiselect_value_container"></div>');
+							this.container.appendTo(this.parent.values_container);
+						},
+						initTextContainer: function(){
+							var name = this.name == null ? '' : this.name;
+							this.text_container = $('<span class="fmx_multiselect_value_text">' + name + '</span>');
+							this.text_container.appendTo(this.container);
+						}
+					
+					});
+					value.init();
+					++this.values_count;
+					if(do_render){
+						this.render();
+					}
+				}
+				else{
+					$.fmx_notification({
+						icon_src: 'error',
+						msg: this.labels.value_already_exists.replace('#{val}', value.name)
+					});
+				}
+			},
+			addResult: function(result_data){
+				var result = result_data;
+				result.id = parseInt(result.id);
+				this.results[result.id] = result;
+				$.extend(result, {
+					parent: this,
+					container: null,
+					init: function(){
+						this.initContainer();
+					},
+					initContainer: function(){
+						var _self = this;
+						var name = this.name ? this.name : '';
+						name = name.length > this.parent.results_max_length ? (name.substring(0, this.parent.results_max_length - 3) + "...") : name;
+						this.container = $('<div class="fmx_multiselect_result_container">' + name + '</div>').click(function(e){
+							e.preventDefault();
+							_self.containerOnClick(e, $(this));
+						});
+						this.container.appendTo(this.parent.results_wrapper);
+					},
+					containerOnClick: function(e, element){
+						this.parent.addValue({ id: this.id, name: this.name }, true);
+					},
+					remove: function(){
+						this.container.remove();
+					}
+				});
+				result.init();
+			},
+			truncateResults: function(){
+				$.each(this.results, function(key, result){
+					result.remove();
+				});
+				this.results = {};
+			},
+			error: function(){
+				$.fmx_notification({
+					icon_src: 'error',
+					msg: 'There was an error. Please try again later.'
+				});
+			},
+			doSearchOnError: function(){
+				if(!this.aborted){
+					this.val = null;
+					this.search_field.val('');
+					this.searchFieldOnFocusIn();
+					this.error();	
+				}
+			},
+			initValuesContainer: function(){
+				this.values_container = $('<div class="fmx_multiselect_values_container"></div>');
+				this.values_container.appendTo(this.container);
+			},
+			initValues: function(){
+				$.each(this.init_values, function(key, value){
+					_self.addValue(value);
+				});
+			},
+			initSearchField: function(){
+				this.search_field = $('<input />', {
+					type: 'text',
+					placeholder: this.labels.search
+				}).addClass('fmx_multiselect_search_field').keyup(function(e){
+					_self.searchFieldOnKeyUp();
+				}).focusin(function(e){
+					_self.searchFieldOnFocusIn(e);
+				}).focusout(function(e){
+					_self.searchFieldOnFocusOut(e);
+				});
+				this.search_field.appendTo(this.search_container);
+			},
+			searchFieldOnFocusIn: function(e){
+				if(!this.val){
+					this.status_container.html(this.labels.idle_status);
+				}
+				this.status_container.show();
+			},
+			searchFieldOnFocusOut: function(e){
+				if(!this.val){
+					this.status_container.hide();	
+				}
+			},
+			abortAjaxRequest: function(){
+				if(this.ajax_request != null){
+					this.aborted = true;
+					this.ajax_request.abort();
+					this.ajax_request = null;
+				}
+			},
+			searchFieldOnKeyUp: function(){
+				this.truncateResults();
+				this.status_container.show()
+				var val = this.search_field.val();
+				if(!val){
+					this.abortAjaxRequest();
+					this.typing = false;
+					this.val = null;
+					this.searchFieldOnFocusIn(null);
+				}
+				else{
+					if(this.val != val){
+						this.val = val;
+						this.status_container.html(this.labels.typing_status.replace('#{val}', this.val));
+						this.search_interval_count = 0;
+						this.typing = true;
+					}
+				}
+			},
+			initNotFoundContainer: function(){
+				this.not_found_container = $('<div class="fmx_multiselect_not_found_container">' + this.labels.not_found + '</div>');
+				this.not_found_container.appendTo(this.container);
+			},
+			initSearchContainer: function(){
+				this.search_container = $('<div class="fmx_multiselect_search_container"></div>');
+				this.search_container.appendTo(this.container);
+			},
+			render: function(){
+				if(this.values_count == 0){
+					this.not_found_container.show();
+					this.values_container.hide();
+				}
+				else{
+					this.not_found_container.hide();
+					this.values_container.show();
+				}
+			}
+		};
+		$.extend(_self, opts);
+		_self.init();
+		return _self;
+	};
+})(jQuery);
