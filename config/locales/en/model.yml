@@ -105,4 +105,30 @@ en:
           thursday: 'Thursday'
           friday: 'Friday'
           saturday: 'Saturday'
-          
+      performance_result:
+        technology:
+          sequential: 'Sequential'
+          sequential_db: 'Sequential DB'
+          parallel: 'Parallel'
+          gpu_db: 'GPU DB'
+        time_fields:
+          meter_length: 'Meter Length'
+          peak_deliveries: 'Peak Deliveries' 
+          peak_disruptions: 'Peak Disruptions' 
+          peak_traffic: 'Peak Traffic' 
+          disruptions_times: 'Disruptions Times' 
+          delivery_times: 'Delivery Times' 
+          chart_times: 'Chart Times' 
+          tracks: 'Tracks'
+          shops: 'Shops'
+          deliveries: 'Deliveries'
+          traffic_disruptions: 'Traffic Disruptions' 
+          streets: 'Streets'
+          deliveries_disruptions: 'Deliveries / Disruptions' 
+          traffic_count_totals: 'Traffic Count Totals' 
+          shop_totals: 'Shop Totals' 
+          delivery_totals: 'Delivery Totals'
+        street_time_fields:
+          streets_meter_length: 'Streets Meter Length' 
+          streets_track_count: 'Streets Track Count' 
+          streets_location: 'Streets Location'
