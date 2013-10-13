@@ -1,1 +1,30 @@
-ALTER TABLE shops ADD COLUMN loading_area_type INTEGER NOT NULL;
+CREATE SEQUENCE public.performance_results_id_seq;
+CREATE TABLE public.performance_results (
+                id BIGINT NOT NULL DEFAULT nextval('public.performance_results_id_seq'),
+                km_id BIGINT NOT NULL,
+                technology INTEGER NOT NULL,
+                meter_length_time BIGINT DEFAULT 0 NOT NULL,
+                peak_deliveries_time BIGINT DEFAULT 0 NOT NULL,
+                peak_disruptions_time BIGINT DEFAULT 0 NOT NULL,
+                peak_traffic_time BIGINT DEFAULT 0 NOT NULL,
+                disruptions_times_time BIGINT DEFAULT 0 NOT NULL,
+                delivery_times_time BIGINT DEFAULT 0 NOT NULL,
+                chart_times_time BIGINT DEFAULT 0 NOT NULL,
+                tracks_time BIGINT DEFAULT 0 NOT NULL,
+                shops_time BIGINT DEFAULT 0 NOT NULL,
+                deliveries_time BIGINT DEFAULT 0 NOT NULL,
+                traffic_disruptions_time BIGINT DEFAULT 0 NOT NULL,
+                streets_time BIGINT DEFAULT 0 NOT NULL,
+                streets_meter_length_time BIGINT DEFAULT 0 NOT NULL,
+                streets_track_count_time BIGINT DEFAULT 0 NOT NULL,
+                streets_location_time BIGINT NOT NULL,
+                deliveries_disruptions_time BIGINT DEFAULT 0 NOT NULL,
+                traffic_count_totals_time BIGINT DEFAULT 0 NOT NULL,
+                shop_totals_time BIGINT DEFAULT 0 NOT NULL,
+                delivery_totals_time BIGINT DEFAULT 0 NOT NULL,
+                total_time BIGINT DEFAULT 0 NOT NULL,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL,
+                CONSTRAINT performance_results_pk PRIMARY KEY (id)
+);
+ALTER SEQUENCE public.performance_results_id_seq OWNED BY public.performance_results.id;

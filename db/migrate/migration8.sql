@@ -1,7 +1,0 @@
-BEGIN;
-
-ALTER TABLE shops
-	ADD COLUMN deliveries_count INTEGER DEFAULT 0
-;
-
-COMMIT;

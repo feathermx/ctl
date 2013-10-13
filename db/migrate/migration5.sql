@@ -1,9 +1,0 @@
-BEGIN;
-
-ALTER TABLE street_data
-	ALTER COLUMN width_of_sidewalks SET DATA TYPE DOUBLE PRECISION,
-	ALTER COLUMN parking_area_length SET DATA TYPE DOUBLE PRECISION
-;
-
-
-COMMIT;

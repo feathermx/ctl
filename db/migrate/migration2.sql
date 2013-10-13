@@ -1,1 +1,0 @@
-ALTER TABLE countries ADD COLUMN extension VARCHAR(10);
