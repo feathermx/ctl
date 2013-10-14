@@ -10,6 +10,7 @@ en:
         countries: 'Countries'
         kms: 'km2'
         stats: 'Stats'
+        performance_results: 'Performance Results'
       menu:
         users: 'Users'
         languages: 'Languages'
@@ -277,7 +278,8 @@ en:
             total_time: 'Total Time(secs)'
             created_at: 'Created At'
           show:
+            title: '%{km} - Performance Results'
             general:
-              title: '%{km} - Total: %{time} secs'
-            streets:
-              title: '%{km} - Street: %{time} secs'
+              title: 'Total: %{time} secs'
+            street:
+              title: 'Street: %{time} secs'

@@ -1,7 +1,15 @@
 <% l_base = 'app.admin.views.performance_results.show' %>
 <% action_url = url_for(action: :show_action, performance_result_id: @performance_result.id) %>
+<% header_opts = @section.merge(lang_key: "#{l_base}.title") %>
 <%= javascript_include_tag url_for(action_url) %>
 <div id="performance_result_show_container">
-  <%= render partial: 'admin/performance_results/show/general', locals: { l_base: "#{l_base}" } %>
-  <%= render partial: 'admin/performance_results/show/streets', locals: { l_base: "#{l_base}" } %>
+	<%= render partial: 'admin/shared/section/header', locals: { opts: header_opts } %>
+	<%= render partial: 'admin/performance_results/show/section', locals: { key: 'general' } %>
+	<%= render partial: 'admin/performance_results/show/section', locals: { key: 'street' } %>
+  <% 
+		#render partial: 'admin/performance_results/show/general', locals: { l_base: "#{l_base}" } 
+	%>
+  <% 
+		#render partial: 'admin/performance_results/show/streets', locals: { l_base: "#{l_base}" } 
+	%>
 </div>

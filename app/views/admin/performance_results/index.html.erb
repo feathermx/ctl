@@ -1,8 +1,8 @@
 <% content_for :table_fields do %>
-	<th data-name="technology"><%= t 'app.admin.views.performance_results.fields.technology' %></th>
 	<th data-name="km_name"><%= t 'app.admin.views.performance_results.fields.km_name' %></th>
-	<th data-name="total_time"><%= t 'app.admin.views.performance_results.fields.total_time' %></th>
 	<th data-name="c_at" data-sort="created_at"><%= t 'app.admin.views.performance_results.fields.created_at' %></th>
+	<th data-name="technology"><%= t 'app.admin.views.performance_results.fields.technology' %></th>
+	<th data-name="total_time"><%= t 'app.admin.views.performance_results.fields.total_time' %></th>
 <% end %>
 <%= render partial: 'admin/shared/plugins/highcharts' %>
 <%= stylesheet_link_tag 'admin/views/performance_results' %>

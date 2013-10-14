@@ -62,6 +62,7 @@ class Admin::PerformanceResultsController < Admin::AdminController
   def performance_section
     @section.merge!(
       show_add_btn: false,
+      show_cancel_btn: true,
       lang_args: {
         km: self.performance_result.km.name
       }

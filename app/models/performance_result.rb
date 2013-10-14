@@ -73,7 +73,7 @@ class PerformanceResult < ActiveRecord::FmxBase
       },
       PeakDisruptions => {
         field: 'peak_disruptions',
-        name: I18n.t("#{LangTimeFields}.peak_deliveries")
+        name: I18n.t("#{LangTimeFields}.peak_disruptions")
       },
       PeakTraffic => {
         field: 'peak_traffic',

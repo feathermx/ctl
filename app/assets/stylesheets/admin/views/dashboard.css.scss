@@ -286,6 +286,19 @@ a.menu_element.active .menu_element_icon img, a.menu_element:hover .menu_element
 	float: right;
 }
 
+.section_subtitle{
+	background: none repeat scroll 0 0 #EEEEEE;
+	height: 36px;
+	margin: 5px 20px 0 20px;
+	h2.section_subtitle_label{
+		color: #333333;
+		font-size: 16px;
+		display: block;
+		float: left;
+		margin: 8px 0 0 15px;
+	}
+}
+
 @include link('a.section_action') {
 	background: none repeat scroll 0 0 #C9C9C9;
 	text-decoration: none;

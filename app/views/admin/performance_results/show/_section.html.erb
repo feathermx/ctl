@@ -1,0 +1,13 @@
+<% l_base = "app.admin.views.performance_results.show.#{key}" %>
+<% c_id = "performance_result_show_#{key}" %>
+<% secs = @performance_result.send("admin_#{key}_time") %>
+<div class="performance_result_show_section" id="<%= c_id %>">
+  <% 
+		#render partial: 'admin/shared/section/header', locals: { opts: header_opts } 
+	%>
+	<div class="section_subtitle">
+		<h2 class="section_subtitle_label"><%= t "#{l_base}.title", { time: secs } %></h2>
+		<div class="clear"></div>
+	</div>
+  <div class="performance_result_show_chart"></div>
+</div>

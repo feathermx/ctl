@@ -15,28 +15,25 @@
 			this.initLang();
 			this.initConfig();
 			this.initContainer();
-			this.initViews();
 		},
 		initViews: function(){
 			this.initGeneralView();
+			this.initStreetView();
+		},
+		initStreetView: function(){
+			var view = this.getViewBase('street');
+			$.extend(view, {
+				init: function(){
+					this.render();
+				}
+			});
+			view.init();
 		},
 		initGeneralView: function(){
 			var view = this.getViewBase('general');
 			$.extend(view, {
 				init: function(){
-					this.initBackBtn();
 					this.render();
-				},
-				initBackBtn: function(){
-					var _self = this;
-					var back_btn = this.container.find('#performance_result_cancel_btn');
-					back_btn.click(function(e){
-						e.preventDefault();
-						_self.backBtnOnClick(e, $(this));
-					});
-				},
-				backBtnOnClick: function(e, element){
-					this.root.view_stack.popView();
 				}
 			});
 			view.init();
@@ -49,25 +46,43 @@
 				view: null,
 				key: key,
 				container: null,
+				val: null,
 				init: function(){
 					this.initRoot();
 					this.initView();
+					this.initVal();
 					this.initContainer();
 				},
+				initVal: function(){
+					this.val = config.val;
+				},
 				render: function(){
-					var fields = [];
-					/**
-					series: [ {
-					                name: 'Tokyo',
-					                data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-					            }
-					],
-					xAxis: {
-					                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-					                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-					            },
-					*/
-					//TODO
+					var _self = this;
+					var element = this.view.element;
+					var categories = [];
+					var data = [];
+					var fields = this.view.lang[this.key + '_fields'];
+					var container = this.container.find('.performance_result_show_chart');
+					var chart_opts = this.view.config.chart;
+					$.each(fields, function(key, val){
+						var field_name = val.field + '_time';
+						data.push(element[field_name] / _self.val.usec_sec);
+						categories.push(val.name);
+					});
+					this.root.plugins.highcharts(container,  
+						$.extend({
+							series: [{
+								data: data
+							}],
+							xAxis: {
+								categories: categories,
+								labels: {
+									rotation: -45,
+									align: 'right'
+								}
+							}
+						}, chart_opts)
+					);
 				},
 				initContainer: function(){
 					this.container = this.view.container.find('#performance_result_show_' + this.key);
@@ -84,6 +99,19 @@
 		},
 		initContainer: function(){
 			this.container = this.root.dashboard.container.find('#performance_result_show_container');
+			this.initViews();
+			this.initBackBtn();
+		},
+		initBackBtn: function(){
+			var _self = this;
+			var back_btn = this.container.find('#performance_result_cancel_btn');
+			back_btn.click(function(e){
+				e.preventDefault();
+				_self.backBtnOnClick(e, $(this));
+			});
+		},
+		backBtnOnClick: function(e, element){
+			this.root.view_stack.popView();
 		},
 		initRoot: function(){
 			this.root = this.parent.root;

@@ -9,12 +9,12 @@ class Admin::PerformanceResult < PerformanceResult
     super(opts.merge(methods: [:c_at]))
   end
   
-  def admin_total_time_secs
-    @admin_total_time_secs ||= self.total_time_secs.round(SecDecimals)
+  def admin_general_time
+    @admin_general_time ||= self.total_time_secs.round(SecDecimals)
   end
   
-  def admin_streets_time_secs
-    @admin_streets_time_secs ||= self.streets_time_secs.round(SecDecimals)
+  def admin_street_time
+    @admin_streets_time ||= self.streets_time_secs.round(SecDecimals)
   end
 
 end

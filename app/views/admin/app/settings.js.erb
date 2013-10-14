@@ -10,6 +10,9 @@ $.extend(config, {
 			b_false: '<%= image_url 'admin/formats/false.png' %>'
 		}
 	},
+	val: {
+		usec_sec: <%= PerformanceResult::UsecSecs %>
+	},
 	charts: {
 		base: {
 			credits: {
@@ -119,7 +122,19 @@ $.extend(config, {
 		performance_result: {
 			show: {
 				chart: {
-					type: 'line'
+					type: 'line',
+					legend: {
+						enabled: false
+					},
+					tooltip: {
+						formatter: function(){ return this.x + '<br /><b>' + this.point.y + ' secs</b>'; }
+					},
+					yAxis: {
+						min: 0,
+						title: {
+							enabled: false
+						}
+					}
 				}
 			}
 		}

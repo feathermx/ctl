@@ -6,7 +6,10 @@
     }
   }
   .performance_result_show_chart{
-    width: 100%;
+		margin: 0 20px;
+		border-left: 1px solid #E4E4E4;
+		border-right: 1px solid #E4E4E4;
+		border-bottom: 1px solid #E4E4E4;
     height: 300px;
   }
 }
