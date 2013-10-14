@@ -47,7 +47,7 @@ module ActiveRecord
     end
     
     def self.find_by_id(id)
-      self.base.filter_by_id(id).first
+      self.base.filter_by_id(id).order(nil).first
     end
     
     def time_val(val)

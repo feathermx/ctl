@@ -44,6 +44,11 @@ class Admin::HomeController < Admin::AdminController
         key: 'stats',
         perm: User::Perm::Stats,
         url: { controller: :stats, action: :index }
+      },
+      {
+        key: 'performance_results',
+        perm: User::Perm::PerformanceResults,
+        url: { controller: :performance_results, action: :index }
       }
     ]
   end

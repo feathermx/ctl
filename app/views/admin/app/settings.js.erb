@@ -1,13 +1,34 @@
 var config = {};
 $.extend(config, {
 	init: function(){
-		this.fmx.parent = this;
+		this.fmx.parent = this.plugins.parent = this;
 	},
 	images: {
 		base: '<%= image_url '%{image}', alt: 'base' %>',
 		formats: {
 			b_true: '<%= image_url 'admin/formats/true.png' %>',
 			b_false: '<%= image_url 'admin/formats/false.png' %>'
+		}
+	},
+	charts: {
+		base: {
+			credits: {
+				enabled: false
+			},
+			title: {
+				text: ''
+			}
+		}
+	},
+	plugins: {
+		parent: this,
+		highcharts: function(){
+			var opts = {};
+			var base = this.parent.charts.base;
+			$.extend(opts, {
+				
+			}, lang.plugins.highcharts(), base);
+			return opts;
 		}
 	},
 	views: {
@@ -94,6 +115,13 @@ $.extend(config, {
 					}
 				}
 			}
+		},
+		performance_result: {
+			show: {
+				chart: {
+					type: 'line'
+				}
+			}
 		}
 	},
 	fmx: {
@@ -119,7 +147,6 @@ $.extend(config, {
 			}, lang.fmx.notification());
 			return opts;
 		},
-		
 		overlay: function(){
 			var opts = {};
 			$.extend(opts, {

@@ -24,7 +24,40 @@ class Street < ActiveRecord::FmxBase
   validates :lng2, numericality: true, allow_nil: true
   validates :research_id, uniqueness: { scope: :block_id }
   
-  def set_location
+  def set_location(pr=nil)
+    if pr.nil?
+      self.do_set_location
+    else
+      pr.exec(:StreetsLocation) do
+        self.do_set_location
+      end
+    end
+  end
+  
+  def set_meter_length(pr=nil)
+    if pr.nil?
+      self.do_set_meter_length
+    else
+      pr.exec(:StreetsMeterLength) do
+        self.do_set_meter_length
+      end
+    end
+  end
+  
+  def set_track_count(pr=nil)
+    if pr.nil?
+      self.do_set_track_count
+    else
+      pr.exec(:StreetsTrackCount) do
+        self.do_set_track_count
+      end
+    end
+    
+  end
+  
+  protected
+  
+  def do_set_location
     total = Track.base_count.filter_by_street(self.id).order(nil).first[:num].to_i
     if total > 0
       half = (total / 2)
@@ -36,13 +69,13 @@ class Street < ActiveRecord::FmxBase
     end
   end
   
-  def set_meter_length
+  def do_set_meter_length
     data = StreetData.meter_base.filter_by_street(self.id).first
     self.public_meter_length = data[:public_meter_length].to_f
     self.dedicated_meter_length = data[:dedicated_meter_length].to_f
   end
   
-  def set_track_count
+  def do_set_track_count
     data = Track.base_count.filter_by_street(self.id).order(nil).first
     self.track_count = data[:num].to_i
   end

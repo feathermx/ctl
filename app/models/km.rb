@@ -38,6 +38,17 @@ class Km < ActiveRecord::FmxBase
   before_save :set_active_state
   before_destroy :remove_active_count
   
+  # Performance Results
+  def pr
+    @pr ||= ->{
+      Settings.load_file('/lib/script/stopwatch/stopwatch.rb')
+      p = PerformanceResult.new
+      p.set_technology(Settings.get('technology.parallel'), Settings.get('technology.parallel_db'))
+      p.km_id = self.id
+      p
+    }.call
+  end
+  
   def min_delivery_time_at
     @min_delivery_time_at ||= ->{
       (self.min_delivery_time.to_i * 1000) unless self.min_delivery_time.nil? 
@@ -226,27 +237,70 @@ class Km < ActiveRecord::FmxBase
     if self.active_changed
       if self.active?
         self.reset_active_fields
-        self.set_meter_length
-        self.set_peak_deliveries
-        self.set_peak_disruptions
-        self.set_peak_traffic
-        self.set_disruption_times
-        self.set_delivery_times
-        self.set_chart_times
-        self.set_tracks
-        self.set_shops
-        self.set_deliveries
-        self.set_traffic_disruptions
-        self.set_streets
-        self.set_deliveries_disruptions
-        self.set_traffic_count_totals
-        self.set_shop_totals
-        self.set_delivery_totals
+        self.calc_totals
         self.add_active_count
       else
         self.substract_active_count
       end
     end
+  end
+  
+  def calc_totals
+    self.pr.exec_block(:MeterLength) do
+      self.set_meter_length
+    end
+    self.pr.exec_block(:PeakDeliveries) do
+      self.set_peak_deliveries
+    end
+    self.pr.exec_block(:PeakDisruptions) do
+      self.set_peak_disruptions
+    end
+    self.pr.exec_block(:PeakTraffic) do
+      self.set_peak_traffic
+    end
+    self.pr.exec_block(:DisruptionTimes) do
+      self.set_disruption_times
+    end
+    self.pr.exec_block(:DeliveryTimes) do
+      self.set_delivery_times
+    end
+    self.pr.exec_block(:ChartTimes) do
+      self.set_chart_times
+    end
+    self.pr.exec_block(:Tracks) do
+      self.set_tracks
+    end
+    self.pr.exec_block(:Shops) do
+      self.set_shops
+    end
+    self.pr.exec_block(:Deliveries) do
+      self.set_deliveries
+    end
+    self.pr.exec_block(:TrafficDisruptions) do
+      self.set_traffic_disruptions
+    end
+    self.set_streets
+    self.pr.exec_block(:DeliveriesDisruptions) do
+      self.set_deliveries_disruptions
+    end
+    self.pr.exec_block(:TrafficCountTotals) do
+      self.set_traffic_count_totals
+    end
+    self.pr.exec_block(:ShopTotals) do
+      self.set_shop_totals 
+    end
+    self.pr.exec_block(:DeliveryTotals) do
+      self.set_delivery_totals
+    end
+    self.pr.save
+    puts "------------------------------"
+    puts "------------------------------"
+    puts "------------------------------"
+    puts "PR: #{self.pr.inspect}"
+    puts "PR: #{self.pr.errors.inspect}"
+    puts "------------------------------"
+    puts "------------------------------"
+    puts "------------------------------"
   end
   
   def add_active_count
@@ -261,119 +315,155 @@ class Km < ActiveRecord::FmxBase
   
   def set_traffic_count_totals
     self.destroy_traffic_count_totals
-    el = TrafficCountTotal.generate(self)
-    el.save
+    self.pr.exec(:TrafficCountTotals) do
+      el = TrafficCountTotal.generate(self)
+      el.save
+    end
   end
   
   def set_shop_totals
     self.destroy_shop_totals
-    Shop::ShopType::List.each do |key, val|
-      el = ShopTotal.generate(key, self.id)
-      el.save
+    self.pr.exec(:ShopTotals) do
+      Shop::ShopType::List.each do |key, val|
+        el = ShopTotal.generate(key, self.id)
+        el.save
+      end
     end
   end
   
   def set_delivery_totals
     self.destroy_delivery_totals
-    max = 0
-    unless self.min_delivery_time.nil? || self.max_delivery_time.nil?
-      ((self.min_delivery_time.hour)..(self.max_delivery_time.hour)).each do |hour|
-        el = DeliveryTotal.generate(hour, self)
-        max = el[:max] if el[:max] > max
-        el[:el].save
+    self.pr.exec(:DeliveryTotals) do
+      max = 0
+      unless self.min_delivery_time.nil? || self.max_delivery_time.nil?
+        ((self.min_delivery_time.hour)..(self.max_delivery_time.hour)).each do |hour|
+          el = DeliveryTotal.generate(hour, self)
+          max = el[:max] if el[:max] > max
+          el[:el].save
+        end
       end
+      self.max_deliveries = max
     end
-    self.max_deliveries = max
   end
   
   def set_deliveries_disruptions
     self.destroy_deliveries_disruptions
-    unless self.chart_start_time.nil? || self.chart_end_time.nil?
-      ((self.chart_start_time.hour)..(self.chart_end_time.hour)).each do |hour|
-        el = DeliveriesDisruption.generate(hour, self)
-        el.save
+    self.pr.exec(:DeliveriesDisruptions) do
+      unless self.chart_start_time.nil? || self.chart_end_time.nil?
+        ((self.chart_start_time.hour)..(self.chart_end_time.hour)).each do |hour|
+          el = DeliveriesDisruption.generate(hour, self)
+          el.save
+        end
       end
     end
   end
   
   def set_streets
     self.streets.each do |el|
-      el.set_meter_length
-      el.set_track_count
-      el.set_location
+      self.pr.exec_block(:StreetsMeterLength) do
+        el.set_meter_length(self.pr)
+      end
+      self.pr.exec_block(:StreetsTrackCount) do
+        el.set_track_count(self.pr)
+      end
+      self.pr.exec_block(:StreetsLocation) do
+        el.set_location(self.pr)
+      end
       el.save
     end
   end
   
   def set_traffic_disruptions
-    self.traffic_disruptions.each do |el|
-      el.set_location
-      el.save
+    self.pr.exec(:TrafficDisruptions) do
+      self.traffic_disruptions.each do |el|
+        el.set_location
+        el.save
+      end
     end
   end
   
   def set_deliveries
-    self.deliveries.each do |el|
-      el.set_location
-      el.save
+    self.pr.exec(:Deliveries) do
+      self.deliveries.each do |el|
+        el.set_location
+        el.save
+      end
     end
   end
   
   def set_shops
-    self.shops.each do |el|
-      el.set_location
-      el.save
+    self.pr.exec(:Shops) do
+      self.shops.each do |el|
+        el.set_location
+        el.save
+      end
     end
   end
   
   def set_tracks
-    self.tracks.each do |el|
-      el.set_street_id
-      el.save
+    self.pr.exec(:Tracks) do
+      self.tracks.each do |el|
+        el.set_street_id
+        el.save
+      end
     end
   end
   
   def set_chart_times
-    unless self.min_disruption_time.nil? || self.min_delivery_time.nil?
-      self.chart_start_time = (self.min_disruption_time < self.min_delivery_time) ? self.min_disruption_time : self.min_delivery_time
-    end
-    unless self.max_disruption_time.nil? || self.max_delivery_time.nil?
-      self.chart_end_time = (self.max_disruption_time > self.max_delivery_time) ? self.max_disruption_time : self.max_delivery_time
+    self.pr.exec(:ChartTimes) do
+      unless self.min_disruption_time.nil? || self.min_delivery_time.nil?
+        self.chart_start_time = (self.min_disruption_time < self.min_delivery_time) ? self.min_disruption_time : self.min_delivery_time
+      end
+      unless self.max_disruption_time.nil? || self.max_delivery_time.nil?
+        self.chart_end_time = (self.max_disruption_time > self.max_delivery_time) ? self.max_disruption_time : self.max_delivery_time
+      end
     end
   end
   
   def set_disruption_times
-    self.min_disruption_time = TrafficDisruption.min_hour_for_km(self.id)
-    self.max_disruption_time = TrafficDisruption.max_hour_for_km(self.id)
+    self.pr.exec(:DisruptionTimes) do
+      self.min_disruption_time = TrafficDisruption.min_hour_for_km(self.id)
+      self.max_disruption_time = TrafficDisruption.max_hour_for_km(self.id)
+    end
   end
   
   def set_delivery_times
-    self.min_delivery_time = Delivery.min_hour_for_km(self.id)
-    self.max_delivery_time = Delivery.max_hour_for_km(self.id)
+    self.pr.exec(:DeliveryTimes) do
+      self.min_delivery_time = Delivery.min_hour_for_km(self.id)
+      self.max_delivery_time = Delivery.max_hour_for_km(self.id)
+    end
   end
   
   def set_meter_length
-    data = StreetData.meter_base.filter_by_km(self.id).first
-    self.public_meter_length = data[:public_meter_length].to_f
-    self.dedicated_meter_length = data[:dedicated_meter_length].to_f
+    self.pr.exec(:MeterLength) do
+      data = StreetData.meter_base.filter_by_km(self.id).first
+      self.public_meter_length = data[:public_meter_length].to_f
+      self.dedicated_meter_length = data[:dedicated_meter_length].to_f
+    end
   end
   
   def set_peak_deliveries
-    peak = self.get_peak(Delivery)
-    self.peak_delivery_hour = "#{peak[1]}:00:00 +00:00"
-    self.peak_deliveries = peak[0]
+    self.pr.exec(:PeakDeliveries) do
+      peak = self.get_peak(Delivery)
+      self.peak_delivery_hour = "#{peak[1]}:00:00 +00:00"
+      self.peak_deliveries = peak[0]
+    end
   end
   
   def set_peak_disruptions
-    peak = self.get_peak(TrafficDisruption)
-    self.peak_disruption_hour = "#{peak[1]}:00:00 +00:00"
-    self.peak_disruptions = peak[0]
+    self.pr.exec(:PeakDisruptions) do
+      peak = self.get_peak(TrafficDisruption)
+      self.peak_disruption_hour = "#{peak[1]}:00:00 +00:00"
+      self.peak_disruptions = peak[0]
+    end
   end
   
   def set_peak_traffic
-    peak = self.get_peak(TrafficCount, TrafficCount.peak_base)
-    self.peak_traffic_hour = "#{peak[1]}:00:00 +00:00"
-    self.peak_traffic = peak[0]
+    self.pr.exec(:PeakTraffic) do
+      peak = self.get_peak(TrafficCount, TrafficCount.peak_base)
+      self.peak_traffic_hour = "#{peak[1]}:00:00 +00:00"
+      self.peak_traffic = peak[0]
+    end
   end
   
   def get_peak(cls, base=nil)

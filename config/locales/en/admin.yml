@@ -16,6 +16,7 @@ en:
         countries: 'Countries'
         kms: 'km2'
         stats: 'Stats'
+        performance_results: 'Performance Results'
       messages:
         not_found: 'No records found.'
         create_success: 'Record created successfully'
@@ -268,3 +269,15 @@ en:
             notes: 'Notes'
           new:
             title: 'CSV Upload'
+        performance_results:
+          title: 'Performance Results'
+          fields:
+            km_name: 'Kilometer'
+            technology: 'Technology'
+            total_time: 'Total Time(secs)'
+            created_at: 'Created At'
+          show:
+            general:
+              title: '%{km} - Total: %{time} secs'
+            streets:
+              title: '%{km} - Street: %{time} secs'

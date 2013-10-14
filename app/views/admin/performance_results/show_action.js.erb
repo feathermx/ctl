@@ -1,0 +1,102 @@
+(function(){
+	var parent = app.dashboard.performance_result;
+	var el = parent.show = {};
+	$.extend(el, {
+		parent: parent,
+		root: null,
+		view: null,
+		lang: null,
+		config: null,
+		container: null,
+		element: <%= @performance_result.to_json.html_safe %>,
+		init: function(){
+			this.initRoot();
+			this.initView();
+			this.initLang();
+			this.initConfig();
+			this.initContainer();
+			this.initViews();
+		},
+		initViews: function(){
+			this.initGeneralView();
+		},
+		initGeneralView: function(){
+			var view = this.getViewBase('general');
+			$.extend(view, {
+				init: function(){
+					this.initBackBtn();
+					this.render();
+				},
+				initBackBtn: function(){
+					var _self = this;
+					var back_btn = this.container.find('#performance_result_cancel_btn');
+					back_btn.click(function(e){
+						e.preventDefault();
+						_self.backBtnOnClick(e, $(this));
+					});
+				},
+				backBtnOnClick: function(e, element){
+					this.root.view_stack.popView();
+				}
+			});
+			view.init();
+		},
+		getViewBase: function(key){
+			var view = {};
+			$.extend(view, {
+				parent: this,
+				root: null,
+				view: null,
+				key: key,
+				container: null,
+				init: function(){
+					this.initRoot();
+					this.initView();
+					this.initContainer();
+				},
+				render: function(){
+					var fields = [];
+					/**
+					series: [ {
+					                name: 'Tokyo',
+					                data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+					            }
+					],
+					xAxis: {
+					                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+					                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+					            },
+					*/
+					//TODO
+				},
+				initContainer: function(){
+					this.container = this.view.container.find('#performance_result_show_' + this.key);
+				},
+				initRoot: function(){
+					this.root = this.parent.root;
+				},
+				initView: function(){
+					this.view = this.parent.view;
+				}
+			});
+			view.init();
+			return view;
+		},
+		initContainer: function(){
+			this.container = this.root.dashboard.container.find('#performance_result_show_container');
+		},
+		initRoot: function(){
+			this.root = this.parent.root;
+		},
+		initView: function(){
+			this.view = this;
+		},
+		initLang: function(){
+			this.lang = lang.views.performance_result.show;
+		},
+		initConfig: function(){
+			this.config = config.views.performance_result.show;
+		}
+	});
+	el.init();
+})(jQuery);

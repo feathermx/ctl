@@ -1,0 +1,50 @@
+<% content_for :table_formats do %>
+var tf = {};
+$.extend(tf, {
+	parent: this,
+	root: null,
+	list: {},
+	technologies: <%= PerformanceResult::Technology::List.to_json.html_safe %>,
+	init: function(){
+		this.initRoot();
+		this.initList();
+	},
+	initList: function(){
+		var _self = this;
+	    $.extend(this.list, {
+			c_at: 'dateTime',
+			total_time: function(val, el){
+				return _self.totalTimeFormat(val, el);
+			},
+			technology: function(val, el){
+				return _self.technologyFormat(val, el);
+			}
+	    });
+	},
+	totalTimeFormat: function(val, el){
+		return this.root.formats.decimal(val / 1000.0, 2);
+	},
+	technologyFormat: function(val, el){
+		var res = '-';
+	    var key = parseInt(val);
+	    if(!isNaN(key) && isFinite(key)){
+			var els = [];
+			$.each(this.technologies, function(k, t){
+				if((key & k) == k) els.push(t.name);
+			});
+			if(els.length > 0) res = els.join(" + ");
+	    }
+	    return res;
+	},
+	initRoot: function(){
+		this.root = this.parent.root;
+	}
+});
+tf.init();
+this.table_formats = tf.list;
+<% end %>
+<% content_for :section_actions do %>
+  <%= render partial: 'admin/shared/section/actions/show', locals: { opts: @section.merge(perm: list?) } %> 
+	<%= render partial: 'admin/shared/section/actions/delete', locals: { opts: @section.merge(perm: delete?) } %>
+<% end %>
+<%= render partial: 'admin/shared/section/action', locals: { opts: @section } %>

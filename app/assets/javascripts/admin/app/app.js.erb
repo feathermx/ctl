@@ -9,6 +9,7 @@ $.extend(app, {
 	init: function(){
 		this.initRoot();
 		this.initFmx();
+		this.initPlugins();
 		this.initGoogleMapsLoader();
 		this.initHasTouch();
 		this.initMainLoader();
@@ -204,6 +205,9 @@ $.extend(app, {
 	initFmx: function(){
 		this.fmx.root = this;
 	},
+	initPlugins: function(){
+		this.plugins.root = this;
+	},
 	initHasTouch: function(){
 		this.has_touch = 'ontouchstart' in document.documentElement;
 	},
@@ -233,6 +237,23 @@ $.extend(app, {
 				src: base.replace('%{image}', src) + '?t=' + time
 			}).attr(dimensions).css(dimensions).addClass('fmx_table_image');
 			return img;
+		},
+		decimal: function(val, decimals){
+			var res = 0;
+			val = parseFloat(val);
+			if(!isNaN(val) && isFinite(val)){
+				res = val.toFixed(decimals);
+				res = parseFloat(res);
+			}
+			return res;
+		}
+	},
+	plugins: {
+		root: null,
+		highcharts: function(container, opts){
+			container.highcharts(
+				$.extend(opts, config.plugins.highcharts())
+			);
 		}
 	},
 	fmx: {

@@ -5,20 +5,12 @@ module Summable
   class SumField
     
     # optional field_name
-    attr_accessor :nspc, :fields, :total_name, :parent
+    attr_accessor :nspc, :fields, :field_name, :parent
     
     def initialize(args={})
-      opts = { total_name: 'total' }
-      opts.merge!(args)
-      field_name = opts.delete :field_name
-      @total_name = field_name unless field_name.blank?
-      opts.each do |name, value|
+      args.each do |name, value|
         send("#{name}=", value)
       end
-    end
-    
-    def total_name
-      @total_name ||= "#{self.nspc}_#{self.total_name}"
     end
     
     def set_field
@@ -27,7 +19,7 @@ module Summable
         field_name = "#{f}_#{self.nspc}"
         sum = sum + self.parent.send(field_name).to_f
       end
-      self.parent.send("#{self.total_name}=", sum)
+      self.parent.send("#{self.field_name}=", sum)
     end
     
     def before_save

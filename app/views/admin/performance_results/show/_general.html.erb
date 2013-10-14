@@ -1,0 +1,7 @@
+<% l_base << '.general' %>
+<% lang_args = @section[:lang_args].merge(time: @performance_result.admin_total_time_secs ) %>
+<% header_opts = @section.merge(lang_key: "#{l_base}.title", lang_args: lang_args, show_cancel_btn: true) %>
+<div class="performance_result_show_section" id="performance_result_show_general">
+  <%= render partial: 'admin/shared/section/header', locals: { opts: header_opts } %>
+  <div class="performance_result_show_chart"></div>
+</div>

@@ -19,8 +19,14 @@ development:
   facebook:
     app_id: '186275988212233'
     app_secret: 'b8e78642f5ed80e9bb15a438c96d2a64'
+  technology:
+    parallel: false
+    parallel_db: false
 production:
   scope: '/km2'
   facebook:
     app_id: '542124615835598'
     app_secret: '1270965444f79feae5ff74af986e8c3a'
+  technology:
+    parallel: false
+    parallel_db: false

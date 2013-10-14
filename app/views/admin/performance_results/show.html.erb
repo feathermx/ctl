@@ -1,0 +1,7 @@
+<% l_base = 'app.admin.views.performance_results.show' %>
+<% action_url = url_for(action: :show_action, performance_result_id: @performance_result.id) %>
+<%= javascript_include_tag url_for(action_url) %>
+<div id="performance_result_show_container">
+  <%= render partial: 'admin/performance_results/show/general', locals: { l_base: "#{l_base}" } %>
+  <%= render partial: 'admin/performance_results/show/streets', locals: { l_base: "#{l_base}" } %>
+</div>

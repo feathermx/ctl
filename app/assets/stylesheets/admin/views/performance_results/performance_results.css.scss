@@ -1,0 +1,12 @@
+#performance_result_show_container{
+  .performance_result_show_section{
+    margin: 0 0 20px 0;
+    &.last{
+      margin: 0 0 0 0;
+    }
+  }
+  .performance_result_show_chart{
+    width: 100%;
+    height: 300px;
+  }
+}

@@ -1,7 +1,7 @@
 var lang = {};
 $.extend(lang, {
 	init: function(){
-		this.fmx.parent = this.app.parent = this;
+		this.fmx.parent = this.plugins.parent = this.app.parent = this;
 	},
 	messages: {
 		not_found: '<%= t 'app.admin.messages.not_found' %>',
@@ -11,12 +11,28 @@ $.extend(lang, {
 		delete_all_success: '<%= t 'app.admin.messages.delete_all_success' %>'
 	},
 	views: {
+		performance_result: {
+			show: {
+				general_fields: <%= PerformanceResult::TimeFields::List.to_json.html_safe %>,
+				street_fields: <%= PerformanceResult::TimeFields::StreetList.to_json.html_safe %>
+			}
+		},
 		profile: {
 			update_labels: {
 				info: '<%= t 'app.admin.views.profile.tabs.info.labels.update_success' %>',
 				password: '<%= t 'app.admin.views.profile.tabs.password.labels.update_success' %>',
 				city: '<%= t 'app.admin.views.profile.tabs.city.labels.update_success' %>'
 			}
+		}
+	},
+	plugins: {
+		parent: null,
+		highcharts: function(){
+			var opts = {};
+			$.extend(opts, {
+				
+			});
+			return opts;
 		}
 	},
 	fmx: {

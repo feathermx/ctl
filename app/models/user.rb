@@ -10,6 +10,7 @@ class User < ActiveRecord::FmxBase
     Countries = 4
     Kms = 8
     Stats = 16
+    PerformanceResults = 32
     List = {
       Users => {
         key: 'users'
@@ -25,6 +26,9 @@ class User < ActiveRecord::FmxBase
       },
       Stats => {
         key: 'stats'
+      },
+      PerformanceResults => {
+        key: 'performance_results'
       }
     }
   end
@@ -97,6 +101,5 @@ class User < ActiveRecord::FmxBase
       MultiSelectField.generate(name: :km, model: UserKm, list_with: :user_kms)
     ]
   end
-  
   
 end
