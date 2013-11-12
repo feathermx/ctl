@@ -8,7 +8,8 @@ module Slugable
     before_save :set_slug
     
     def set_slug
-      self.slug = self.get_slug if self.slug.nil?
+			# TODO fix
+      #self.slug = self.get_slug if self.slug.nil?
     end
     
     protected

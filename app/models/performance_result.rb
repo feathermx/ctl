@@ -236,6 +236,7 @@ class PerformanceResult < ActiveRecord::FmxBase
     if self.parallel?
       t = Thread.new do
         yield
+        ActiveRecord::Base.connection.close
       end
       self.pool[key].push(t)
     else

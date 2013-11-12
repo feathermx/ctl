@@ -20,7 +20,7 @@ development:
     app_id: '186275988212233'
     app_secret: 'b8e78642f5ed80e9bb15a438c96d2a64'
   technology:
-    parallel: false
+    parallel: true
     parallel_db: false
 production:
   scope: '/km2'

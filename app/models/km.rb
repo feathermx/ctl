@@ -4,7 +4,7 @@ class Km < ActiveRecord::FmxBase
   
   scope :base, ->{ select("kms.id, kms.is_active, kms.tracks_count, kms.traffic_counts_count, kms.traffic_disruptions_count, kms.street_data_count, kms.parking_restrictions_count, kms.shops_count, kms.public_meter_length, kms.dedicated_meter_length, kms.peak_deliveries, kms.peak_delivery_hour, kms.peak_disruptions, kms.peak_disruption_hour, kms.peak_traffic, kms.peak_traffic_hour, kms.min_disruption_time, kms.max_disruption_time, kms.min_delivery_time, kms.max_delivery_time, kms.chart_start_time, kms.chart_end_time, kms.max_deliveries, kms.deliveries_count, kms.city_id, kms.name, kms.slug, kms.description, kms.comments, kms.lat, kms.lng, kms.street_lat, kms.street_lng") }
   scope :base_count, ->{ select("COUNT(kms.id) as num") }
-  scope :base_id, ->{ select("kms.id") }
+  scope :base_id, ->{ select('kms.id') }
   scope :with_city, ->{ select('cities.name as city_name').joins('JOIN cities ON cities.id = kms.city_id') }
   scope :with_user_kms, ->{ joins('JOIN user_kms ON user_kms.km_id = kms.id') }
   scope :filter_by_id, ->(id){ where(id: id) }
@@ -293,14 +293,6 @@ class Km < ActiveRecord::FmxBase
       self.set_delivery_totals
     end
     self.pr.save
-    puts "------------------------------"
-    puts "------------------------------"
-    puts "------------------------------"
-    puts "PR: #{self.pr.inspect}"
-    puts "PR: #{self.pr.errors.inspect}"
-    puts "------------------------------"
-    puts "------------------------------"
-    puts "------------------------------"
   end
   
   def add_active_count
@@ -318,15 +310,17 @@ class Km < ActiveRecord::FmxBase
     self.pr.exec(:TrafficCountTotals) do
       el = TrafficCountTotal.generate(self)
       el.save
+      #ActiveRecord::Base.connection.close
     end
   end
   
   def set_shop_totals
     self.destroy_shop_totals
-    self.pr.exec(:ShopTotals) do
-      Shop::ShopType::List.each do |key, val|
+    Shop::ShopType::List.each do |key, val|
+      self.pr.exec(:ShopTotals) do
         el = ShopTotal.generate(key, self.id)
         el.save
+        #ActiveRecord::Base.connection.close
       end
     end
   end
@@ -348,11 +342,12 @@ class Km < ActiveRecord::FmxBase
   
   def set_deliveries_disruptions
     self.destroy_deliveries_disruptions
-    self.pr.exec(:DeliveriesDisruptions) do
-      unless self.chart_start_time.nil? || self.chart_end_time.nil?
-        ((self.chart_start_time.hour)..(self.chart_end_time.hour)).each do |hour|
+    unless self.chart_start_time.nil? || self.chart_end_time.nil?
+      ((self.chart_start_time.hour)..(self.chart_end_time.hour)).each do |hour|
+        self.pr.exec(:DeliveriesDisruptions) do
           el = DeliveriesDisruption.generate(hour, self)
           el.save
+          #ActiveRecord::Base.connection.close
         end
       end
     end
@@ -374,10 +369,11 @@ class Km < ActiveRecord::FmxBase
   end
   
   def set_traffic_disruptions
-    self.pr.exec(:TrafficDisruptions) do
-      self.traffic_disruptions.each do |el|
+    self.traffic_disruptions.each do |el|
+      self.pr.exec(:TrafficDisruptions) do
         el.set_location
         el.save
+        #ActiveRecord::Base.connection.close
       end
     end
   end
@@ -421,15 +417,21 @@ class Km < ActiveRecord::FmxBase
   end
   
   def set_disruption_times
-    self.pr.exec(:DisruptionTimes) do
+    key = :DisruptionTimes
+    self.pr.exec(key) do
       self.min_disruption_time = TrafficDisruption.min_hour_for_km(self.id)
+    end
+    self.pr.exec(key) do
       self.max_disruption_time = TrafficDisruption.max_hour_for_km(self.id)
     end
   end
   
   def set_delivery_times
-    self.pr.exec(:DeliveryTimes) do
+    key = :DeliveryTimes
+    self.pr.exec(key) do
       self.min_delivery_time = Delivery.min_hour_for_km(self.id)
+    end
+    self.pr.exec(key) do
       self.max_delivery_time = Delivery.max_hour_for_km(self.id)
     end
   end
@@ -505,6 +507,5 @@ class Km < ActiveRecord::FmxBase
   def remove_active_count
     self.substract_active_count if self.active?
   end
-  
   
 end
